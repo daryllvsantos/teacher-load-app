@@ -60,6 +60,12 @@ export default function RootLayout({
                 >
                   Subjects
                 </Link>
+                <Link
+                  className="rounded-full border border-transparent bg-[var(--surface-muted)] px-4 py-2 text-[var(--text-primary)] transition hover:border-[var(--primary)] hover:text-[var(--primary)]"
+                  href="/classes"
+                >
+                  Classes
+                </Link>
               </nav>
               <ThemeToggle />
             </div>

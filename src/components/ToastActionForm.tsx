@@ -43,6 +43,7 @@ export default function ToastActionForm({
   const formRef = useRef<HTMLFormElement | null>(null);
   const [isConfirmOpen, setIsConfirmOpen] = useState(false);
   const [pendingSubmitter, setPendingSubmitter] = useState<HTMLElement | null>(null);
+  const isConfirmingRef = useRef(false);
 
   useEffect(() => {
     if (state.status === "success") {
@@ -60,6 +61,10 @@ export default function ToastActionForm({
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     if (!requiresConfirm) return;
+    if (isConfirmingRef.current) {
+      isConfirmingRef.current = false;
+      return;
+    }
     event.preventDefault();
     const nativeEvent = event.nativeEvent as SubmitEvent;
     setPendingSubmitter((nativeEvent?.submitter as HTMLElement) ?? null);
@@ -69,6 +74,7 @@ export default function ToastActionForm({
   const handleConfirm = () => {
     setIsConfirmOpen(false);
     if (formRef.current) {
+      isConfirmingRef.current = true;
       formRef.current.requestSubmit(pendingSubmitter ?? undefined);
     }
     setPendingSubmitter(null);

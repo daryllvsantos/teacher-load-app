@@ -19,9 +19,17 @@ type SubjectOption = {
   color: string;
 };
 
+type ClassOption = {
+  id: string;
+  gradeLevel: string;
+  section: string;
+  shift?: Shift;
+};
+
 type LoadFormProps = {
   teachers: TeacherOption[];
   subjects: SubjectOption[];
+  classes: ClassOption[];
   createLoad: (previousState: LoadFormState, formData: FormData) => Promise<LoadFormState>;
   preselectedTeacherId?: string;
 };
@@ -42,6 +50,7 @@ const weekdayOptions: { value: Weekday; label: string }[] = [
 export default function LoadForm({
   teachers,
   subjects,
+  classes,
   createLoad,
   preselectedTeacherId,
 }: LoadFormProps) {
@@ -77,6 +86,9 @@ export default function LoadForm({
   const isAfternoonShift = selectedTeacher?.shift === "AFTERNOON";
   const isMorningShift = selectedTeacher?.shift === "MORNING";
   const activeBlocks = isAfternoonShift ? afternoonTimeBlocks : morningTimeBlocks;
+  const visibleClasses = selectedTeacher
+    ? classes.filter((classItem) => classItem.shift === selectedTeacher.shift)
+    : classes;
   const selectedBlock = activeBlocks.find(
     (block) => `${block.start}-${block.end}` === selectedTimeBlock
   );
@@ -90,8 +102,30 @@ export default function LoadForm({
     }
   }, [formState]);
 
+  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+    const formData = new FormData(event.currentTarget);
+    const teacherId = String(formData.get("teacherId") ?? "").trim();
+    const subjectId = String(formData.get("subjectId") ?? "").trim();
+    const classId = String(formData.get("classId") ?? "").trim();
+    const day = String(formData.get("day") ?? "").trim();
+    const startTime = String(formData.get("startTime") ?? "").trim();
+    const endTime = String(formData.get("endTime") ?? "").trim();
+    const timeBlock = String(formData.get("timeBlock") ?? "").trim();
+
+    const hasTeacher = Boolean(preselectedTeacherId || teacherId);
+    const needsTimeBlock = Boolean(selectedTeacher);
+    const hasValidTime = needsTimeBlock
+      ? Boolean(timeBlock && startTime && endTime)
+      : Boolean(startTime && endTime);
+
+    if (!hasTeacher || !subjectId || !classId || !day || !hasValidTime) {
+      event.preventDefault();
+      toast.error("Please complete all required load details.");
+    }
+  };
+
   return (
-    <form action={formAction} className="grid gap-3 md:grid-cols-3">
+    <form action={formAction} className="grid gap-3 md:grid-cols-3" onSubmit={handleSubmit}>
       {preselectedTeacherId ? (
         <input type="hidden" name="teacherId" value={preselectedTeacherId} />
       ) : (
@@ -113,6 +147,14 @@ export default function LoadForm({
         {subjects.map((subject) => (
           <option key={subject.id} value={subject.id}>
             {subject.code} - {subject.name}
+          </option>
+        ))}
+      </Select>
+      <Select name="classId">
+        <option value="">Select class</option>
+        {visibleClasses.map((classItem) => (
+          <option key={classItem.id} value={classItem.id}>
+            {classItem.gradeLevel} - {classItem.section}
           </option>
         ))}
       </Select>

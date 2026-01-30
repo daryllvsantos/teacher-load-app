@@ -128,7 +128,7 @@ export default async function Home() {
         ))}
       </div>
       <DashboardCharts charts={charts} />
-      <div className="grid gap-4 md:grid-cols-2">
+      <div className="grid gap-4 md:grid-cols-3">
         <div className="rounded-2xl bg-[var(--surface)] p-5 shadow-sm ring-1 ring-[var(--border)]">
           <h3 className="text-sm font-semibold uppercase text-[var(--text-muted)]">Teachers</h3>
           <p className="mt-2 text-sm text-[var(--text-muted)]">Add teacher profiles with basic details.</p>
@@ -149,6 +149,18 @@ export default async function Home() {
             href="/subjects"
           >
             Manage subjects →
+          </Link>
+        </div>
+        <div className="rounded-2xl bg-[var(--surface)] p-5 shadow-sm ring-1 ring-[var(--border)]">
+          <h3 className="text-sm font-semibold uppercase text-[var(--text-muted)]">Classes</h3>
+          <p className="mt-2 text-sm text-[var(--text-muted)]">
+            Create class sections and view their schedules.
+          </p>
+          <Link
+            className="mt-3 inline-flex text-sm font-semibold text-[var(--text-primary)] hover:text-[var(--primary)]"
+            href="/classes"
+          >
+            Manage classes →
           </Link>
         </div>
       </div>

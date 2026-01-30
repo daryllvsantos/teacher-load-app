@@ -136,10 +136,22 @@ exports.Prisma.SubjectScalarFieldEnum = {
   updatedAt: 'updatedAt'
 };
 
+exports.Prisma.ClassScalarFieldEnum = {
+  id: 'id',
+  gradeLevel: 'gradeLevel',
+  section: 'section',
+  adviser: 'adviser',
+  shift: 'shift',
+  color: 'color',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
 exports.Prisma.LoadScalarFieldEnum = {
   id: 'id',
   teacherId: 'teacherId',
   subjectId: 'subjectId',
+  classId: 'classId',
   shift: 'shift',
   startTime: 'startTime',
   endTime: 'endTime',
@@ -178,6 +190,7 @@ exports.Weekday = exports.$Enums.Weekday = {
 exports.Prisma.ModelName = {
   Teacher: 'Teacher',
   Subject: 'Subject',
+  Class: 'Class',
   Load: 'Load',
   LoadDay: 'LoadDay'
 };

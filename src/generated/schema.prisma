@@ -28,10 +28,23 @@ model Subject {
   loads     Load[]
 }
 
+model Class {
+  id         String   @id @default(cuid())
+  gradeLevel String
+  section    String
+  adviser    String
+  shift      Shift    @default(MORNING)
+  color      String   @default("#1d4ed8")
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+  loads      Load[]
+}
+
 model Load {
   id        String    @id @default(cuid())
   teacherId String
   subjectId String
+  classId   String
   shift     Shift
   startTime String
   endTime   String
@@ -39,6 +52,7 @@ model Load {
   updatedAt DateTime  @updatedAt
   subject   Subject   @relation(fields: [subjectId], references: [id], onDelete: Cascade)
   teacher   Teacher   @relation(fields: [teacherId], references: [id], onDelete: Cascade)
+  class     Class     @relation(fields: [classId], references: [id], onDelete: Cascade)
   days      LoadDay[]
 }
 

@@ -119,11 +119,12 @@ async function createLoad(
   "use server";
   const teacherId = String(formData.get("teacherId"));
   const subjectId = String(formData.get("subjectId"));
+  const classId = String(formData.get("classId"));
   const startTime = String(formData.get("startTime") || "").trim();
   const endTime = String(formData.get("endTime") || "").trim();
   const day = String(formData.get("day") || "").trim() as Weekday;
 
-  if (!teacherId || !subjectId || !startTime || !endTime || !day) {
+  if (!teacherId || !subjectId || !classId || !startTime || !endTime || !day) {
     return { status: "error", message: "Please complete all load details." };
   }
 
@@ -138,6 +139,14 @@ async function createLoad(
   });
   if (!teacher) {
     return { status: "error", message: "Teacher not found." };
+  }
+
+  const classSection = await prisma.class.findUnique({
+    where: { id: classId },
+    select: { id: true },
+  });
+  if (!classSection) {
+    return { status: "error", message: "Class not found." };
   }
 
   const existingSameDay = await prisma.load.findMany({
@@ -174,6 +183,7 @@ async function createLoad(
     data: {
       teacherId,
       subjectId,
+      classId,
       shift: teacher.shift,
       startTime,
       endTime,
@@ -238,13 +248,14 @@ export default async function TeacherDetailPage({
   if (!id) {
     notFound();
   }
-  const [teacher, subjects] = await Promise.all([
+  const [teacher, subjects, classes] = await Promise.all([
     prisma.teacher.findUnique({
       where: { id },
       include: {
         loads: {
           include: {
             subject: true,
+            class: true,
             days: true,
           },
         },
@@ -253,6 +264,10 @@ export default async function TeacherDetailPage({
     prisma.subject.findMany({
       orderBy: { code: "asc" },
       select: { id: true, code: true, name: true, color: true },
+    }),
+    prisma.class.findMany({
+      orderBy: [{ gradeLevel: "asc" }, { section: "asc" }],
+      select: { id: true, gradeLevel: true, section: true, color: true, shift: true },
     }),
   ]);
 
@@ -373,6 +388,7 @@ export default async function TeacherDetailPage({
             createLoad={createLoad}
             teacher={{ id: teacher.id, name: teacher.name, shift: teacher.shift }}
             subjects={subjects}
+            classes={classes}
           />
           <p className="text-sm text-[var(--text-muted)]">
             Add new loads without leaving the schedule view.
@@ -409,8 +425,8 @@ export default async function TeacherDetailPage({
                       <td key={`${entry.weekday}-${block.start}`} className="py-3">
                         {load ? (
                           <div
-                            className="relative inline-flex max-w-full flex-col gap-1 rounded-lg border border-[var(--border)] px-3 py-2 text-xs"
-                            style={{ backgroundColor: load.subject.color }}
+                            className="relative inline-flex max-w-full flex-col gap-1 rounded-lg border border-[var(--border)] px-3 pb-2 pt-6 text-xs"
+                            style={{ backgroundColor: load.class.color }}
                           >
                             <ToastActionButton
                               action={deleteLoad}
@@ -428,8 +444,8 @@ export default async function TeacherDetailPage({
                             >
                               −
                             </ToastActionButton>
-                            <span className="schedule-chip-text font-semibold text-white">
-                              {load.subject.code}
+                            <span className="schedule-chip-text text-white">
+                              {load.class.gradeLevel} - {load.class.section}
                             </span>
                             <span className="schedule-chip-text text-white/90">
                               {load.subject.name}

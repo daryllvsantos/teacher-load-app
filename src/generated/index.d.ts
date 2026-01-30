@@ -24,6 +24,11 @@ export type Teacher = $Result.DefaultSelection<Prisma.$TeacherPayload>
  */
 export type Subject = $Result.DefaultSelection<Prisma.$SubjectPayload>
 /**
+ * Model Class
+ * 
+ */
+export type Class = $Result.DefaultSelection<Prisma.$ClassPayload>
+/**
  * Model Load
  * 
  */
@@ -202,6 +207,16 @@ export class PrismaClient<
     * ```
     */
   get subject(): Prisma.SubjectDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.class`: Exposes CRUD operations for the **Class** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more Classes
+    * const classes = await prisma.class.findMany()
+    * ```
+    */
+  get class(): Prisma.ClassDelegate<ExtArgs, ClientOptions>;
 
   /**
    * `prisma.load`: Exposes CRUD operations for the **Load** model.
@@ -658,6 +673,7 @@ export namespace Prisma {
   export const ModelName: {
     Teacher: 'Teacher',
     Subject: 'Subject',
+    Class: 'Class',
     Load: 'Load',
     LoadDay: 'LoadDay'
   };
@@ -675,7 +691,7 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "teacher" | "subject" | "load" | "loadDay"
+      modelProps: "teacher" | "subject" | "class" | "load" | "loadDay"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -824,6 +840,80 @@ export namespace Prisma {
           count: {
             args: Prisma.SubjectCountArgs<ExtArgs>
             result: $Utils.Optional<SubjectCountAggregateOutputType> | number
+          }
+        }
+      }
+      Class: {
+        payload: Prisma.$ClassPayload<ExtArgs>
+        fields: Prisma.ClassFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.ClassFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ClassPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.ClassFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ClassPayload>
+          }
+          findFirst: {
+            args: Prisma.ClassFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ClassPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.ClassFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ClassPayload>
+          }
+          findMany: {
+            args: Prisma.ClassFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ClassPayload>[]
+          }
+          create: {
+            args: Prisma.ClassCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ClassPayload>
+          }
+          createMany: {
+            args: Prisma.ClassCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.ClassCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ClassPayload>[]
+          }
+          delete: {
+            args: Prisma.ClassDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ClassPayload>
+          }
+          update: {
+            args: Prisma.ClassUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ClassPayload>
+          }
+          deleteMany: {
+            args: Prisma.ClassDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.ClassUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.ClassUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ClassPayload>[]
+          }
+          upsert: {
+            args: Prisma.ClassUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ClassPayload>
+          }
+          aggregate: {
+            args: Prisma.ClassAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateClass>
+          }
+          groupBy: {
+            args: Prisma.ClassGroupByArgs<ExtArgs>
+            result: $Utils.Optional<ClassGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.ClassCountArgs<ExtArgs>
+            result: $Utils.Optional<ClassCountAggregateOutputType> | number
           }
         }
       }
@@ -1085,6 +1175,7 @@ export namespace Prisma {
   export type GlobalOmitConfig = {
     teacher?: TeacherOmit
     subject?: SubjectOmit
+    class?: ClassOmit
     load?: LoadOmit
     loadDay?: LoadDayOmit
   }
@@ -1220,6 +1311,37 @@ export namespace Prisma {
    * SubjectCountOutputType without action
    */
   export type SubjectCountOutputTypeCountLoadsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: LoadWhereInput
+  }
+
+
+  /**
+   * Count Type ClassCountOutputType
+   */
+
+  export type ClassCountOutputType = {
+    loads: number
+  }
+
+  export type ClassCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    loads?: boolean | ClassCountOutputTypeCountLoadsArgs
+  }
+
+  // Custom InputTypes
+  /**
+   * ClassCountOutputType without action
+   */
+  export type ClassCountOutputTypeDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ClassCountOutputType
+     */
+    select?: ClassCountOutputTypeSelect<ExtArgs> | null
+  }
+
+  /**
+   * ClassCountOutputType without action
+   */
+  export type ClassCountOutputTypeCountLoadsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: LoadWhereInput
   }
 
@@ -3435,6 +3557,1113 @@ export namespace Prisma {
 
 
   /**
+   * Model Class
+   */
+
+  export type AggregateClass = {
+    _count: ClassCountAggregateOutputType | null
+    _min: ClassMinAggregateOutputType | null
+    _max: ClassMaxAggregateOutputType | null
+  }
+
+  export type ClassMinAggregateOutputType = {
+    id: string | null
+    gradeLevel: string | null
+    section: string | null
+    adviser: string | null
+    shift: $Enums.Shift | null
+    color: string | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type ClassMaxAggregateOutputType = {
+    id: string | null
+    gradeLevel: string | null
+    section: string | null
+    adviser: string | null
+    shift: $Enums.Shift | null
+    color: string | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type ClassCountAggregateOutputType = {
+    id: number
+    gradeLevel: number
+    section: number
+    adviser: number
+    shift: number
+    color: number
+    createdAt: number
+    updatedAt: number
+    _all: number
+  }
+
+
+  export type ClassMinAggregateInputType = {
+    id?: true
+    gradeLevel?: true
+    section?: true
+    adviser?: true
+    shift?: true
+    color?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type ClassMaxAggregateInputType = {
+    id?: true
+    gradeLevel?: true
+    section?: true
+    adviser?: true
+    shift?: true
+    color?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type ClassCountAggregateInputType = {
+    id?: true
+    gradeLevel?: true
+    section?: true
+    adviser?: true
+    shift?: true
+    color?: true
+    createdAt?: true
+    updatedAt?: true
+    _all?: true
+  }
+
+  export type ClassAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which Class to aggregate.
+     */
+    where?: ClassWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Classes to fetch.
+     */
+    orderBy?: ClassOrderByWithRelationInput | ClassOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: ClassWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Classes from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Classes.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned Classes
+    **/
+    _count?: true | ClassCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: ClassMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: ClassMaxAggregateInputType
+  }
+
+  export type GetClassAggregateType<T extends ClassAggregateArgs> = {
+        [P in keyof T & keyof AggregateClass]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateClass[P]>
+      : GetScalarType<T[P], AggregateClass[P]>
+  }
+
+
+
+
+  export type ClassGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: ClassWhereInput
+    orderBy?: ClassOrderByWithAggregationInput | ClassOrderByWithAggregationInput[]
+    by: ClassScalarFieldEnum[] | ClassScalarFieldEnum
+    having?: ClassScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: ClassCountAggregateInputType | true
+    _min?: ClassMinAggregateInputType
+    _max?: ClassMaxAggregateInputType
+  }
+
+  export type ClassGroupByOutputType = {
+    id: string
+    gradeLevel: string
+    section: string
+    adviser: string
+    shift: $Enums.Shift
+    color: string
+    createdAt: Date
+    updatedAt: Date
+    _count: ClassCountAggregateOutputType | null
+    _min: ClassMinAggregateOutputType | null
+    _max: ClassMaxAggregateOutputType | null
+  }
+
+  type GetClassGroupByPayload<T extends ClassGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<ClassGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof ClassGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], ClassGroupByOutputType[P]>
+            : GetScalarType<T[P], ClassGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type ClassSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    gradeLevel?: boolean
+    section?: boolean
+    adviser?: boolean
+    shift?: boolean
+    color?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    loads?: boolean | Class$loadsArgs<ExtArgs>
+    _count?: boolean | ClassCountOutputTypeDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["class"]>
+
+  export type ClassSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    gradeLevel?: boolean
+    section?: boolean
+    adviser?: boolean
+    shift?: boolean
+    color?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }, ExtArgs["result"]["class"]>
+
+  export type ClassSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    gradeLevel?: boolean
+    section?: boolean
+    adviser?: boolean
+    shift?: boolean
+    color?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }, ExtArgs["result"]["class"]>
+
+  export type ClassSelectScalar = {
+    id?: boolean
+    gradeLevel?: boolean
+    section?: boolean
+    adviser?: boolean
+    shift?: boolean
+    color?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }
+
+  export type ClassOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "gradeLevel" | "section" | "adviser" | "shift" | "color" | "createdAt" | "updatedAt", ExtArgs["result"]["class"]>
+  export type ClassInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    loads?: boolean | Class$loadsArgs<ExtArgs>
+    _count?: boolean | ClassCountOutputTypeDefaultArgs<ExtArgs>
+  }
+  export type ClassIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
+  export type ClassIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
+
+  export type $ClassPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "Class"
+    objects: {
+      loads: Prisma.$LoadPayload<ExtArgs>[]
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      gradeLevel: string
+      section: string
+      adviser: string
+      shift: $Enums.Shift
+      color: string
+      createdAt: Date
+      updatedAt: Date
+    }, ExtArgs["result"]["class"]>
+    composites: {}
+  }
+
+  type ClassGetPayload<S extends boolean | null | undefined | ClassDefaultArgs> = $Result.GetResult<Prisma.$ClassPayload, S>
+
+  type ClassCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<ClassFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: ClassCountAggregateInputType | true
+    }
+
+  export interface ClassDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['Class'], meta: { name: 'Class' } }
+    /**
+     * Find zero or one Class that matches the filter.
+     * @param {ClassFindUniqueArgs} args - Arguments to find a Class
+     * @example
+     * // Get one Class
+     * const class = await prisma.class.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends ClassFindUniqueArgs>(args: SelectSubset<T, ClassFindUniqueArgs<ExtArgs>>): Prisma__ClassClient<$Result.GetResult<Prisma.$ClassPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one Class that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {ClassFindUniqueOrThrowArgs} args - Arguments to find a Class
+     * @example
+     * // Get one Class
+     * const class = await prisma.class.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends ClassFindUniqueOrThrowArgs>(args: SelectSubset<T, ClassFindUniqueOrThrowArgs<ExtArgs>>): Prisma__ClassClient<$Result.GetResult<Prisma.$ClassPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first Class that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ClassFindFirstArgs} args - Arguments to find a Class
+     * @example
+     * // Get one Class
+     * const class = await prisma.class.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends ClassFindFirstArgs>(args?: SelectSubset<T, ClassFindFirstArgs<ExtArgs>>): Prisma__ClassClient<$Result.GetResult<Prisma.$ClassPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first Class that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ClassFindFirstOrThrowArgs} args - Arguments to find a Class
+     * @example
+     * // Get one Class
+     * const class = await prisma.class.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends ClassFindFirstOrThrowArgs>(args?: SelectSubset<T, ClassFindFirstOrThrowArgs<ExtArgs>>): Prisma__ClassClient<$Result.GetResult<Prisma.$ClassPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more Classes that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ClassFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all Classes
+     * const classes = await prisma.class.findMany()
+     * 
+     * // Get first 10 Classes
+     * const classes = await prisma.class.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const classWithIdOnly = await prisma.class.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends ClassFindManyArgs>(args?: SelectSubset<T, ClassFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ClassPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a Class.
+     * @param {ClassCreateArgs} args - Arguments to create a Class.
+     * @example
+     * // Create one Class
+     * const Class = await prisma.class.create({
+     *   data: {
+     *     // ... data to create a Class
+     *   }
+     * })
+     * 
+     */
+    create<T extends ClassCreateArgs>(args: SelectSubset<T, ClassCreateArgs<ExtArgs>>): Prisma__ClassClient<$Result.GetResult<Prisma.$ClassPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many Classes.
+     * @param {ClassCreateManyArgs} args - Arguments to create many Classes.
+     * @example
+     * // Create many Classes
+     * const class = await prisma.class.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends ClassCreateManyArgs>(args?: SelectSubset<T, ClassCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many Classes and returns the data saved in the database.
+     * @param {ClassCreateManyAndReturnArgs} args - Arguments to create many Classes.
+     * @example
+     * // Create many Classes
+     * const class = await prisma.class.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many Classes and only return the `id`
+     * const classWithIdOnly = await prisma.class.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends ClassCreateManyAndReturnArgs>(args?: SelectSubset<T, ClassCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ClassPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a Class.
+     * @param {ClassDeleteArgs} args - Arguments to delete one Class.
+     * @example
+     * // Delete one Class
+     * const Class = await prisma.class.delete({
+     *   where: {
+     *     // ... filter to delete one Class
+     *   }
+     * })
+     * 
+     */
+    delete<T extends ClassDeleteArgs>(args: SelectSubset<T, ClassDeleteArgs<ExtArgs>>): Prisma__ClassClient<$Result.GetResult<Prisma.$ClassPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one Class.
+     * @param {ClassUpdateArgs} args - Arguments to update one Class.
+     * @example
+     * // Update one Class
+     * const class = await prisma.class.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends ClassUpdateArgs>(args: SelectSubset<T, ClassUpdateArgs<ExtArgs>>): Prisma__ClassClient<$Result.GetResult<Prisma.$ClassPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more Classes.
+     * @param {ClassDeleteManyArgs} args - Arguments to filter Classes to delete.
+     * @example
+     * // Delete a few Classes
+     * const { count } = await prisma.class.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends ClassDeleteManyArgs>(args?: SelectSubset<T, ClassDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Classes.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ClassUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many Classes
+     * const class = await prisma.class.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends ClassUpdateManyArgs>(args: SelectSubset<T, ClassUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Classes and returns the data updated in the database.
+     * @param {ClassUpdateManyAndReturnArgs} args - Arguments to update many Classes.
+     * @example
+     * // Update many Classes
+     * const class = await prisma.class.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more Classes and only return the `id`
+     * const classWithIdOnly = await prisma.class.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends ClassUpdateManyAndReturnArgs>(args: SelectSubset<T, ClassUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ClassPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one Class.
+     * @param {ClassUpsertArgs} args - Arguments to update or create a Class.
+     * @example
+     * // Update or create a Class
+     * const class = await prisma.class.upsert({
+     *   create: {
+     *     // ... data to create a Class
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the Class we want to update
+     *   }
+     * })
+     */
+    upsert<T extends ClassUpsertArgs>(args: SelectSubset<T, ClassUpsertArgs<ExtArgs>>): Prisma__ClassClient<$Result.GetResult<Prisma.$ClassPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of Classes.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ClassCountArgs} args - Arguments to filter Classes to count.
+     * @example
+     * // Count the number of Classes
+     * const count = await prisma.class.count({
+     *   where: {
+     *     // ... the filter for the Classes we want to count
+     *   }
+     * })
+    **/
+    count<T extends ClassCountArgs>(
+      args?: Subset<T, ClassCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], ClassCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a Class.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ClassAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends ClassAggregateArgs>(args: Subset<T, ClassAggregateArgs>): Prisma.PrismaPromise<GetClassAggregateType<T>>
+
+    /**
+     * Group by Class.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ClassGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends ClassGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: ClassGroupByArgs['orderBy'] }
+        : { orderBy?: ClassGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, ClassGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetClassGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the Class model
+   */
+  readonly fields: ClassFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for Class.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__ClassClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    loads<T extends Class$loadsArgs<ExtArgs> = {}>(args?: Subset<T, Class$loadsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$LoadPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the Class model
+   */
+  interface ClassFieldRefs {
+    readonly id: FieldRef<"Class", 'String'>
+    readonly gradeLevel: FieldRef<"Class", 'String'>
+    readonly section: FieldRef<"Class", 'String'>
+    readonly adviser: FieldRef<"Class", 'String'>
+    readonly shift: FieldRef<"Class", 'Shift'>
+    readonly color: FieldRef<"Class", 'String'>
+    readonly createdAt: FieldRef<"Class", 'DateTime'>
+    readonly updatedAt: FieldRef<"Class", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * Class findUnique
+   */
+  export type ClassFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Class
+     */
+    select?: ClassSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Class
+     */
+    omit?: ClassOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ClassInclude<ExtArgs> | null
+    /**
+     * Filter, which Class to fetch.
+     */
+    where: ClassWhereUniqueInput
+  }
+
+  /**
+   * Class findUniqueOrThrow
+   */
+  export type ClassFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Class
+     */
+    select?: ClassSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Class
+     */
+    omit?: ClassOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ClassInclude<ExtArgs> | null
+    /**
+     * Filter, which Class to fetch.
+     */
+    where: ClassWhereUniqueInput
+  }
+
+  /**
+   * Class findFirst
+   */
+  export type ClassFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Class
+     */
+    select?: ClassSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Class
+     */
+    omit?: ClassOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ClassInclude<ExtArgs> | null
+    /**
+     * Filter, which Class to fetch.
+     */
+    where?: ClassWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Classes to fetch.
+     */
+    orderBy?: ClassOrderByWithRelationInput | ClassOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for Classes.
+     */
+    cursor?: ClassWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Classes from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Classes.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Classes.
+     */
+    distinct?: ClassScalarFieldEnum | ClassScalarFieldEnum[]
+  }
+
+  /**
+   * Class findFirstOrThrow
+   */
+  export type ClassFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Class
+     */
+    select?: ClassSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Class
+     */
+    omit?: ClassOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ClassInclude<ExtArgs> | null
+    /**
+     * Filter, which Class to fetch.
+     */
+    where?: ClassWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Classes to fetch.
+     */
+    orderBy?: ClassOrderByWithRelationInput | ClassOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for Classes.
+     */
+    cursor?: ClassWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Classes from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Classes.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Classes.
+     */
+    distinct?: ClassScalarFieldEnum | ClassScalarFieldEnum[]
+  }
+
+  /**
+   * Class findMany
+   */
+  export type ClassFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Class
+     */
+    select?: ClassSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Class
+     */
+    omit?: ClassOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ClassInclude<ExtArgs> | null
+    /**
+     * Filter, which Classes to fetch.
+     */
+    where?: ClassWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Classes to fetch.
+     */
+    orderBy?: ClassOrderByWithRelationInput | ClassOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing Classes.
+     */
+    cursor?: ClassWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Classes from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Classes.
+     */
+    skip?: number
+    distinct?: ClassScalarFieldEnum | ClassScalarFieldEnum[]
+  }
+
+  /**
+   * Class create
+   */
+  export type ClassCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Class
+     */
+    select?: ClassSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Class
+     */
+    omit?: ClassOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ClassInclude<ExtArgs> | null
+    /**
+     * The data needed to create a Class.
+     */
+    data: XOR<ClassCreateInput, ClassUncheckedCreateInput>
+  }
+
+  /**
+   * Class createMany
+   */
+  export type ClassCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many Classes.
+     */
+    data: ClassCreateManyInput | ClassCreateManyInput[]
+  }
+
+  /**
+   * Class createManyAndReturn
+   */
+  export type ClassCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Class
+     */
+    select?: ClassSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the Class
+     */
+    omit?: ClassOmit<ExtArgs> | null
+    /**
+     * The data used to create many Classes.
+     */
+    data: ClassCreateManyInput | ClassCreateManyInput[]
+  }
+
+  /**
+   * Class update
+   */
+  export type ClassUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Class
+     */
+    select?: ClassSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Class
+     */
+    omit?: ClassOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ClassInclude<ExtArgs> | null
+    /**
+     * The data needed to update a Class.
+     */
+    data: XOR<ClassUpdateInput, ClassUncheckedUpdateInput>
+    /**
+     * Choose, which Class to update.
+     */
+    where: ClassWhereUniqueInput
+  }
+
+  /**
+   * Class updateMany
+   */
+  export type ClassUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update Classes.
+     */
+    data: XOR<ClassUpdateManyMutationInput, ClassUncheckedUpdateManyInput>
+    /**
+     * Filter which Classes to update
+     */
+    where?: ClassWhereInput
+    /**
+     * Limit how many Classes to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * Class updateManyAndReturn
+   */
+  export type ClassUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Class
+     */
+    select?: ClassSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the Class
+     */
+    omit?: ClassOmit<ExtArgs> | null
+    /**
+     * The data used to update Classes.
+     */
+    data: XOR<ClassUpdateManyMutationInput, ClassUncheckedUpdateManyInput>
+    /**
+     * Filter which Classes to update
+     */
+    where?: ClassWhereInput
+    /**
+     * Limit how many Classes to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * Class upsert
+   */
+  export type ClassUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Class
+     */
+    select?: ClassSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Class
+     */
+    omit?: ClassOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ClassInclude<ExtArgs> | null
+    /**
+     * The filter to search for the Class to update in case it exists.
+     */
+    where: ClassWhereUniqueInput
+    /**
+     * In case the Class found by the `where` argument doesn't exist, create a new Class with this data.
+     */
+    create: XOR<ClassCreateInput, ClassUncheckedCreateInput>
+    /**
+     * In case the Class was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<ClassUpdateInput, ClassUncheckedUpdateInput>
+  }
+
+  /**
+   * Class delete
+   */
+  export type ClassDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Class
+     */
+    select?: ClassSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Class
+     */
+    omit?: ClassOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ClassInclude<ExtArgs> | null
+    /**
+     * Filter which Class to delete.
+     */
+    where: ClassWhereUniqueInput
+  }
+
+  /**
+   * Class deleteMany
+   */
+  export type ClassDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which Classes to delete
+     */
+    where?: ClassWhereInput
+    /**
+     * Limit how many Classes to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * Class.loads
+   */
+  export type Class$loadsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Load
+     */
+    select?: LoadSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Load
+     */
+    omit?: LoadOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: LoadInclude<ExtArgs> | null
+    where?: LoadWhereInput
+    orderBy?: LoadOrderByWithRelationInput | LoadOrderByWithRelationInput[]
+    cursor?: LoadWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: LoadScalarFieldEnum | LoadScalarFieldEnum[]
+  }
+
+  /**
+   * Class without action
+   */
+  export type ClassDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Class
+     */
+    select?: ClassSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Class
+     */
+    omit?: ClassOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ClassInclude<ExtArgs> | null
+  }
+
+
+  /**
    * Model Load
    */
 
@@ -3448,6 +4677,7 @@ export namespace Prisma {
     id: string | null
     teacherId: string | null
     subjectId: string | null
+    classId: string | null
     shift: $Enums.Shift | null
     startTime: string | null
     endTime: string | null
@@ -3459,6 +4689,7 @@ export namespace Prisma {
     id: string | null
     teacherId: string | null
     subjectId: string | null
+    classId: string | null
     shift: $Enums.Shift | null
     startTime: string | null
     endTime: string | null
@@ -3470,6 +4701,7 @@ export namespace Prisma {
     id: number
     teacherId: number
     subjectId: number
+    classId: number
     shift: number
     startTime: number
     endTime: number
@@ -3483,6 +4715,7 @@ export namespace Prisma {
     id?: true
     teacherId?: true
     subjectId?: true
+    classId?: true
     shift?: true
     startTime?: true
     endTime?: true
@@ -3494,6 +4727,7 @@ export namespace Prisma {
     id?: true
     teacherId?: true
     subjectId?: true
+    classId?: true
     shift?: true
     startTime?: true
     endTime?: true
@@ -3505,6 +4739,7 @@ export namespace Prisma {
     id?: true
     teacherId?: true
     subjectId?: true
+    classId?: true
     shift?: true
     startTime?: true
     endTime?: true
@@ -3589,6 +4824,7 @@ export namespace Prisma {
     id: string
     teacherId: string
     subjectId: string
+    classId: string
     shift: $Enums.Shift
     startTime: string
     endTime: string
@@ -3617,6 +4853,7 @@ export namespace Prisma {
     id?: boolean
     teacherId?: boolean
     subjectId?: boolean
+    classId?: boolean
     shift?: boolean
     startTime?: boolean
     endTime?: boolean
@@ -3624,6 +4861,7 @@ export namespace Prisma {
     updatedAt?: boolean
     subject?: boolean | SubjectDefaultArgs<ExtArgs>
     teacher?: boolean | TeacherDefaultArgs<ExtArgs>
+    class?: boolean | ClassDefaultArgs<ExtArgs>
     days?: boolean | Load$daysArgs<ExtArgs>
     _count?: boolean | LoadCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["load"]>
@@ -3632,6 +4870,7 @@ export namespace Prisma {
     id?: boolean
     teacherId?: boolean
     subjectId?: boolean
+    classId?: boolean
     shift?: boolean
     startTime?: boolean
     endTime?: boolean
@@ -3639,12 +4878,14 @@ export namespace Prisma {
     updatedAt?: boolean
     subject?: boolean | SubjectDefaultArgs<ExtArgs>
     teacher?: boolean | TeacherDefaultArgs<ExtArgs>
+    class?: boolean | ClassDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["load"]>
 
   export type LoadSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
     teacherId?: boolean
     subjectId?: boolean
+    classId?: boolean
     shift?: boolean
     startTime?: boolean
     endTime?: boolean
@@ -3652,12 +4893,14 @@ export namespace Prisma {
     updatedAt?: boolean
     subject?: boolean | SubjectDefaultArgs<ExtArgs>
     teacher?: boolean | TeacherDefaultArgs<ExtArgs>
+    class?: boolean | ClassDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["load"]>
 
   export type LoadSelectScalar = {
     id?: boolean
     teacherId?: boolean
     subjectId?: boolean
+    classId?: boolean
     shift?: boolean
     startTime?: boolean
     endTime?: boolean
@@ -3665,20 +4908,23 @@ export namespace Prisma {
     updatedAt?: boolean
   }
 
-  export type LoadOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "teacherId" | "subjectId" | "shift" | "startTime" | "endTime" | "createdAt" | "updatedAt", ExtArgs["result"]["load"]>
+  export type LoadOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "teacherId" | "subjectId" | "classId" | "shift" | "startTime" | "endTime" | "createdAt" | "updatedAt", ExtArgs["result"]["load"]>
   export type LoadInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     subject?: boolean | SubjectDefaultArgs<ExtArgs>
     teacher?: boolean | TeacherDefaultArgs<ExtArgs>
+    class?: boolean | ClassDefaultArgs<ExtArgs>
     days?: boolean | Load$daysArgs<ExtArgs>
     _count?: boolean | LoadCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type LoadIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     subject?: boolean | SubjectDefaultArgs<ExtArgs>
     teacher?: boolean | TeacherDefaultArgs<ExtArgs>
+    class?: boolean | ClassDefaultArgs<ExtArgs>
   }
   export type LoadIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     subject?: boolean | SubjectDefaultArgs<ExtArgs>
     teacher?: boolean | TeacherDefaultArgs<ExtArgs>
+    class?: boolean | ClassDefaultArgs<ExtArgs>
   }
 
   export type $LoadPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -3686,12 +4932,14 @@ export namespace Prisma {
     objects: {
       subject: Prisma.$SubjectPayload<ExtArgs>
       teacher: Prisma.$TeacherPayload<ExtArgs>
+      class: Prisma.$ClassPayload<ExtArgs>
       days: Prisma.$LoadDayPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
       teacherId: string
       subjectId: string
+      classId: string
       shift: $Enums.Shift
       startTime: string
       endTime: string
@@ -4093,6 +5341,7 @@ export namespace Prisma {
     readonly [Symbol.toStringTag]: "PrismaPromise"
     subject<T extends SubjectDefaultArgs<ExtArgs> = {}>(args?: Subset<T, SubjectDefaultArgs<ExtArgs>>): Prisma__SubjectClient<$Result.GetResult<Prisma.$SubjectPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
     teacher<T extends TeacherDefaultArgs<ExtArgs> = {}>(args?: Subset<T, TeacherDefaultArgs<ExtArgs>>): Prisma__TeacherClient<$Result.GetResult<Prisma.$TeacherPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    class<T extends ClassDefaultArgs<ExtArgs> = {}>(args?: Subset<T, ClassDefaultArgs<ExtArgs>>): Prisma__ClassClient<$Result.GetResult<Prisma.$ClassPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
     days<T extends Load$daysArgs<ExtArgs> = {}>(args?: Subset<T, Load$daysArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$LoadDayPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
@@ -4126,6 +5375,7 @@ export namespace Prisma {
     readonly id: FieldRef<"Load", 'String'>
     readonly teacherId: FieldRef<"Load", 'String'>
     readonly subjectId: FieldRef<"Load", 'String'>
+    readonly classId: FieldRef<"Load", 'String'>
     readonly shift: FieldRef<"Load", 'Shift'>
     readonly startTime: FieldRef<"Load", 'String'>
     readonly endTime: FieldRef<"Load", 'String'>
@@ -5633,10 +6883,25 @@ export namespace Prisma {
   export type SubjectScalarFieldEnum = (typeof SubjectScalarFieldEnum)[keyof typeof SubjectScalarFieldEnum]
 
 
+  export const ClassScalarFieldEnum: {
+    id: 'id',
+    gradeLevel: 'gradeLevel',
+    section: 'section',
+    adviser: 'adviser',
+    shift: 'shift',
+    color: 'color',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt'
+  };
+
+  export type ClassScalarFieldEnum = (typeof ClassScalarFieldEnum)[keyof typeof ClassScalarFieldEnum]
+
+
   export const LoadScalarFieldEnum: {
     id: 'id',
     teacherId: 'teacherId',
     subjectId: 'subjectId',
+    classId: 'classId',
     shift: 'shift',
     startTime: 'startTime',
     endTime: 'endTime',
@@ -5840,6 +7105,76 @@ export namespace Prisma {
     updatedAt?: DateTimeWithAggregatesFilter<"Subject"> | Date | string
   }
 
+  export type ClassWhereInput = {
+    AND?: ClassWhereInput | ClassWhereInput[]
+    OR?: ClassWhereInput[]
+    NOT?: ClassWhereInput | ClassWhereInput[]
+    id?: StringFilter<"Class"> | string
+    gradeLevel?: StringFilter<"Class"> | string
+    section?: StringFilter<"Class"> | string
+    adviser?: StringFilter<"Class"> | string
+    shift?: EnumShiftFilter<"Class"> | $Enums.Shift
+    color?: StringFilter<"Class"> | string
+    createdAt?: DateTimeFilter<"Class"> | Date | string
+    updatedAt?: DateTimeFilter<"Class"> | Date | string
+    loads?: LoadListRelationFilter
+  }
+
+  export type ClassOrderByWithRelationInput = {
+    id?: SortOrder
+    gradeLevel?: SortOrder
+    section?: SortOrder
+    adviser?: SortOrder
+    shift?: SortOrder
+    color?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    loads?: LoadOrderByRelationAggregateInput
+  }
+
+  export type ClassWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    AND?: ClassWhereInput | ClassWhereInput[]
+    OR?: ClassWhereInput[]
+    NOT?: ClassWhereInput | ClassWhereInput[]
+    gradeLevel?: StringFilter<"Class"> | string
+    section?: StringFilter<"Class"> | string
+    adviser?: StringFilter<"Class"> | string
+    shift?: EnumShiftFilter<"Class"> | $Enums.Shift
+    color?: StringFilter<"Class"> | string
+    createdAt?: DateTimeFilter<"Class"> | Date | string
+    updatedAt?: DateTimeFilter<"Class"> | Date | string
+    loads?: LoadListRelationFilter
+  }, "id">
+
+  export type ClassOrderByWithAggregationInput = {
+    id?: SortOrder
+    gradeLevel?: SortOrder
+    section?: SortOrder
+    adviser?: SortOrder
+    shift?: SortOrder
+    color?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    _count?: ClassCountOrderByAggregateInput
+    _max?: ClassMaxOrderByAggregateInput
+    _min?: ClassMinOrderByAggregateInput
+  }
+
+  export type ClassScalarWhereWithAggregatesInput = {
+    AND?: ClassScalarWhereWithAggregatesInput | ClassScalarWhereWithAggregatesInput[]
+    OR?: ClassScalarWhereWithAggregatesInput[]
+    NOT?: ClassScalarWhereWithAggregatesInput | ClassScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"Class"> | string
+    gradeLevel?: StringWithAggregatesFilter<"Class"> | string
+    section?: StringWithAggregatesFilter<"Class"> | string
+    adviser?: StringWithAggregatesFilter<"Class"> | string
+    shift?: EnumShiftWithAggregatesFilter<"Class"> | $Enums.Shift
+    color?: StringWithAggregatesFilter<"Class"> | string
+    createdAt?: DateTimeWithAggregatesFilter<"Class"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"Class"> | Date | string
+  }
+
   export type LoadWhereInput = {
     AND?: LoadWhereInput | LoadWhereInput[]
     OR?: LoadWhereInput[]
@@ -5847,6 +7182,7 @@ export namespace Prisma {
     id?: StringFilter<"Load"> | string
     teacherId?: StringFilter<"Load"> | string
     subjectId?: StringFilter<"Load"> | string
+    classId?: StringFilter<"Load"> | string
     shift?: EnumShiftFilter<"Load"> | $Enums.Shift
     startTime?: StringFilter<"Load"> | string
     endTime?: StringFilter<"Load"> | string
@@ -5854,6 +7190,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFilter<"Load"> | Date | string
     subject?: XOR<SubjectScalarRelationFilter, SubjectWhereInput>
     teacher?: XOR<TeacherScalarRelationFilter, TeacherWhereInput>
+    class?: XOR<ClassScalarRelationFilter, ClassWhereInput>
     days?: LoadDayListRelationFilter
   }
 
@@ -5861,6 +7198,7 @@ export namespace Prisma {
     id?: SortOrder
     teacherId?: SortOrder
     subjectId?: SortOrder
+    classId?: SortOrder
     shift?: SortOrder
     startTime?: SortOrder
     endTime?: SortOrder
@@ -5868,6 +7206,7 @@ export namespace Prisma {
     updatedAt?: SortOrder
     subject?: SubjectOrderByWithRelationInput
     teacher?: TeacherOrderByWithRelationInput
+    class?: ClassOrderByWithRelationInput
     days?: LoadDayOrderByRelationAggregateInput
   }
 
@@ -5878,6 +7217,7 @@ export namespace Prisma {
     NOT?: LoadWhereInput | LoadWhereInput[]
     teacherId?: StringFilter<"Load"> | string
     subjectId?: StringFilter<"Load"> | string
+    classId?: StringFilter<"Load"> | string
     shift?: EnumShiftFilter<"Load"> | $Enums.Shift
     startTime?: StringFilter<"Load"> | string
     endTime?: StringFilter<"Load"> | string
@@ -5885,6 +7225,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFilter<"Load"> | Date | string
     subject?: XOR<SubjectScalarRelationFilter, SubjectWhereInput>
     teacher?: XOR<TeacherScalarRelationFilter, TeacherWhereInput>
+    class?: XOR<ClassScalarRelationFilter, ClassWhereInput>
     days?: LoadDayListRelationFilter
   }, "id">
 
@@ -5892,6 +7233,7 @@ export namespace Prisma {
     id?: SortOrder
     teacherId?: SortOrder
     subjectId?: SortOrder
+    classId?: SortOrder
     shift?: SortOrder
     startTime?: SortOrder
     endTime?: SortOrder
@@ -5909,6 +7251,7 @@ export namespace Prisma {
     id?: StringWithAggregatesFilter<"Load"> | string
     teacherId?: StringWithAggregatesFilter<"Load"> | string
     subjectId?: StringWithAggregatesFilter<"Load"> | string
+    classId?: StringWithAggregatesFilter<"Load"> | string
     shift?: EnumShiftWithAggregatesFilter<"Load"> | $Enums.Shift
     startTime?: StringWithAggregatesFilter<"Load"> | string
     endTime?: StringWithAggregatesFilter<"Load"> | string
@@ -6103,6 +7446,87 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
+  export type ClassCreateInput = {
+    id?: string
+    gradeLevel: string
+    section: string
+    adviser: string
+    shift?: $Enums.Shift
+    color?: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    loads?: LoadCreateNestedManyWithoutClassInput
+  }
+
+  export type ClassUncheckedCreateInput = {
+    id?: string
+    gradeLevel: string
+    section: string
+    adviser: string
+    shift?: $Enums.Shift
+    color?: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    loads?: LoadUncheckedCreateNestedManyWithoutClassInput
+  }
+
+  export type ClassUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    gradeLevel?: StringFieldUpdateOperationsInput | string
+    section?: StringFieldUpdateOperationsInput | string
+    adviser?: StringFieldUpdateOperationsInput | string
+    shift?: EnumShiftFieldUpdateOperationsInput | $Enums.Shift
+    color?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    loads?: LoadUpdateManyWithoutClassNestedInput
+  }
+
+  export type ClassUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    gradeLevel?: StringFieldUpdateOperationsInput | string
+    section?: StringFieldUpdateOperationsInput | string
+    adviser?: StringFieldUpdateOperationsInput | string
+    shift?: EnumShiftFieldUpdateOperationsInput | $Enums.Shift
+    color?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    loads?: LoadUncheckedUpdateManyWithoutClassNestedInput
+  }
+
+  export type ClassCreateManyInput = {
+    id?: string
+    gradeLevel: string
+    section: string
+    adviser: string
+    shift?: $Enums.Shift
+    color?: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type ClassUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    gradeLevel?: StringFieldUpdateOperationsInput | string
+    section?: StringFieldUpdateOperationsInput | string
+    adviser?: StringFieldUpdateOperationsInput | string
+    shift?: EnumShiftFieldUpdateOperationsInput | $Enums.Shift
+    color?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ClassUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    gradeLevel?: StringFieldUpdateOperationsInput | string
+    section?: StringFieldUpdateOperationsInput | string
+    adviser?: StringFieldUpdateOperationsInput | string
+    shift?: EnumShiftFieldUpdateOperationsInput | $Enums.Shift
+    color?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
   export type LoadCreateInput = {
     id?: string
     shift: $Enums.Shift
@@ -6112,6 +7536,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     subject: SubjectCreateNestedOneWithoutLoadsInput
     teacher: TeacherCreateNestedOneWithoutLoadsInput
+    class: ClassCreateNestedOneWithoutLoadsInput
     days?: LoadDayCreateNestedManyWithoutLoadInput
   }
 
@@ -6119,6 +7544,7 @@ export namespace Prisma {
     id?: string
     teacherId: string
     subjectId: string
+    classId: string
     shift: $Enums.Shift
     startTime: string
     endTime: string
@@ -6136,6 +7562,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     subject?: SubjectUpdateOneRequiredWithoutLoadsNestedInput
     teacher?: TeacherUpdateOneRequiredWithoutLoadsNestedInput
+    class?: ClassUpdateOneRequiredWithoutLoadsNestedInput
     days?: LoadDayUpdateManyWithoutLoadNestedInput
   }
 
@@ -6143,6 +7570,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     teacherId?: StringFieldUpdateOperationsInput | string
     subjectId?: StringFieldUpdateOperationsInput | string
+    classId?: StringFieldUpdateOperationsInput | string
     shift?: EnumShiftFieldUpdateOperationsInput | $Enums.Shift
     startTime?: StringFieldUpdateOperationsInput | string
     endTime?: StringFieldUpdateOperationsInput | string
@@ -6155,6 +7583,7 @@ export namespace Prisma {
     id?: string
     teacherId: string
     subjectId: string
+    classId: string
     shift: $Enums.Shift
     startTime: string
     endTime: string
@@ -6175,6 +7604,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     teacherId?: StringFieldUpdateOperationsInput | string
     subjectId?: StringFieldUpdateOperationsInput | string
+    classId?: StringFieldUpdateOperationsInput | string
     shift?: EnumShiftFieldUpdateOperationsInput | $Enums.Shift
     startTime?: StringFieldUpdateOperationsInput | string
     endTime?: StringFieldUpdateOperationsInput | string
@@ -6399,6 +7829,39 @@ export namespace Prisma {
     updatedAt?: SortOrder
   }
 
+  export type ClassCountOrderByAggregateInput = {
+    id?: SortOrder
+    gradeLevel?: SortOrder
+    section?: SortOrder
+    adviser?: SortOrder
+    shift?: SortOrder
+    color?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type ClassMaxOrderByAggregateInput = {
+    id?: SortOrder
+    gradeLevel?: SortOrder
+    section?: SortOrder
+    adviser?: SortOrder
+    shift?: SortOrder
+    color?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type ClassMinOrderByAggregateInput = {
+    id?: SortOrder
+    gradeLevel?: SortOrder
+    section?: SortOrder
+    adviser?: SortOrder
+    shift?: SortOrder
+    color?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
   export type SubjectScalarRelationFilter = {
     is?: SubjectWhereInput
     isNot?: SubjectWhereInput
@@ -6407,6 +7870,11 @@ export namespace Prisma {
   export type TeacherScalarRelationFilter = {
     is?: TeacherWhereInput
     isNot?: TeacherWhereInput
+  }
+
+  export type ClassScalarRelationFilter = {
+    is?: ClassWhereInput
+    isNot?: ClassWhereInput
   }
 
   export type LoadDayListRelationFilter = {
@@ -6423,6 +7891,7 @@ export namespace Prisma {
     id?: SortOrder
     teacherId?: SortOrder
     subjectId?: SortOrder
+    classId?: SortOrder
     shift?: SortOrder
     startTime?: SortOrder
     endTime?: SortOrder
@@ -6434,6 +7903,7 @@ export namespace Prisma {
     id?: SortOrder
     teacherId?: SortOrder
     subjectId?: SortOrder
+    classId?: SortOrder
     shift?: SortOrder
     startTime?: SortOrder
     endTime?: SortOrder
@@ -6445,6 +7915,7 @@ export namespace Prisma {
     id?: SortOrder
     teacherId?: SortOrder
     subjectId?: SortOrder
+    classId?: SortOrder
     shift?: SortOrder
     startTime?: SortOrder
     endTime?: SortOrder
@@ -6597,6 +8068,48 @@ export namespace Prisma {
     deleteMany?: LoadScalarWhereInput | LoadScalarWhereInput[]
   }
 
+  export type LoadCreateNestedManyWithoutClassInput = {
+    create?: XOR<LoadCreateWithoutClassInput, LoadUncheckedCreateWithoutClassInput> | LoadCreateWithoutClassInput[] | LoadUncheckedCreateWithoutClassInput[]
+    connectOrCreate?: LoadCreateOrConnectWithoutClassInput | LoadCreateOrConnectWithoutClassInput[]
+    createMany?: LoadCreateManyClassInputEnvelope
+    connect?: LoadWhereUniqueInput | LoadWhereUniqueInput[]
+  }
+
+  export type LoadUncheckedCreateNestedManyWithoutClassInput = {
+    create?: XOR<LoadCreateWithoutClassInput, LoadUncheckedCreateWithoutClassInput> | LoadCreateWithoutClassInput[] | LoadUncheckedCreateWithoutClassInput[]
+    connectOrCreate?: LoadCreateOrConnectWithoutClassInput | LoadCreateOrConnectWithoutClassInput[]
+    createMany?: LoadCreateManyClassInputEnvelope
+    connect?: LoadWhereUniqueInput | LoadWhereUniqueInput[]
+  }
+
+  export type LoadUpdateManyWithoutClassNestedInput = {
+    create?: XOR<LoadCreateWithoutClassInput, LoadUncheckedCreateWithoutClassInput> | LoadCreateWithoutClassInput[] | LoadUncheckedCreateWithoutClassInput[]
+    connectOrCreate?: LoadCreateOrConnectWithoutClassInput | LoadCreateOrConnectWithoutClassInput[]
+    upsert?: LoadUpsertWithWhereUniqueWithoutClassInput | LoadUpsertWithWhereUniqueWithoutClassInput[]
+    createMany?: LoadCreateManyClassInputEnvelope
+    set?: LoadWhereUniqueInput | LoadWhereUniqueInput[]
+    disconnect?: LoadWhereUniqueInput | LoadWhereUniqueInput[]
+    delete?: LoadWhereUniqueInput | LoadWhereUniqueInput[]
+    connect?: LoadWhereUniqueInput | LoadWhereUniqueInput[]
+    update?: LoadUpdateWithWhereUniqueWithoutClassInput | LoadUpdateWithWhereUniqueWithoutClassInput[]
+    updateMany?: LoadUpdateManyWithWhereWithoutClassInput | LoadUpdateManyWithWhereWithoutClassInput[]
+    deleteMany?: LoadScalarWhereInput | LoadScalarWhereInput[]
+  }
+
+  export type LoadUncheckedUpdateManyWithoutClassNestedInput = {
+    create?: XOR<LoadCreateWithoutClassInput, LoadUncheckedCreateWithoutClassInput> | LoadCreateWithoutClassInput[] | LoadUncheckedCreateWithoutClassInput[]
+    connectOrCreate?: LoadCreateOrConnectWithoutClassInput | LoadCreateOrConnectWithoutClassInput[]
+    upsert?: LoadUpsertWithWhereUniqueWithoutClassInput | LoadUpsertWithWhereUniqueWithoutClassInput[]
+    createMany?: LoadCreateManyClassInputEnvelope
+    set?: LoadWhereUniqueInput | LoadWhereUniqueInput[]
+    disconnect?: LoadWhereUniqueInput | LoadWhereUniqueInput[]
+    delete?: LoadWhereUniqueInput | LoadWhereUniqueInput[]
+    connect?: LoadWhereUniqueInput | LoadWhereUniqueInput[]
+    update?: LoadUpdateWithWhereUniqueWithoutClassInput | LoadUpdateWithWhereUniqueWithoutClassInput[]
+    updateMany?: LoadUpdateManyWithWhereWithoutClassInput | LoadUpdateManyWithWhereWithoutClassInput[]
+    deleteMany?: LoadScalarWhereInput | LoadScalarWhereInput[]
+  }
+
   export type SubjectCreateNestedOneWithoutLoadsInput = {
     create?: XOR<SubjectCreateWithoutLoadsInput, SubjectUncheckedCreateWithoutLoadsInput>
     connectOrCreate?: SubjectCreateOrConnectWithoutLoadsInput
@@ -6607,6 +8120,12 @@ export namespace Prisma {
     create?: XOR<TeacherCreateWithoutLoadsInput, TeacherUncheckedCreateWithoutLoadsInput>
     connectOrCreate?: TeacherCreateOrConnectWithoutLoadsInput
     connect?: TeacherWhereUniqueInput
+  }
+
+  export type ClassCreateNestedOneWithoutLoadsInput = {
+    create?: XOR<ClassCreateWithoutLoadsInput, ClassUncheckedCreateWithoutLoadsInput>
+    connectOrCreate?: ClassCreateOrConnectWithoutLoadsInput
+    connect?: ClassWhereUniqueInput
   }
 
   export type LoadDayCreateNestedManyWithoutLoadInput = {
@@ -6637,6 +8156,14 @@ export namespace Prisma {
     upsert?: TeacherUpsertWithoutLoadsInput
     connect?: TeacherWhereUniqueInput
     update?: XOR<XOR<TeacherUpdateToOneWithWhereWithoutLoadsInput, TeacherUpdateWithoutLoadsInput>, TeacherUncheckedUpdateWithoutLoadsInput>
+  }
+
+  export type ClassUpdateOneRequiredWithoutLoadsNestedInput = {
+    create?: XOR<ClassCreateWithoutLoadsInput, ClassUncheckedCreateWithoutLoadsInput>
+    connectOrCreate?: ClassCreateOrConnectWithoutLoadsInput
+    upsert?: ClassUpsertWithoutLoadsInput
+    connect?: ClassWhereUniqueInput
+    update?: XOR<XOR<ClassUpdateToOneWithWhereWithoutLoadsInput, ClassUpdateWithoutLoadsInput>, ClassUncheckedUpdateWithoutLoadsInput>
   }
 
   export type LoadDayUpdateManyWithoutLoadNestedInput = {
@@ -6836,12 +8363,14 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     subject: SubjectCreateNestedOneWithoutLoadsInput
+    class: ClassCreateNestedOneWithoutLoadsInput
     days?: LoadDayCreateNestedManyWithoutLoadInput
   }
 
   export type LoadUncheckedCreateWithoutTeacherInput = {
     id?: string
     subjectId: string
+    classId: string
     shift: $Enums.Shift
     startTime: string
     endTime: string
@@ -6882,6 +8411,7 @@ export namespace Prisma {
     id?: StringFilter<"Load"> | string
     teacherId?: StringFilter<"Load"> | string
     subjectId?: StringFilter<"Load"> | string
+    classId?: StringFilter<"Load"> | string
     shift?: EnumShiftFilter<"Load"> | $Enums.Shift
     startTime?: StringFilter<"Load"> | string
     endTime?: StringFilter<"Load"> | string
@@ -6897,12 +8427,14 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     teacher: TeacherCreateNestedOneWithoutLoadsInput
+    class: ClassCreateNestedOneWithoutLoadsInput
     days?: LoadDayCreateNestedManyWithoutLoadInput
   }
 
   export type LoadUncheckedCreateWithoutSubjectInput = {
     id?: string
     teacherId: string
+    classId: string
     shift: $Enums.Shift
     startTime: string
     endTime: string
@@ -6934,6 +8466,55 @@ export namespace Prisma {
   export type LoadUpdateManyWithWhereWithoutSubjectInput = {
     where: LoadScalarWhereInput
     data: XOR<LoadUpdateManyMutationInput, LoadUncheckedUpdateManyWithoutSubjectInput>
+  }
+
+  export type LoadCreateWithoutClassInput = {
+    id?: string
+    shift: $Enums.Shift
+    startTime: string
+    endTime: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    subject: SubjectCreateNestedOneWithoutLoadsInput
+    teacher: TeacherCreateNestedOneWithoutLoadsInput
+    days?: LoadDayCreateNestedManyWithoutLoadInput
+  }
+
+  export type LoadUncheckedCreateWithoutClassInput = {
+    id?: string
+    teacherId: string
+    subjectId: string
+    shift: $Enums.Shift
+    startTime: string
+    endTime: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    days?: LoadDayUncheckedCreateNestedManyWithoutLoadInput
+  }
+
+  export type LoadCreateOrConnectWithoutClassInput = {
+    where: LoadWhereUniqueInput
+    create: XOR<LoadCreateWithoutClassInput, LoadUncheckedCreateWithoutClassInput>
+  }
+
+  export type LoadCreateManyClassInputEnvelope = {
+    data: LoadCreateManyClassInput | LoadCreateManyClassInput[]
+  }
+
+  export type LoadUpsertWithWhereUniqueWithoutClassInput = {
+    where: LoadWhereUniqueInput
+    update: XOR<LoadUpdateWithoutClassInput, LoadUncheckedUpdateWithoutClassInput>
+    create: XOR<LoadCreateWithoutClassInput, LoadUncheckedCreateWithoutClassInput>
+  }
+
+  export type LoadUpdateWithWhereUniqueWithoutClassInput = {
+    where: LoadWhereUniqueInput
+    data: XOR<LoadUpdateWithoutClassInput, LoadUncheckedUpdateWithoutClassInput>
+  }
+
+  export type LoadUpdateManyWithWhereWithoutClassInput = {
+    where: LoadScalarWhereInput
+    data: XOR<LoadUpdateManyMutationInput, LoadUncheckedUpdateManyWithoutClassInput>
   }
 
   export type SubjectCreateWithoutLoadsInput = {
@@ -6982,6 +8563,33 @@ export namespace Prisma {
   export type TeacherCreateOrConnectWithoutLoadsInput = {
     where: TeacherWhereUniqueInput
     create: XOR<TeacherCreateWithoutLoadsInput, TeacherUncheckedCreateWithoutLoadsInput>
+  }
+
+  export type ClassCreateWithoutLoadsInput = {
+    id?: string
+    gradeLevel: string
+    section: string
+    adviser: string
+    shift?: $Enums.Shift
+    color?: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type ClassUncheckedCreateWithoutLoadsInput = {
+    id?: string
+    gradeLevel: string
+    section: string
+    adviser: string
+    shift?: $Enums.Shift
+    color?: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type ClassCreateOrConnectWithoutLoadsInput = {
+    where: ClassWhereUniqueInput
+    create: XOR<ClassCreateWithoutLoadsInput, ClassUncheckedCreateWithoutLoadsInput>
   }
 
   export type LoadDayCreateWithoutLoadInput = {
@@ -7063,6 +8671,39 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
+  export type ClassUpsertWithoutLoadsInput = {
+    update: XOR<ClassUpdateWithoutLoadsInput, ClassUncheckedUpdateWithoutLoadsInput>
+    create: XOR<ClassCreateWithoutLoadsInput, ClassUncheckedCreateWithoutLoadsInput>
+    where?: ClassWhereInput
+  }
+
+  export type ClassUpdateToOneWithWhereWithoutLoadsInput = {
+    where?: ClassWhereInput
+    data: XOR<ClassUpdateWithoutLoadsInput, ClassUncheckedUpdateWithoutLoadsInput>
+  }
+
+  export type ClassUpdateWithoutLoadsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    gradeLevel?: StringFieldUpdateOperationsInput | string
+    section?: StringFieldUpdateOperationsInput | string
+    adviser?: StringFieldUpdateOperationsInput | string
+    shift?: EnumShiftFieldUpdateOperationsInput | $Enums.Shift
+    color?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ClassUncheckedUpdateWithoutLoadsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    gradeLevel?: StringFieldUpdateOperationsInput | string
+    section?: StringFieldUpdateOperationsInput | string
+    adviser?: StringFieldUpdateOperationsInput | string
+    shift?: EnumShiftFieldUpdateOperationsInput | $Enums.Shift
+    color?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
   export type LoadDayUpsertWithWhereUniqueWithoutLoadInput = {
     where: LoadDayWhereUniqueInput
     update: XOR<LoadDayUpdateWithoutLoadInput, LoadDayUncheckedUpdateWithoutLoadInput>
@@ -7097,12 +8738,14 @@ export namespace Prisma {
     updatedAt?: Date | string
     subject: SubjectCreateNestedOneWithoutLoadsInput
     teacher: TeacherCreateNestedOneWithoutLoadsInput
+    class: ClassCreateNestedOneWithoutLoadsInput
   }
 
   export type LoadUncheckedCreateWithoutDaysInput = {
     id?: string
     teacherId: string
     subjectId: string
+    classId: string
     shift: $Enums.Shift
     startTime: string
     endTime: string
@@ -7135,12 +8778,14 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     subject?: SubjectUpdateOneRequiredWithoutLoadsNestedInput
     teacher?: TeacherUpdateOneRequiredWithoutLoadsNestedInput
+    class?: ClassUpdateOneRequiredWithoutLoadsNestedInput
   }
 
   export type LoadUncheckedUpdateWithoutDaysInput = {
     id?: StringFieldUpdateOperationsInput | string
     teacherId?: StringFieldUpdateOperationsInput | string
     subjectId?: StringFieldUpdateOperationsInput | string
+    classId?: StringFieldUpdateOperationsInput | string
     shift?: EnumShiftFieldUpdateOperationsInput | $Enums.Shift
     startTime?: StringFieldUpdateOperationsInput | string
     endTime?: StringFieldUpdateOperationsInput | string
@@ -7151,6 +8796,7 @@ export namespace Prisma {
   export type LoadCreateManyTeacherInput = {
     id?: string
     subjectId: string
+    classId: string
     shift: $Enums.Shift
     startTime: string
     endTime: string
@@ -7166,12 +8812,14 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     subject?: SubjectUpdateOneRequiredWithoutLoadsNestedInput
+    class?: ClassUpdateOneRequiredWithoutLoadsNestedInput
     days?: LoadDayUpdateManyWithoutLoadNestedInput
   }
 
   export type LoadUncheckedUpdateWithoutTeacherInput = {
     id?: StringFieldUpdateOperationsInput | string
     subjectId?: StringFieldUpdateOperationsInput | string
+    classId?: StringFieldUpdateOperationsInput | string
     shift?: EnumShiftFieldUpdateOperationsInput | $Enums.Shift
     startTime?: StringFieldUpdateOperationsInput | string
     endTime?: StringFieldUpdateOperationsInput | string
@@ -7183,6 +8831,7 @@ export namespace Prisma {
   export type LoadUncheckedUpdateManyWithoutTeacherInput = {
     id?: StringFieldUpdateOperationsInput | string
     subjectId?: StringFieldUpdateOperationsInput | string
+    classId?: StringFieldUpdateOperationsInput | string
     shift?: EnumShiftFieldUpdateOperationsInput | $Enums.Shift
     startTime?: StringFieldUpdateOperationsInput | string
     endTime?: StringFieldUpdateOperationsInput | string
@@ -7193,6 +8842,7 @@ export namespace Prisma {
   export type LoadCreateManySubjectInput = {
     id?: string
     teacherId: string
+    classId: string
     shift: $Enums.Shift
     startTime: string
     endTime: string
@@ -7208,12 +8858,14 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     teacher?: TeacherUpdateOneRequiredWithoutLoadsNestedInput
+    class?: ClassUpdateOneRequiredWithoutLoadsNestedInput
     days?: LoadDayUpdateManyWithoutLoadNestedInput
   }
 
   export type LoadUncheckedUpdateWithoutSubjectInput = {
     id?: StringFieldUpdateOperationsInput | string
     teacherId?: StringFieldUpdateOperationsInput | string
+    classId?: StringFieldUpdateOperationsInput | string
     shift?: EnumShiftFieldUpdateOperationsInput | $Enums.Shift
     startTime?: StringFieldUpdateOperationsInput | string
     endTime?: StringFieldUpdateOperationsInput | string
@@ -7225,6 +8877,53 @@ export namespace Prisma {
   export type LoadUncheckedUpdateManyWithoutSubjectInput = {
     id?: StringFieldUpdateOperationsInput | string
     teacherId?: StringFieldUpdateOperationsInput | string
+    classId?: StringFieldUpdateOperationsInput | string
+    shift?: EnumShiftFieldUpdateOperationsInput | $Enums.Shift
+    startTime?: StringFieldUpdateOperationsInput | string
+    endTime?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type LoadCreateManyClassInput = {
+    id?: string
+    teacherId: string
+    subjectId: string
+    shift: $Enums.Shift
+    startTime: string
+    endTime: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type LoadUpdateWithoutClassInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    shift?: EnumShiftFieldUpdateOperationsInput | $Enums.Shift
+    startTime?: StringFieldUpdateOperationsInput | string
+    endTime?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    subject?: SubjectUpdateOneRequiredWithoutLoadsNestedInput
+    teacher?: TeacherUpdateOneRequiredWithoutLoadsNestedInput
+    days?: LoadDayUpdateManyWithoutLoadNestedInput
+  }
+
+  export type LoadUncheckedUpdateWithoutClassInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    teacherId?: StringFieldUpdateOperationsInput | string
+    subjectId?: StringFieldUpdateOperationsInput | string
+    shift?: EnumShiftFieldUpdateOperationsInput | $Enums.Shift
+    startTime?: StringFieldUpdateOperationsInput | string
+    endTime?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    days?: LoadDayUncheckedUpdateManyWithoutLoadNestedInput
+  }
+
+  export type LoadUncheckedUpdateManyWithoutClassInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    teacherId?: StringFieldUpdateOperationsInput | string
+    subjectId?: StringFieldUpdateOperationsInput | string
     shift?: EnumShiftFieldUpdateOperationsInput | $Enums.Shift
     startTime?: StringFieldUpdateOperationsInput | string
     endTime?: StringFieldUpdateOperationsInput | string

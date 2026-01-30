@@ -19,13 +19,20 @@ type SubjectOption = {
   color: string;
 };
 
+type ClassOption = {
+  id: string;
+  gradeLevel: string;
+  section: string;
+};
+
 type LoadModalProps = {
   createLoad: (previousState: LoadFormState, formData: FormData) => Promise<LoadFormState>;
   teacher: TeacherOption;
   subjects: SubjectOption[];
+  classes: ClassOption[];
 };
 
-export default function LoadModal({ createLoad, teacher, subjects }: LoadModalProps) {
+export default function LoadModal({ createLoad, teacher, subjects, classes }: LoadModalProps) {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
@@ -53,6 +60,7 @@ export default function LoadModal({ createLoad, teacher, subjects }: LoadModalPr
                 preselectedTeacherId={teacher.id}
                 teachers={[teacher]}
                 subjects={subjects}
+                classes={classes}
               />
             </div>
           </div>
