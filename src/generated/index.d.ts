@@ -2359,25 +2359,15 @@ export namespace Prisma {
 
   export type AggregateSubject = {
     _count: SubjectCountAggregateOutputType | null
-    _avg: SubjectAvgAggregateOutputType | null
-    _sum: SubjectSumAggregateOutputType | null
     _min: SubjectMinAggregateOutputType | null
     _max: SubjectMaxAggregateOutputType | null
-  }
-
-  export type SubjectAvgAggregateOutputType = {
-    hours: number | null
-  }
-
-  export type SubjectSumAggregateOutputType = {
-    hours: number | null
   }
 
   export type SubjectMinAggregateOutputType = {
     id: string | null
     code: string | null
     name: string | null
-    hours: number | null
+    color: string | null
     createdAt: Date | null
     updatedAt: Date | null
   }
@@ -2386,7 +2376,7 @@ export namespace Prisma {
     id: string | null
     code: string | null
     name: string | null
-    hours: number | null
+    color: string | null
     createdAt: Date | null
     updatedAt: Date | null
   }
@@ -2395,26 +2385,18 @@ export namespace Prisma {
     id: number
     code: number
     name: number
-    hours: number
+    color: number
     createdAt: number
     updatedAt: number
     _all: number
   }
 
 
-  export type SubjectAvgAggregateInputType = {
-    hours?: true
-  }
-
-  export type SubjectSumAggregateInputType = {
-    hours?: true
-  }
-
   export type SubjectMinAggregateInputType = {
     id?: true
     code?: true
     name?: true
-    hours?: true
+    color?: true
     createdAt?: true
     updatedAt?: true
   }
@@ -2423,7 +2405,7 @@ export namespace Prisma {
     id?: true
     code?: true
     name?: true
-    hours?: true
+    color?: true
     createdAt?: true
     updatedAt?: true
   }
@@ -2432,7 +2414,7 @@ export namespace Prisma {
     id?: true
     code?: true
     name?: true
-    hours?: true
+    color?: true
     createdAt?: true
     updatedAt?: true
     _all?: true
@@ -2476,18 +2458,6 @@ export namespace Prisma {
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
      * 
-     * Select which fields to average
-    **/
-    _avg?: SubjectAvgAggregateInputType
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
-     * Select which fields to sum
-    **/
-    _sum?: SubjectSumAggregateInputType
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
      * Select which fields to find the minimum value
     **/
     _min?: SubjectMinAggregateInputType
@@ -2518,8 +2488,6 @@ export namespace Prisma {
     take?: number
     skip?: number
     _count?: SubjectCountAggregateInputType | true
-    _avg?: SubjectAvgAggregateInputType
-    _sum?: SubjectSumAggregateInputType
     _min?: SubjectMinAggregateInputType
     _max?: SubjectMaxAggregateInputType
   }
@@ -2528,12 +2496,10 @@ export namespace Prisma {
     id: string
     code: string
     name: string
-    hours: number
+    color: string
     createdAt: Date
     updatedAt: Date
     _count: SubjectCountAggregateOutputType | null
-    _avg: SubjectAvgAggregateOutputType | null
-    _sum: SubjectSumAggregateOutputType | null
     _min: SubjectMinAggregateOutputType | null
     _max: SubjectMaxAggregateOutputType | null
   }
@@ -2556,7 +2522,7 @@ export namespace Prisma {
     id?: boolean
     code?: boolean
     name?: boolean
-    hours?: boolean
+    color?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     loads?: boolean | Subject$loadsArgs<ExtArgs>
@@ -2567,7 +2533,7 @@ export namespace Prisma {
     id?: boolean
     code?: boolean
     name?: boolean
-    hours?: boolean
+    color?: boolean
     createdAt?: boolean
     updatedAt?: boolean
   }, ExtArgs["result"]["subject"]>
@@ -2576,7 +2542,7 @@ export namespace Prisma {
     id?: boolean
     code?: boolean
     name?: boolean
-    hours?: boolean
+    color?: boolean
     createdAt?: boolean
     updatedAt?: boolean
   }, ExtArgs["result"]["subject"]>
@@ -2585,12 +2551,12 @@ export namespace Prisma {
     id?: boolean
     code?: boolean
     name?: boolean
-    hours?: boolean
+    color?: boolean
     createdAt?: boolean
     updatedAt?: boolean
   }
 
-  export type SubjectOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "code" | "name" | "hours" | "createdAt" | "updatedAt", ExtArgs["result"]["subject"]>
+  export type SubjectOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "code" | "name" | "color" | "createdAt" | "updatedAt", ExtArgs["result"]["subject"]>
   export type SubjectInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     loads?: boolean | Subject$loadsArgs<ExtArgs>
     _count?: boolean | SubjectCountOutputTypeDefaultArgs<ExtArgs>
@@ -2607,7 +2573,7 @@ export namespace Prisma {
       id: string
       code: string
       name: string
-      hours: number
+      color: string
       createdAt: Date
       updatedAt: Date
     }, ExtArgs["result"]["subject"]>
@@ -3037,7 +3003,7 @@ export namespace Prisma {
     readonly id: FieldRef<"Subject", 'String'>
     readonly code: FieldRef<"Subject", 'String'>
     readonly name: FieldRef<"Subject", 'String'>
-    readonly hours: FieldRef<"Subject", 'Int'>
+    readonly color: FieldRef<"Subject", 'String'>
     readonly createdAt: FieldRef<"Subject", 'DateTime'>
     readonly updatedAt: FieldRef<"Subject", 'DateTime'>
   }
@@ -3656,9 +3622,9 @@ export namespace Prisma {
     endTime?: boolean
     createdAt?: boolean
     updatedAt?: boolean
-    days?: boolean | Load$daysArgs<ExtArgs>
-    teacher?: boolean | TeacherDefaultArgs<ExtArgs>
     subject?: boolean | SubjectDefaultArgs<ExtArgs>
+    teacher?: boolean | TeacherDefaultArgs<ExtArgs>
+    days?: boolean | Load$daysArgs<ExtArgs>
     _count?: boolean | LoadCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["load"]>
 
@@ -3671,8 +3637,8 @@ export namespace Prisma {
     endTime?: boolean
     createdAt?: boolean
     updatedAt?: boolean
-    teacher?: boolean | TeacherDefaultArgs<ExtArgs>
     subject?: boolean | SubjectDefaultArgs<ExtArgs>
+    teacher?: boolean | TeacherDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["load"]>
 
   export type LoadSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
@@ -3684,8 +3650,8 @@ export namespace Prisma {
     endTime?: boolean
     createdAt?: boolean
     updatedAt?: boolean
-    teacher?: boolean | TeacherDefaultArgs<ExtArgs>
     subject?: boolean | SubjectDefaultArgs<ExtArgs>
+    teacher?: boolean | TeacherDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["load"]>
 
   export type LoadSelectScalar = {
@@ -3701,26 +3667,26 @@ export namespace Prisma {
 
   export type LoadOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "teacherId" | "subjectId" | "shift" | "startTime" | "endTime" | "createdAt" | "updatedAt", ExtArgs["result"]["load"]>
   export type LoadInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    days?: boolean | Load$daysArgs<ExtArgs>
-    teacher?: boolean | TeacherDefaultArgs<ExtArgs>
     subject?: boolean | SubjectDefaultArgs<ExtArgs>
+    teacher?: boolean | TeacherDefaultArgs<ExtArgs>
+    days?: boolean | Load$daysArgs<ExtArgs>
     _count?: boolean | LoadCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type LoadIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    teacher?: boolean | TeacherDefaultArgs<ExtArgs>
     subject?: boolean | SubjectDefaultArgs<ExtArgs>
+    teacher?: boolean | TeacherDefaultArgs<ExtArgs>
   }
   export type LoadIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    teacher?: boolean | TeacherDefaultArgs<ExtArgs>
     subject?: boolean | SubjectDefaultArgs<ExtArgs>
+    teacher?: boolean | TeacherDefaultArgs<ExtArgs>
   }
 
   export type $LoadPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "Load"
     objects: {
-      days: Prisma.$LoadDayPayload<ExtArgs>[]
-      teacher: Prisma.$TeacherPayload<ExtArgs>
       subject: Prisma.$SubjectPayload<ExtArgs>
+      teacher: Prisma.$TeacherPayload<ExtArgs>
+      days: Prisma.$LoadDayPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -4125,9 +4091,9 @@ export namespace Prisma {
    */
   export interface Prisma__LoadClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
-    days<T extends Load$daysArgs<ExtArgs> = {}>(args?: Subset<T, Load$daysArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$LoadDayPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-    teacher<T extends TeacherDefaultArgs<ExtArgs> = {}>(args?: Subset<T, TeacherDefaultArgs<ExtArgs>>): Prisma__TeacherClient<$Result.GetResult<Prisma.$TeacherPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
     subject<T extends SubjectDefaultArgs<ExtArgs> = {}>(args?: Subset<T, SubjectDefaultArgs<ExtArgs>>): Prisma__SubjectClient<$Result.GetResult<Prisma.$SubjectPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    teacher<T extends TeacherDefaultArgs<ExtArgs> = {}>(args?: Subset<T, TeacherDefaultArgs<ExtArgs>>): Prisma__TeacherClient<$Result.GetResult<Prisma.$TeacherPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    days<T extends Load$daysArgs<ExtArgs> = {}>(args?: Subset<T, Load$daysArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$LoadDayPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -5659,7 +5625,7 @@ export namespace Prisma {
     id: 'id',
     code: 'code',
     name: 'name',
-    hours: 'hours',
+    color: 'color',
     createdAt: 'createdAt',
     updatedAt: 'updatedAt'
   };
@@ -5733,13 +5699,6 @@ export namespace Prisma {
 
 
   /**
-   * Reference to a field of type 'Int'
-   */
-  export type IntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Int'>
-    
-
-
-  /**
    * Reference to a field of type 'Weekday'
    */
   export type EnumWeekdayFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Weekday'>
@@ -5747,9 +5706,9 @@ export namespace Prisma {
 
 
   /**
-   * Reference to a field of type 'Float'
+   * Reference to a field of type 'Int'
    */
-  export type FloatFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Float'>
+  export type IntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Int'>
     
   /**
    * Deep Input Types
@@ -5828,7 +5787,7 @@ export namespace Prisma {
     id?: StringFilter<"Subject"> | string
     code?: StringFilter<"Subject"> | string
     name?: StringFilter<"Subject"> | string
-    hours?: IntFilter<"Subject"> | number
+    color?: StringFilter<"Subject"> | string
     createdAt?: DateTimeFilter<"Subject"> | Date | string
     updatedAt?: DateTimeFilter<"Subject"> | Date | string
     loads?: LoadListRelationFilter
@@ -5838,7 +5797,7 @@ export namespace Prisma {
     id?: SortOrder
     code?: SortOrder
     name?: SortOrder
-    hours?: SortOrder
+    color?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     loads?: LoadOrderByRelationAggregateInput
@@ -5851,7 +5810,7 @@ export namespace Prisma {
     OR?: SubjectWhereInput[]
     NOT?: SubjectWhereInput | SubjectWhereInput[]
     name?: StringFilter<"Subject"> | string
-    hours?: IntFilter<"Subject"> | number
+    color?: StringFilter<"Subject"> | string
     createdAt?: DateTimeFilter<"Subject"> | Date | string
     updatedAt?: DateTimeFilter<"Subject"> | Date | string
     loads?: LoadListRelationFilter
@@ -5861,14 +5820,12 @@ export namespace Prisma {
     id?: SortOrder
     code?: SortOrder
     name?: SortOrder
-    hours?: SortOrder
+    color?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     _count?: SubjectCountOrderByAggregateInput
-    _avg?: SubjectAvgOrderByAggregateInput
     _max?: SubjectMaxOrderByAggregateInput
     _min?: SubjectMinOrderByAggregateInput
-    _sum?: SubjectSumOrderByAggregateInput
   }
 
   export type SubjectScalarWhereWithAggregatesInput = {
@@ -5878,7 +5835,7 @@ export namespace Prisma {
     id?: StringWithAggregatesFilter<"Subject"> | string
     code?: StringWithAggregatesFilter<"Subject"> | string
     name?: StringWithAggregatesFilter<"Subject"> | string
-    hours?: IntWithAggregatesFilter<"Subject"> | number
+    color?: StringWithAggregatesFilter<"Subject"> | string
     createdAt?: DateTimeWithAggregatesFilter<"Subject"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"Subject"> | Date | string
   }
@@ -5895,9 +5852,9 @@ export namespace Prisma {
     endTime?: StringFilter<"Load"> | string
     createdAt?: DateTimeFilter<"Load"> | Date | string
     updatedAt?: DateTimeFilter<"Load"> | Date | string
-    days?: LoadDayListRelationFilter
-    teacher?: XOR<TeacherScalarRelationFilter, TeacherWhereInput>
     subject?: XOR<SubjectScalarRelationFilter, SubjectWhereInput>
+    teacher?: XOR<TeacherScalarRelationFilter, TeacherWhereInput>
+    days?: LoadDayListRelationFilter
   }
 
   export type LoadOrderByWithRelationInput = {
@@ -5909,9 +5866,9 @@ export namespace Prisma {
     endTime?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
-    days?: LoadDayOrderByRelationAggregateInput
-    teacher?: TeacherOrderByWithRelationInput
     subject?: SubjectOrderByWithRelationInput
+    teacher?: TeacherOrderByWithRelationInput
+    days?: LoadDayOrderByRelationAggregateInput
   }
 
   export type LoadWhereUniqueInput = Prisma.AtLeast<{
@@ -5926,9 +5883,9 @@ export namespace Prisma {
     endTime?: StringFilter<"Load"> | string
     createdAt?: DateTimeFilter<"Load"> | Date | string
     updatedAt?: DateTimeFilter<"Load"> | Date | string
-    days?: LoadDayListRelationFilter
-    teacher?: XOR<TeacherScalarRelationFilter, TeacherWhereInput>
     subject?: XOR<SubjectScalarRelationFilter, SubjectWhereInput>
+    teacher?: XOR<TeacherScalarRelationFilter, TeacherWhereInput>
+    days?: LoadDayListRelationFilter
   }, "id">
 
   export type LoadOrderByWithAggregationInput = {
@@ -6083,7 +6040,7 @@ export namespace Prisma {
     id?: string
     code: string
     name: string
-    hours: number
+    color?: string
     createdAt?: Date | string
     updatedAt?: Date | string
     loads?: LoadCreateNestedManyWithoutSubjectInput
@@ -6093,7 +6050,7 @@ export namespace Prisma {
     id?: string
     code: string
     name: string
-    hours: number
+    color?: string
     createdAt?: Date | string
     updatedAt?: Date | string
     loads?: LoadUncheckedCreateNestedManyWithoutSubjectInput
@@ -6103,7 +6060,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     code?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
-    hours?: IntFieldUpdateOperationsInput | number
+    color?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     loads?: LoadUpdateManyWithoutSubjectNestedInput
@@ -6113,7 +6070,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     code?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
-    hours?: IntFieldUpdateOperationsInput | number
+    color?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     loads?: LoadUncheckedUpdateManyWithoutSubjectNestedInput
@@ -6123,7 +6080,7 @@ export namespace Prisma {
     id?: string
     code: string
     name: string
-    hours: number
+    color?: string
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -6132,7 +6089,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     code?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
-    hours?: IntFieldUpdateOperationsInput | number
+    color?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -6141,7 +6098,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     code?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
-    hours?: IntFieldUpdateOperationsInput | number
+    color?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -6153,9 +6110,9 @@ export namespace Prisma {
     endTime: string
     createdAt?: Date | string
     updatedAt?: Date | string
-    days?: LoadDayCreateNestedManyWithoutLoadInput
-    teacher: TeacherCreateNestedOneWithoutLoadsInput
     subject: SubjectCreateNestedOneWithoutLoadsInput
+    teacher: TeacherCreateNestedOneWithoutLoadsInput
+    days?: LoadDayCreateNestedManyWithoutLoadInput
   }
 
   export type LoadUncheckedCreateInput = {
@@ -6177,9 +6134,9 @@ export namespace Prisma {
     endTime?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    days?: LoadDayUpdateManyWithoutLoadNestedInput
-    teacher?: TeacherUpdateOneRequiredWithoutLoadsNestedInput
     subject?: SubjectUpdateOneRequiredWithoutLoadsNestedInput
+    teacher?: TeacherUpdateOneRequiredWithoutLoadsNestedInput
+    days?: LoadDayUpdateManyWithoutLoadNestedInput
   }
 
   export type LoadUncheckedUpdateInput = {
@@ -6415,35 +6372,20 @@ export namespace Prisma {
     _max?: NestedDateTimeFilter<$PrismaModel>
   }
 
-  export type IntFilter<$PrismaModel = never> = {
-    equals?: number | IntFieldRefInput<$PrismaModel>
-    in?: number[]
-    notIn?: number[]
-    lt?: number | IntFieldRefInput<$PrismaModel>
-    lte?: number | IntFieldRefInput<$PrismaModel>
-    gt?: number | IntFieldRefInput<$PrismaModel>
-    gte?: number | IntFieldRefInput<$PrismaModel>
-    not?: NestedIntFilter<$PrismaModel> | number
-  }
-
   export type SubjectCountOrderByAggregateInput = {
     id?: SortOrder
     code?: SortOrder
     name?: SortOrder
-    hours?: SortOrder
+    color?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
-  }
-
-  export type SubjectAvgOrderByAggregateInput = {
-    hours?: SortOrder
   }
 
   export type SubjectMaxOrderByAggregateInput = {
     id?: SortOrder
     code?: SortOrder
     name?: SortOrder
-    hours?: SortOrder
+    color?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -6452,35 +6394,14 @@ export namespace Prisma {
     id?: SortOrder
     code?: SortOrder
     name?: SortOrder
-    hours?: SortOrder
+    color?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
 
-  export type SubjectSumOrderByAggregateInput = {
-    hours?: SortOrder
-  }
-
-  export type IntWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: number | IntFieldRefInput<$PrismaModel>
-    in?: number[]
-    notIn?: number[]
-    lt?: number | IntFieldRefInput<$PrismaModel>
-    lte?: number | IntFieldRefInput<$PrismaModel>
-    gt?: number | IntFieldRefInput<$PrismaModel>
-    gte?: number | IntFieldRefInput<$PrismaModel>
-    not?: NestedIntWithAggregatesFilter<$PrismaModel> | number
-    _count?: NestedIntFilter<$PrismaModel>
-    _avg?: NestedFloatFilter<$PrismaModel>
-    _sum?: NestedIntFilter<$PrismaModel>
-    _min?: NestedIntFilter<$PrismaModel>
-    _max?: NestedIntFilter<$PrismaModel>
-  }
-
-  export type LoadDayListRelationFilter = {
-    every?: LoadDayWhereInput
-    some?: LoadDayWhereInput
-    none?: LoadDayWhereInput
+  export type SubjectScalarRelationFilter = {
+    is?: SubjectWhereInput
+    isNot?: SubjectWhereInput
   }
 
   export type TeacherScalarRelationFilter = {
@@ -6488,9 +6409,10 @@ export namespace Prisma {
     isNot?: TeacherWhereInput
   }
 
-  export type SubjectScalarRelationFilter = {
-    is?: SubjectWhereInput
-    isNot?: SubjectWhereInput
+  export type LoadDayListRelationFilter = {
+    every?: LoadDayWhereInput
+    some?: LoadDayWhereInput
+    none?: LoadDayWhereInput
   }
 
   export type LoadDayOrderByRelationAggregateInput = {
@@ -6647,14 +6569,6 @@ export namespace Prisma {
     connect?: LoadWhereUniqueInput | LoadWhereUniqueInput[]
   }
 
-  export type IntFieldUpdateOperationsInput = {
-    set?: number
-    increment?: number
-    decrement?: number
-    multiply?: number
-    divide?: number
-  }
-
   export type LoadUpdateManyWithoutSubjectNestedInput = {
     create?: XOR<LoadCreateWithoutSubjectInput, LoadUncheckedCreateWithoutSubjectInput> | LoadCreateWithoutSubjectInput[] | LoadUncheckedCreateWithoutSubjectInput[]
     connectOrCreate?: LoadCreateOrConnectWithoutSubjectInput | LoadCreateOrConnectWithoutSubjectInput[]
@@ -6683,11 +6597,10 @@ export namespace Prisma {
     deleteMany?: LoadScalarWhereInput | LoadScalarWhereInput[]
   }
 
-  export type LoadDayCreateNestedManyWithoutLoadInput = {
-    create?: XOR<LoadDayCreateWithoutLoadInput, LoadDayUncheckedCreateWithoutLoadInput> | LoadDayCreateWithoutLoadInput[] | LoadDayUncheckedCreateWithoutLoadInput[]
-    connectOrCreate?: LoadDayCreateOrConnectWithoutLoadInput | LoadDayCreateOrConnectWithoutLoadInput[]
-    createMany?: LoadDayCreateManyLoadInputEnvelope
-    connect?: LoadDayWhereUniqueInput | LoadDayWhereUniqueInput[]
+  export type SubjectCreateNestedOneWithoutLoadsInput = {
+    create?: XOR<SubjectCreateWithoutLoadsInput, SubjectUncheckedCreateWithoutLoadsInput>
+    connectOrCreate?: SubjectCreateOrConnectWithoutLoadsInput
+    connect?: SubjectWhereUniqueInput
   }
 
   export type TeacherCreateNestedOneWithoutLoadsInput = {
@@ -6696,10 +6609,11 @@ export namespace Prisma {
     connect?: TeacherWhereUniqueInput
   }
 
-  export type SubjectCreateNestedOneWithoutLoadsInput = {
-    create?: XOR<SubjectCreateWithoutLoadsInput, SubjectUncheckedCreateWithoutLoadsInput>
-    connectOrCreate?: SubjectCreateOrConnectWithoutLoadsInput
-    connect?: SubjectWhereUniqueInput
+  export type LoadDayCreateNestedManyWithoutLoadInput = {
+    create?: XOR<LoadDayCreateWithoutLoadInput, LoadDayUncheckedCreateWithoutLoadInput> | LoadDayCreateWithoutLoadInput[] | LoadDayUncheckedCreateWithoutLoadInput[]
+    connectOrCreate?: LoadDayCreateOrConnectWithoutLoadInput | LoadDayCreateOrConnectWithoutLoadInput[]
+    createMany?: LoadDayCreateManyLoadInputEnvelope
+    connect?: LoadDayWhereUniqueInput | LoadDayWhereUniqueInput[]
   }
 
   export type LoadDayUncheckedCreateNestedManyWithoutLoadInput = {
@@ -6707,6 +6621,22 @@ export namespace Prisma {
     connectOrCreate?: LoadDayCreateOrConnectWithoutLoadInput | LoadDayCreateOrConnectWithoutLoadInput[]
     createMany?: LoadDayCreateManyLoadInputEnvelope
     connect?: LoadDayWhereUniqueInput | LoadDayWhereUniqueInput[]
+  }
+
+  export type SubjectUpdateOneRequiredWithoutLoadsNestedInput = {
+    create?: XOR<SubjectCreateWithoutLoadsInput, SubjectUncheckedCreateWithoutLoadsInput>
+    connectOrCreate?: SubjectCreateOrConnectWithoutLoadsInput
+    upsert?: SubjectUpsertWithoutLoadsInput
+    connect?: SubjectWhereUniqueInput
+    update?: XOR<XOR<SubjectUpdateToOneWithWhereWithoutLoadsInput, SubjectUpdateWithoutLoadsInput>, SubjectUncheckedUpdateWithoutLoadsInput>
+  }
+
+  export type TeacherUpdateOneRequiredWithoutLoadsNestedInput = {
+    create?: XOR<TeacherCreateWithoutLoadsInput, TeacherUncheckedCreateWithoutLoadsInput>
+    connectOrCreate?: TeacherCreateOrConnectWithoutLoadsInput
+    upsert?: TeacherUpsertWithoutLoadsInput
+    connect?: TeacherWhereUniqueInput
+    update?: XOR<XOR<TeacherUpdateToOneWithWhereWithoutLoadsInput, TeacherUpdateWithoutLoadsInput>, TeacherUncheckedUpdateWithoutLoadsInput>
   }
 
   export type LoadDayUpdateManyWithoutLoadNestedInput = {
@@ -6721,22 +6651,6 @@ export namespace Prisma {
     update?: LoadDayUpdateWithWhereUniqueWithoutLoadInput | LoadDayUpdateWithWhereUniqueWithoutLoadInput[]
     updateMany?: LoadDayUpdateManyWithWhereWithoutLoadInput | LoadDayUpdateManyWithWhereWithoutLoadInput[]
     deleteMany?: LoadDayScalarWhereInput | LoadDayScalarWhereInput[]
-  }
-
-  export type TeacherUpdateOneRequiredWithoutLoadsNestedInput = {
-    create?: XOR<TeacherCreateWithoutLoadsInput, TeacherUncheckedCreateWithoutLoadsInput>
-    connectOrCreate?: TeacherCreateOrConnectWithoutLoadsInput
-    upsert?: TeacherUpsertWithoutLoadsInput
-    connect?: TeacherWhereUniqueInput
-    update?: XOR<XOR<TeacherUpdateToOneWithWhereWithoutLoadsInput, TeacherUpdateWithoutLoadsInput>, TeacherUncheckedUpdateWithoutLoadsInput>
-  }
-
-  export type SubjectUpdateOneRequiredWithoutLoadsNestedInput = {
-    create?: XOR<SubjectCreateWithoutLoadsInput, SubjectUncheckedCreateWithoutLoadsInput>
-    connectOrCreate?: SubjectCreateOrConnectWithoutLoadsInput
-    upsert?: SubjectUpsertWithoutLoadsInput
-    connect?: SubjectWhereUniqueInput
-    update?: XOR<XOR<SubjectUpdateToOneWithWhereWithoutLoadsInput, SubjectUpdateWithoutLoadsInput>, SubjectUncheckedUpdateWithoutLoadsInput>
   }
 
   export type LoadDayUncheckedUpdateManyWithoutLoadNestedInput = {
@@ -6897,33 +6811,6 @@ export namespace Prisma {
     _max?: NestedDateTimeFilter<$PrismaModel>
   }
 
-  export type NestedIntWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: number | IntFieldRefInput<$PrismaModel>
-    in?: number[]
-    notIn?: number[]
-    lt?: number | IntFieldRefInput<$PrismaModel>
-    lte?: number | IntFieldRefInput<$PrismaModel>
-    gt?: number | IntFieldRefInput<$PrismaModel>
-    gte?: number | IntFieldRefInput<$PrismaModel>
-    not?: NestedIntWithAggregatesFilter<$PrismaModel> | number
-    _count?: NestedIntFilter<$PrismaModel>
-    _avg?: NestedFloatFilter<$PrismaModel>
-    _sum?: NestedIntFilter<$PrismaModel>
-    _min?: NestedIntFilter<$PrismaModel>
-    _max?: NestedIntFilter<$PrismaModel>
-  }
-
-  export type NestedFloatFilter<$PrismaModel = never> = {
-    equals?: number | FloatFieldRefInput<$PrismaModel>
-    in?: number[]
-    notIn?: number[]
-    lt?: number | FloatFieldRefInput<$PrismaModel>
-    lte?: number | FloatFieldRefInput<$PrismaModel>
-    gt?: number | FloatFieldRefInput<$PrismaModel>
-    gte?: number | FloatFieldRefInput<$PrismaModel>
-    not?: NestedFloatFilter<$PrismaModel> | number
-  }
-
   export type NestedEnumWeekdayFilter<$PrismaModel = never> = {
     equals?: $Enums.Weekday | EnumWeekdayFieldRefInput<$PrismaModel>
     in?: $Enums.Weekday[]
@@ -6948,8 +6835,8 @@ export namespace Prisma {
     endTime: string
     createdAt?: Date | string
     updatedAt?: Date | string
-    days?: LoadDayCreateNestedManyWithoutLoadInput
     subject: SubjectCreateNestedOneWithoutLoadsInput
+    days?: LoadDayCreateNestedManyWithoutLoadInput
   }
 
   export type LoadUncheckedCreateWithoutTeacherInput = {
@@ -7009,8 +6896,8 @@ export namespace Prisma {
     endTime: string
     createdAt?: Date | string
     updatedAt?: Date | string
-    days?: LoadDayCreateNestedManyWithoutLoadInput
     teacher: TeacherCreateNestedOneWithoutLoadsInput
+    days?: LoadDayCreateNestedManyWithoutLoadInput
   }
 
   export type LoadUncheckedCreateWithoutSubjectInput = {
@@ -7049,23 +6936,27 @@ export namespace Prisma {
     data: XOR<LoadUpdateManyMutationInput, LoadUncheckedUpdateManyWithoutSubjectInput>
   }
 
-  export type LoadDayCreateWithoutLoadInput = {
+  export type SubjectCreateWithoutLoadsInput = {
     id?: string
-    weekday: $Enums.Weekday
+    code: string
+    name: string
+    color?: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
   }
 
-  export type LoadDayUncheckedCreateWithoutLoadInput = {
+  export type SubjectUncheckedCreateWithoutLoadsInput = {
     id?: string
-    weekday: $Enums.Weekday
+    code: string
+    name: string
+    color?: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
   }
 
-  export type LoadDayCreateOrConnectWithoutLoadInput = {
-    where: LoadDayWhereUniqueInput
-    create: XOR<LoadDayCreateWithoutLoadInput, LoadDayUncheckedCreateWithoutLoadInput>
-  }
-
-  export type LoadDayCreateManyLoadInputEnvelope = {
-    data: LoadDayCreateManyLoadInput | LoadDayCreateManyLoadInput[]
+  export type SubjectCreateOrConnectWithoutLoadsInput = {
+    where: SubjectWhereUniqueInput
+    create: XOR<SubjectCreateWithoutLoadsInput, SubjectUncheckedCreateWithoutLoadsInput>
   }
 
   export type TeacherCreateWithoutLoadsInput = {
@@ -7093,52 +6984,52 @@ export namespace Prisma {
     create: XOR<TeacherCreateWithoutLoadsInput, TeacherUncheckedCreateWithoutLoadsInput>
   }
 
-  export type SubjectCreateWithoutLoadsInput = {
+  export type LoadDayCreateWithoutLoadInput = {
     id?: string
-    code: string
-    name: string
-    hours: number
-    createdAt?: Date | string
-    updatedAt?: Date | string
+    weekday: $Enums.Weekday
   }
 
-  export type SubjectUncheckedCreateWithoutLoadsInput = {
+  export type LoadDayUncheckedCreateWithoutLoadInput = {
     id?: string
-    code: string
-    name: string
-    hours: number
-    createdAt?: Date | string
-    updatedAt?: Date | string
+    weekday: $Enums.Weekday
   }
 
-  export type SubjectCreateOrConnectWithoutLoadsInput = {
-    where: SubjectWhereUniqueInput
-    create: XOR<SubjectCreateWithoutLoadsInput, SubjectUncheckedCreateWithoutLoadsInput>
-  }
-
-  export type LoadDayUpsertWithWhereUniqueWithoutLoadInput = {
+  export type LoadDayCreateOrConnectWithoutLoadInput = {
     where: LoadDayWhereUniqueInput
-    update: XOR<LoadDayUpdateWithoutLoadInput, LoadDayUncheckedUpdateWithoutLoadInput>
     create: XOR<LoadDayCreateWithoutLoadInput, LoadDayUncheckedCreateWithoutLoadInput>
   }
 
-  export type LoadDayUpdateWithWhereUniqueWithoutLoadInput = {
-    where: LoadDayWhereUniqueInput
-    data: XOR<LoadDayUpdateWithoutLoadInput, LoadDayUncheckedUpdateWithoutLoadInput>
+  export type LoadDayCreateManyLoadInputEnvelope = {
+    data: LoadDayCreateManyLoadInput | LoadDayCreateManyLoadInput[]
   }
 
-  export type LoadDayUpdateManyWithWhereWithoutLoadInput = {
-    where: LoadDayScalarWhereInput
-    data: XOR<LoadDayUpdateManyMutationInput, LoadDayUncheckedUpdateManyWithoutLoadInput>
+  export type SubjectUpsertWithoutLoadsInput = {
+    update: XOR<SubjectUpdateWithoutLoadsInput, SubjectUncheckedUpdateWithoutLoadsInput>
+    create: XOR<SubjectCreateWithoutLoadsInput, SubjectUncheckedCreateWithoutLoadsInput>
+    where?: SubjectWhereInput
   }
 
-  export type LoadDayScalarWhereInput = {
-    AND?: LoadDayScalarWhereInput | LoadDayScalarWhereInput[]
-    OR?: LoadDayScalarWhereInput[]
-    NOT?: LoadDayScalarWhereInput | LoadDayScalarWhereInput[]
-    id?: StringFilter<"LoadDay"> | string
-    loadId?: StringFilter<"LoadDay"> | string
-    weekday?: EnumWeekdayFilter<"LoadDay"> | $Enums.Weekday
+  export type SubjectUpdateToOneWithWhereWithoutLoadsInput = {
+    where?: SubjectWhereInput
+    data: XOR<SubjectUpdateWithoutLoadsInput, SubjectUncheckedUpdateWithoutLoadsInput>
+  }
+
+  export type SubjectUpdateWithoutLoadsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    code?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    color?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type SubjectUncheckedUpdateWithoutLoadsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    code?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    color?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type TeacherUpsertWithoutLoadsInput = {
@@ -7172,33 +7063,29 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
-  export type SubjectUpsertWithoutLoadsInput = {
-    update: XOR<SubjectUpdateWithoutLoadsInput, SubjectUncheckedUpdateWithoutLoadsInput>
-    create: XOR<SubjectCreateWithoutLoadsInput, SubjectUncheckedCreateWithoutLoadsInput>
-    where?: SubjectWhereInput
+  export type LoadDayUpsertWithWhereUniqueWithoutLoadInput = {
+    where: LoadDayWhereUniqueInput
+    update: XOR<LoadDayUpdateWithoutLoadInput, LoadDayUncheckedUpdateWithoutLoadInput>
+    create: XOR<LoadDayCreateWithoutLoadInput, LoadDayUncheckedCreateWithoutLoadInput>
   }
 
-  export type SubjectUpdateToOneWithWhereWithoutLoadsInput = {
-    where?: SubjectWhereInput
-    data: XOR<SubjectUpdateWithoutLoadsInput, SubjectUncheckedUpdateWithoutLoadsInput>
+  export type LoadDayUpdateWithWhereUniqueWithoutLoadInput = {
+    where: LoadDayWhereUniqueInput
+    data: XOR<LoadDayUpdateWithoutLoadInput, LoadDayUncheckedUpdateWithoutLoadInput>
   }
 
-  export type SubjectUpdateWithoutLoadsInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    code?: StringFieldUpdateOperationsInput | string
-    name?: StringFieldUpdateOperationsInput | string
-    hours?: IntFieldUpdateOperationsInput | number
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  export type LoadDayUpdateManyWithWhereWithoutLoadInput = {
+    where: LoadDayScalarWhereInput
+    data: XOR<LoadDayUpdateManyMutationInput, LoadDayUncheckedUpdateManyWithoutLoadInput>
   }
 
-  export type SubjectUncheckedUpdateWithoutLoadsInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    code?: StringFieldUpdateOperationsInput | string
-    name?: StringFieldUpdateOperationsInput | string
-    hours?: IntFieldUpdateOperationsInput | number
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  export type LoadDayScalarWhereInput = {
+    AND?: LoadDayScalarWhereInput | LoadDayScalarWhereInput[]
+    OR?: LoadDayScalarWhereInput[]
+    NOT?: LoadDayScalarWhereInput | LoadDayScalarWhereInput[]
+    id?: StringFilter<"LoadDay"> | string
+    loadId?: StringFilter<"LoadDay"> | string
+    weekday?: EnumWeekdayFilter<"LoadDay"> | $Enums.Weekday
   }
 
   export type LoadCreateWithoutDaysInput = {
@@ -7208,8 +7095,8 @@ export namespace Prisma {
     endTime: string
     createdAt?: Date | string
     updatedAt?: Date | string
-    teacher: TeacherCreateNestedOneWithoutLoadsInput
     subject: SubjectCreateNestedOneWithoutLoadsInput
+    teacher: TeacherCreateNestedOneWithoutLoadsInput
   }
 
   export type LoadUncheckedCreateWithoutDaysInput = {
@@ -7246,8 +7133,8 @@ export namespace Prisma {
     endTime?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    teacher?: TeacherUpdateOneRequiredWithoutLoadsNestedInput
     subject?: SubjectUpdateOneRequiredWithoutLoadsNestedInput
+    teacher?: TeacherUpdateOneRequiredWithoutLoadsNestedInput
   }
 
   export type LoadUncheckedUpdateWithoutDaysInput = {
@@ -7278,8 +7165,8 @@ export namespace Prisma {
     endTime?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    days?: LoadDayUpdateManyWithoutLoadNestedInput
     subject?: SubjectUpdateOneRequiredWithoutLoadsNestedInput
+    days?: LoadDayUpdateManyWithoutLoadNestedInput
   }
 
   export type LoadUncheckedUpdateWithoutTeacherInput = {
@@ -7320,8 +7207,8 @@ export namespace Prisma {
     endTime?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    days?: LoadDayUpdateManyWithoutLoadNestedInput
     teacher?: TeacherUpdateOneRequiredWithoutLoadsNestedInput
+    days?: LoadDayUpdateManyWithoutLoadNestedInput
   }
 
   export type LoadUncheckedUpdateWithoutSubjectInput = {

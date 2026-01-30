@@ -131,7 +131,9 @@ export default async function Home() {
         </div>
         <div className="rounded-2xl bg-[var(--surface)] p-5 shadow-sm ring-1 ring-[var(--border)]">
           <h3 className="text-sm font-semibold uppercase text-[var(--text-muted)]">Subjects</h3>
-          <p className="mt-2 text-sm text-[var(--text-muted)]">Track subject codes and hours.</p>
+          <p className="mt-2 text-sm text-[var(--text-muted)]">
+            Track subject codes and schedule colors.
+          </p>
           <Link
             className="mt-3 inline-flex text-sm font-semibold text-[var(--text-primary)] hover:text-[var(--primary)]"
             href="/subjects"

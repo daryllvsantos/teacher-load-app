@@ -3,8 +3,9 @@ import { notFound } from "next/navigation";
 import { revalidatePath } from "next/cache";
 import { prisma } from "@/lib/prisma";
 import type { Shift, Weekday } from "@/generated";
-import LoadForm from "@/app/loads/LoadForm";
 import { Button, Card, Input, Select } from "@/components/ui";
+import LoadModal from "@/app/teachers/[id]/LoadModal";
+import type { LoadFormState } from "@/app/loads/load-types";
 
 const MAX_MORNING_HOURS_PER_DAY = 6.17;
 const MAX_AFTERNOON_HOURS_PER_DAY = 6.67;
@@ -76,7 +77,10 @@ async function deleteTeacher(formData: FormData) {
   revalidatePath("/teachers");
 }
 
-async function createLoad(formData: FormData) {
+async function createLoad(
+  previousState: LoadFormState,
+  formData: FormData
+): Promise<LoadFormState> {
   "use server";
   const teacherId = String(formData.get("teacherId"));
   const subjectId = String(formData.get("subjectId"));
@@ -84,16 +88,22 @@ async function createLoad(formData: FormData) {
   const endTime = String(formData.get("endTime") || "").trim();
   const day = String(formData.get("day") || "").trim() as Weekday;
 
-  if (!teacherId || !subjectId || !startTime || !endTime || !day) return;
+  if (!teacherId || !subjectId || !startTime || !endTime || !day) {
+    return { status: "error", message: "Please complete all load details." };
+  }
 
   const durationHours = calculateDurationHours(startTime, endTime);
-  if (!durationHours) return;
+  if (!durationHours) {
+    return { status: "error", message: "End time must be after the start time." };
+  }
 
   const teacher = await prisma.teacher.findUnique({
     where: { id: teacherId },
     select: { shift: true },
   });
-  if (!teacher) return;
+  if (!teacher) {
+    return { status: "error", message: "Teacher not found." };
+  }
 
   const existingSameDay = await prisma.load.findMany({
     where: {
@@ -111,9 +121,19 @@ async function createLoad(formData: FormData) {
   const maxHoursForShift =
     teacher.shift === "AFTERNOON" ? MAX_AFTERNOON_HOURS_PER_DAY : MAX_MORNING_HOURS_PER_DAY;
 
-  if (existingDayHours + durationHours > maxHoursForShift) return;
+  if (existingDayHours + durationHours > maxHoursForShift) {
+    return {
+      status: "error",
+      message: "This load exceeds the allowed hours for the selected day.",
+    };
+  }
 
-  if (hasOverlap({ startTime, endTime, existing: existingSameDay })) return;
+  if (hasOverlap({ startTime, endTime, existing: existingSameDay })) {
+    return {
+      status: "error",
+      message: "Time slot is not available anymore for the selected day.",
+    };
+  }
 
   await prisma.load.create({
     data: {
@@ -129,6 +149,7 @@ async function createLoad(formData: FormData) {
   });
 
   revalidatePath(`/teachers/${teacherId}`);
+  return { status: "success", message: "Load added successfully." };
 }
 
 const weekdayOrder: Weekday[] = [
@@ -146,6 +167,31 @@ const weekdayLabels: Record<Weekday, string> = {
   THURSDAY: "Thursday",
   FRIDAY: "Friday",
 };
+
+type TimeBlock = {
+  label: string;
+  start: string;
+  end: string;
+  disabled?: boolean;
+};
+
+const morningTimeBlocks: TimeBlock[] = [
+  { label: "6:00 AM - 7:10 AM", start: "06:00", end: "07:10" },
+  { label: "7:10 AM - 8:20 AM", start: "07:10", end: "08:20" },
+  { label: "8:20 AM - 9:30 AM", start: "08:20", end: "09:30" },
+  { label: "Break (9:30 AM - 9:50 AM)", start: "09:30", end: "09:50", disabled: true },
+  { label: "9:50 AM - 11:00 AM", start: "09:50", end: "11:00" },
+  { label: "11:00 AM - 12:10 PM", start: "11:00", end: "12:10" },
+];
+
+const afternoonTimeBlocks: TimeBlock[] = [
+  { label: "12:00 PM - 1:20 PM", start: "12:00", end: "13:20" },
+  { label: "1:20 PM - 2:40 PM", start: "13:20", end: "14:40" },
+  { label: "2:40 PM - 4:00 PM", start: "14:40", end: "16:00" },
+  { label: "Break (4:00 PM - 4:20 PM)", start: "16:00", end: "16:20", disabled: true },
+  { label: "4:20 PM - 5:40 PM", start: "16:20", end: "17:40" },
+  { label: "5:40 PM - 7:00 PM", start: "17:40", end: "19:00" },
+];
 
 export default async function TeacherDetailPage({
   params,
@@ -171,7 +217,7 @@ export default async function TeacherDetailPage({
     }),
     prisma.subject.findMany({
       orderBy: { code: "asc" },
-      select: { id: true, code: true, name: true },
+      select: { id: true, code: true, name: true, color: true },
     }),
   ]);
 
@@ -189,6 +235,16 @@ export default async function TeacherDetailPage({
       label: weekdayLabels[weekday],
       loads: dayLoads,
     };
+  });
+
+  const activeBlocks = teacher.shift === "AFTERNOON" ? afternoonTimeBlocks : morningTimeBlocks;
+  const scheduleLookup = new Map<string, (typeof teacher.loads)[number]>();
+
+  teacher.loads.forEach((load) => {
+    load.days.forEach((day) => {
+      const key = `${day.weekday}-${load.startTime}-${load.endTime}`;
+      scheduleLookup.set(key, load);
+    });
   });
 
   return (
@@ -209,13 +265,25 @@ export default async function TeacherDetailPage({
       <Card title="Edit Teacher" description="Update the teacher profile details.">
         <form action={updateTeacher} className="grid gap-3 md:grid-cols-2">
           <input type="hidden" name="id" value={teacher.id} />
-          <Input name="name" defaultValue={teacher.name} />
-          <Input name="department" defaultValue={teacher.department ?? ""} placeholder="Department" />
-          <Input name="email" defaultValue={teacher.email ?? ""} placeholder="Email" type="email" />
-          <Select name="shift" defaultValue={teacher.shift}>
-            <option value="MORNING">Morning (6:00 AM - 12:10 NN)</option>
-            <option value="AFTERNOON">Afternoon (12:00 PM - 7:00 PM)</option>
-          </Select>
+          <label className="flex flex-col gap-1 text-sm text-[var(--text-muted)]">
+            Name
+            <Input name="name" defaultValue={teacher.name} />
+          </label>
+          <label className="flex flex-col gap-1 text-sm text-[var(--text-muted)]">
+            Department
+            <Input name="department" defaultValue={teacher.department ?? ""} placeholder="Department" />
+          </label>
+          <label className="flex flex-col gap-1 text-sm text-[var(--text-muted)]">
+            Email
+            <Input name="email" defaultValue={teacher.email ?? ""} placeholder="Email" type="email" />
+          </label>
+          <label className="flex flex-col gap-1 text-sm text-[var(--text-muted)]">
+            Shift
+            <Select name="shift" defaultValue={teacher.shift}>
+              <option value="MORNING">Morning (6:00 AM - 12:10 NN)</option>
+              <option value="AFTERNOON">Afternoon (12:00 PM - 7:00 PM)</option>
+            </Select>
+          </label>
           <div className="md:col-span-2 flex flex-wrap gap-2">
             <Button>Save Changes</Button>
           </div>
@@ -246,72 +314,70 @@ export default async function TeacherDetailPage({
         </form>
       </Card>
 
-      <Card title="Add Load" description="Assign a subject and time block to this teacher.">
-        <LoadForm
-          createLoad={createLoad}
-          preselectedTeacherId={teacher.id}
-          teachers={[
-            {
-              id: teacher.id,
-              name: teacher.name,
-              shift: teacher.shift,
-            },
-          ]}
-          subjects={subjects}
-        />
-      </Card>
-
       <Card
         title="Weekly Schedule"
         description="Monday to Friday schedule based on assigned loads."
       >
+        <div className="mb-4 flex flex-wrap items-center gap-3">
+          <LoadModal
+            createLoad={createLoad}
+            teacher={{ id: teacher.id, name: teacher.name, shift: teacher.shift }}
+            subjects={subjects}
+          />
+          <p className="text-sm text-[var(--text-muted)]">
+            Add new loads without leaving the schedule view.
+          </p>
+        </div>
         <div className="overflow-x-auto">
           <table className="w-full text-left text-sm text-[var(--text-primary)]">
             <thead className="text-xs uppercase text-[var(--text-muted)]">
               <tr>
-                <th className="py-2">Day</th>
-                <th className="py-2">Subjects</th>
                 <th className="py-2">Time</th>
+                {scheduleByDay.map((entry) => (
+                  <th key={entry.weekday} className="py-2">
+                    {entry.label}
+                  </th>
+                ))}
               </tr>
             </thead>
             <tbody>
-              {scheduleByDay.map((entry) => (
-                <tr key={entry.weekday} className="border-t border-[var(--border)]">
+              {activeBlocks.map((block) => (
+                <tr key={`${block.start}-${block.end}`} className="border-t border-[var(--border)]">
                   <td className="py-3 font-semibold text-[var(--text-primary)]">
-                    {entry.label}
+                    <div className="flex flex-col">
+                      <span>{block.label}</span>
+                      {block.disabled && (
+                        <span className="text-xs text-[var(--text-muted)]">Break</span>
+                      )}
+                    </div>
                   </td>
-                  <td className="py-3">
-                    {entry.loads.length > 0 ? (
-                      <div className="flex flex-wrap gap-2">
-                        {entry.loads.map((load) => (
-                          <span
-                            key={load.id}
-                            className="rounded-full border border-[var(--border)] px-3 py-1 text-xs font-semibold text-[var(--text-primary)]"
+                  {scheduleByDay.map((entry) => {
+                    const load = scheduleLookup.get(
+                      `${entry.weekday}-${block.start}-${block.end}`
+                    );
+                    return (
+                      <td key={`${entry.weekday}-${block.start}`} className="py-3">
+                        {load ? (
+                          <div
+                            className="inline-flex max-w-full flex-col gap-1 rounded-lg border border-[var(--border)] px-3 py-2 text-xs"
+                            style={{ backgroundColor: load.subject.color }}
                           >
-                            {load.subject.code} - {load.subject.name}
-                          </span>
-                        ))}
-                      </div>
-                    ) : (
-                      <span className="text-xs text-[var(--text-muted)]">No load</span>
-                    )}
-                  </td>
-                  <td className="py-3">
-                    {entry.loads.length > 0 ? (
-                      <div className="flex flex-wrap gap-2">
-                        {entry.loads.map((load) => (
-                          <span
-                            key={`${load.id}-time`}
-                            className="rounded-full border border-[var(--border)] px-3 py-1 text-xs font-semibold text-[var(--text-primary)]"
-                          >
-                            {load.startTime} - {load.endTime}
-                          </span>
-                        ))}
-                      </div>
-                    ) : (
-                      <span className="text-xs text-[var(--text-muted)]">No schedule</span>
-                    )}
-                  </td>
+                            <span className="font-semibold text-white">
+                              {load.subject.code}
+                            </span>
+                            <span className="text-white/90">{load.subject.name}</span>
+                            <span className="text-[10px] text-white/80">
+                              {load.startTime} - {load.endTime}
+                            </span>
+                          </div>
+                        ) : block.disabled ? (
+                          <span className="text-xs text-[var(--text-muted)]">Break</span>
+                        ) : (
+                          <span className="text-xs text-[var(--text-muted)]">No load</span>
+                        )}
+                      </td>
+                    );
+                  })}
                 </tr>
               ))}
             </tbody>

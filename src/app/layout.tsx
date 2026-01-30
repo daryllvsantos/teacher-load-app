@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { Geist, Geist_Mono } from "next/font/google";
+import { Toaster } from "sonner";
 import "./globals.css";
 import ThemeToggle from "@/components/ThemeToggle";
 
@@ -68,6 +69,7 @@ export default function RootLayout({
             Morning shift: 6:00 AM - 12:00 NN • Afternoon shift: 1:00 PM - 7:00 PM
           </footer>
         </div>
+        <Toaster position="top-right" richColors />
       </body>
     </html>
   );

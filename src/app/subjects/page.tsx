@@ -7,15 +7,15 @@ async function createSubject(formData: FormData) {
   "use server";
   const code = String(formData.get("code") || "").trim();
   const name = String(formData.get("name") || "").trim();
-  const hours = Number(formData.get("hours"));
+  const color = String(formData.get("color") || "").trim();
 
-  if (!code || !name || !hours) return;
+  if (!code || !name || !color) return;
 
   await prisma.subject.create({
     data: {
       code,
       name,
-      hours,
+      color,
     },
   });
 
@@ -27,16 +27,16 @@ async function updateSubject(formData: FormData) {
   const id = String(formData.get("id"));
   const code = String(formData.get("code") || "").trim();
   const name = String(formData.get("name") || "").trim();
-  const hours = Number(formData.get("hours"));
+  const color = String(formData.get("color") || "").trim();
 
-  if (!id || !code || !name || !hours) return;
+  if (!id || !code || !name || !color) return;
 
   await prisma.subject.update({
     where: { id },
     data: {
       code,
       name,
-      hours,
+      color,
     },
   });
 
@@ -56,11 +56,14 @@ export default async function SubjectsPage() {
 
   return (
     <div className="grid gap-6">
-      <Card title="Subjects" description="Manage subject codes and assigned hours.">
-        <form action={createSubject} className="grid gap-3 md:grid-cols-3">
+      <Card title="Subjects" description="Manage subject codes and schedule colors.">
+        <form action={createSubject} className="grid gap-3 md:grid-cols-[1fr_1fr_auto] md:items-center">
           <Input name="code" placeholder="Subject code" />
           <Input name="name" placeholder="Subject name" />
-          <Input name="hours" placeholder="Hours" type="number" />
+          <div className="flex items-center gap-2">
+            <Input name="color" placeholder="#0f766e" type="color" />
+            <span className="text-xs text-[var(--text-muted)]">#0f766e</span>
+          </div>
           <div className="md:col-span-3">
             <Button>Add Subject</Button>
           </div>
@@ -68,70 +71,62 @@ export default async function SubjectsPage() {
       </Card>
 
       <Card title="Current Subjects">
-        <div className="overflow-x-auto">
-          <table className="w-full text-left text-sm text-[var(--text-primary)]">
-            <thead className="text-xs uppercase text-[var(--text-muted)]">
-              <tr>
-                <th className="py-2">Code</th>
-                <th className="py-2">Name</th>
-                <th className="py-2">Hours</th>
-                <th className="py-2">Actions</th>
-              </tr>
-            </thead>
-            <tbody>
-              {subjects.map((subject: Subject) => (
-                <tr key={subject.id} className="border-t border-[var(--border)]">
-                  <td colSpan={3} className="py-3">
-                    <form action={updateSubject} className="grid gap-2 md:grid-cols-3">
-                      <input type="hidden" name="id" value={subject.id} />
-                      <Input name="code" defaultValue={subject.code} />
-                      <Input name="name" defaultValue={subject.name} />
-                      <Input name="hours" defaultValue={String(subject.hours)} type="number" />
-                      <div className="flex gap-2 md:col-span-3">
-                        <Button>Save</Button>
-                        <SecondaryButton>
-                          <span className="text-xs">Cancel</span>
-                        </SecondaryButton>
-                      </div>
-                    </form>
-                  </td>
-                  <td className="py-3 align-top">
-                    <form action={deleteSubject}>
-                      <input type="hidden" name="id" value={subject.id} />
-                      <button
-                        aria-label="Delete subject"
-                        className="inline-flex h-8 w-8 items-center justify-center rounded-full text-red-600 hover:bg-red-50"
-                        title="Delete subject"
-                        type="submit"
+        <div className="grid gap-3 text-sm text-[var(--text-primary)]">
+          <div className="hidden items-center gap-3 rounded-xl border border-[var(--border)] bg-[var(--surface-muted)] px-3 py-2 text-xs font-semibold uppercase text-[var(--text-muted)] md:grid md:grid-cols-[minmax(160px,1fr)_minmax(200px,1fr)_minmax(140px,auto)_minmax(160px,auto)]">
+            <span>Code</span>
+            <span>Name</span>
+            <span>Color</span>
+            <span className="text-right">Actions</span>
+          </div>
+          {subjects.map((subject: Subject) => (
+            <div key={subject.id} className="rounded-xl border border-[var(--border)] px-3 py-2">
+              <div className="grid gap-2 md:grid-cols-[minmax(160px,1fr)_minmax(200px,1fr)_minmax(140px,auto)_minmax(160px,auto)] md:items-center">
+                <form action={updateSubject} className="contents">
+                  <input type="hidden" name="id" value={subject.id} />
+                  <Input name="code" defaultValue={subject.code} />
+                  <Input name="name" defaultValue={subject.name} />
+                  <div className="flex items-center gap-2">
+                    <Input name="color" defaultValue={subject.color} type="color" />
+                    <span className="text-xs text-[var(--text-muted)]">{subject.color}</span>
+                  </div>
+                  <div className="flex flex-wrap items-center gap-2 md:justify-end">
+                    <Button>Save</Button>
+                    <SecondaryButton>
+                      <span className="text-xs">Cancel</span>
+                    </SecondaryButton>
+                    <button
+                      aria-label="Delete subject"
+                      className="inline-flex h-8 w-8 items-center justify-center rounded-full text-red-600 hover:bg-red-50"
+                      title="Delete subject"
+                      type="submit"
+                      form={`delete-${subject.id}`}
+                    >
+                      <svg
+                        aria-hidden="true"
+                        className="h-4 w-4"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="2"
+                        viewBox="0 0 24 24"
                       >
-                        <svg
-                          aria-hidden="true"
-                          className="h-4 w-4"
-                          fill="none"
-                          stroke="currentColor"
-                          strokeWidth="2"
-                          viewBox="0 0 24 24"
-                        >
-                          <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            d="M6 7h12m-9 0V5a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2m-9 0h10m-9 4v6m4-6v6m4-6v6M5 7l1 12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2l1-12"
-                          />
-                        </svg>
-                      </button>
-                    </form>
-                  </td>
-                </tr>
-              ))}
-              {subjects.length === 0 && (
-                <tr>
-                  <td className="py-6 text-sm text-[var(--text-muted)]" colSpan={4}>
-                    No subjects added yet.
-                  </td>
-                </tr>
-              )}
-            </tbody>
-          </table>
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          d="M6 7h12m-9 0V5a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2m-9 0h10m-9 4v6m4-6v6m4-6v6M5 7l1 12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2l1-12"
+                        />
+                      </svg>
+                    </button>
+                  </div>
+                </form>
+                <form action={deleteSubject} id={`delete-${subject.id}`} className="hidden">
+                  <input type="hidden" name="id" value={subject.id} />
+                </form>
+              </div>
+            </div>
+          ))}
+          {subjects.length === 0 && (
+            <div className="py-6 text-sm text-[var(--text-muted)]">No subjects added yet.</div>
+          )}
         </div>
       </Card>
     </div>

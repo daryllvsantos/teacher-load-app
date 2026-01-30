@@ -1,8 +1,10 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useActionState, useEffect, useMemo, useState } from "react";
+import { toast } from "sonner";
 import type { Shift, Weekday } from "@/generated";
 import { Button, Input, Select } from "@/components/ui";
+import type { LoadFormState } from "@/app/loads/load-types";
 
 type TeacherOption = {
   id: string;
@@ -14,12 +16,13 @@ type SubjectOption = {
   id: string;
   code: string;
   name: string;
+  color: string;
 };
 
 type LoadFormProps = {
   teachers: TeacherOption[];
   subjects: SubjectOption[];
-  createLoad: (formData: FormData) => void;
+  createLoad: (previousState: LoadFormState, formData: FormData) => Promise<LoadFormState>;
   preselectedTeacherId?: string;
 };
 
@@ -44,6 +47,9 @@ export default function LoadForm({
 }: LoadFormProps) {
   const [selectedTeacherId, setSelectedTeacherId] = useState(preselectedTeacherId ?? "");
   const [selectedTimeBlock, setSelectedTimeBlock] = useState("");
+  const [formState, formAction] = useActionState(createLoad, {
+    status: "idle",
+  });
 
   const selectedTeacher = useMemo(
     () => teachers.find((teacher) => teacher.id === selectedTeacherId),
@@ -75,8 +81,17 @@ export default function LoadForm({
     (block) => `${block.start}-${block.end}` === selectedTimeBlock
   );
 
+  useEffect(() => {
+    if (formState.status === "error" && formState.message) {
+      toast.error(formState.message);
+    }
+    if (formState.status === "success" && formState.message) {
+      toast.success(formState.message);
+    }
+  }, [formState]);
+
   return (
-    <form action={createLoad} className="grid gap-3 md:grid-cols-3">
+    <form action={formAction} className="grid gap-3 md:grid-cols-3">
       {preselectedTeacherId ? (
         <input type="hidden" name="teacherId" value={preselectedTeacherId} />
       ) : (
