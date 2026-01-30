@@ -2,7 +2,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { revalidatePath } from "next/cache";
 import { prisma } from "@/lib/prisma";
-import type { Shift } from "@/generated";
+import type { Shift, Weekday } from "@/generated";
 import { Button, Card, Input, Select } from "@/components/ui";
 
 async function updateTeacher(formData: FormData) {
@@ -37,6 +37,22 @@ async function deleteTeacher(formData: FormData) {
   revalidatePath("/teachers");
 }
 
+const weekdayOrder: Weekday[] = [
+  "MONDAY",
+  "TUESDAY",
+  "WEDNESDAY",
+  "THURSDAY",
+  "FRIDAY",
+];
+
+const weekdayLabels: Record<Weekday, string> = {
+  MONDAY: "Monday",
+  TUESDAY: "Tuesday",
+  WEDNESDAY: "Wednesday",
+  THURSDAY: "Thursday",
+  FRIDAY: "Friday",
+};
+
 export default async function TeacherDetailPage({
   params,
 }: {
@@ -47,11 +63,33 @@ export default async function TeacherDetailPage({
   if (!id) {
     notFound();
   }
-  const teacher = await prisma.teacher.findUnique({ where: { id } });
+  const teacher = await prisma.teacher.findUnique({
+    where: { id },
+    include: {
+      loads: {
+        include: {
+          subject: true,
+          days: true,
+        },
+      },
+    },
+  });
 
   if (!teacher) {
     notFound();
   }
+
+  const scheduleByDay = weekdayOrder.map((weekday) => {
+    const dayLoads = teacher.loads.filter((load) =>
+      load.days.some((day) => day.weekday === weekday)
+    );
+
+    return {
+      weekday,
+      label: weekdayLabels[weekday],
+      loads: dayLoads,
+    };
+  });
 
   return (
     <div className="grid gap-6">
@@ -106,6 +144,64 @@ export default async function TeacherDetailPage({
             </svg>
           </button>
         </form>
+      </Card>
+
+      <Card
+        title="Weekly Schedule"
+        description="Monday to Friday schedule based on assigned loads."
+      >
+        <div className="overflow-x-auto">
+          <table className="w-full text-left text-sm text-[var(--text-primary)]">
+            <thead className="text-xs uppercase text-[var(--text-muted)]">
+              <tr>
+                <th className="py-2">Day</th>
+                <th className="py-2">Subjects</th>
+                <th className="py-2">Time</th>
+              </tr>
+            </thead>
+            <tbody>
+              {scheduleByDay.map((entry) => (
+                <tr key={entry.weekday} className="border-t border-[var(--border)]">
+                  <td className="py-3 font-semibold text-[var(--text-primary)]">
+                    {entry.label}
+                  </td>
+                  <td className="py-3">
+                    {entry.loads.length > 0 ? (
+                      <div className="flex flex-wrap gap-2">
+                        {entry.loads.map((load) => (
+                          <span
+                            key={load.id}
+                            className="rounded-full border border-[var(--border)] px-3 py-1 text-xs font-semibold text-[var(--text-primary)]"
+                          >
+                            {load.subject.code} - {load.subject.name}
+                          </span>
+                        ))}
+                      </div>
+                    ) : (
+                      <span className="text-xs text-[var(--text-muted)]">No load</span>
+                    )}
+                  </td>
+                  <td className="py-3">
+                    {entry.loads.length > 0 ? (
+                      <div className="flex flex-wrap gap-2">
+                        {entry.loads.map((load) => (
+                          <span
+                            key={`${load.id}-time`}
+                            className="rounded-full border border-[var(--border)] px-3 py-1 text-xs font-semibold text-[var(--text-primary)]"
+                          >
+                            {load.startTime} - {load.endTime}
+                          </span>
+                        ))}
+                      </div>
+                    ) : (
+                      <span className="text-xs text-[var(--text-muted)]">No schedule</span>
+                    )}
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
       </Card>
     </div>
   );

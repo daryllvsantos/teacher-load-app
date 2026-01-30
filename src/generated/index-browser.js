@@ -141,9 +141,16 @@ exports.Prisma.LoadScalarFieldEnum = {
   teacherId: 'teacherId',
   subjectId: 'subjectId',
   shift: 'shift',
-  hours: 'hours',
+  startTime: 'startTime',
+  endTime: 'endTime',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
+};
+
+exports.Prisma.LoadDayScalarFieldEnum = {
+  id: 'id',
+  loadId: 'loadId',
+  weekday: 'weekday'
 };
 
 exports.Prisma.SortOrder = {
@@ -160,10 +167,19 @@ exports.Shift = exports.$Enums.Shift = {
   AFTERNOON: 'AFTERNOON'
 };
 
+exports.Weekday = exports.$Enums.Weekday = {
+  MONDAY: 'MONDAY',
+  TUESDAY: 'TUESDAY',
+  WEDNESDAY: 'WEDNESDAY',
+  THURSDAY: 'THURSDAY',
+  FRIDAY: 'FRIDAY'
+};
+
 exports.Prisma.ModelName = {
   Teacher: 'Teacher',
   Subject: 'Subject',
-  Load: 'Load'
+  Load: 'Load',
+  LoadDay: 'LoadDay'
 };
 
 /**

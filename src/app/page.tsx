@@ -4,20 +4,41 @@ import DashboardCharts from "@/app/DashboardCharts";
 
 const MAX_HOURS = 6;
 
+const parseTimeToMinutes = (time: string) => {
+  const [hours, minutes] = time.split(":").map(Number);
+  if (Number.isNaN(hours) || Number.isNaN(minutes)) return null;
+  return hours * 60 + minutes;
+};
+
+const calculateDurationHours = (startTime: string, endTime: string) => {
+  const startMinutes = parseTimeToMinutes(startTime);
+  const endMinutes = parseTimeToMinutes(endTime);
+  if (startMinutes === null || endMinutes === null) return null;
+  if (endMinutes <= startMinutes) return null;
+  return (endMinutes - startMinutes) / 60;
+};
+
+const formatHours = (value: number) => Number(value.toFixed(1));
+
 export default async function Home() {
-  const [teacherCount, subjectCount, loadCount, totalAssigned, teachersByShift] =
+  const [teacherCount, subjectCount, loadCount, loads, teachersByShift] =
     await Promise.all([
       prisma.teacher.count(),
       prisma.subject.count(),
       prisma.load.count(),
-      prisma.load.aggregate({ _sum: { hours: true } }),
+      prisma.load.findMany({
+        select: { shift: true, startTime: true, endTime: true },
+      }),
       prisma.teacher.groupBy({
         by: ["shift"],
         _count: { id: true },
       }),
     ]);
 
-  const totalAssignedHours = totalAssigned._sum.hours ?? 0;
+  const totalAssignedHours = loads.reduce((total, load) => {
+    const duration = calculateDurationHours(load.startTime, load.endTime) ?? 0;
+    return total + duration;
+  }, 0);
   const totalCapacity = teacherCount * MAX_HOURS;
   const totalRemaining = Math.max(totalCapacity - totalAssignedHours, 0);
 
@@ -25,14 +46,11 @@ export default async function Home() {
     teachersByShift.map((entry) => [entry.shift, entry._count.id])
   );
 
-  const loadsByShift = await prisma.load.groupBy({
-    by: ["shift"],
-    _sum: { hours: true },
-  });
-
-  const loadsByShiftMap = Object.fromEntries(
-    loadsByShift.map((entry) => [entry.shift, entry._sum.hours ?? 0])
-  );
+  const loadsByShiftMap = loads.reduce<Record<string, number>>((acc, load) => {
+    const duration = calculateDurationHours(load.startTime, load.endTime) ?? 0;
+    acc[load.shift] = (acc[load.shift] ?? 0) + duration;
+    return acc;
+  }, {});
 
   const morningCapacity = (teachersByShiftMap.MORNING ?? 0) * MAX_HOURS;
   const afternoonCapacity = (teachersByShiftMap.AFTERNOON ?? 0) * MAX_HOURS;
@@ -44,10 +62,10 @@ export default async function Home() {
       label: "Morning",
       total: morningCapacity,
       data: [
-        { name: "Assigned", value: morningAssigned },
+        { name: "Assigned", value: formatHours(morningAssigned) },
         {
           name: "Remaining",
-          value: Math.max(morningCapacity - morningAssigned, 0),
+          value: formatHours(Math.max(morningCapacity - morningAssigned, 0)),
         },
       ],
     },
@@ -55,10 +73,10 @@ export default async function Home() {
       label: "Afternoon",
       total: afternoonCapacity,
       data: [
-        { name: "Assigned", value: afternoonAssigned },
+        { name: "Assigned", value: formatHours(afternoonAssigned) },
         {
           name: "Remaining",
-          value: Math.max(afternoonCapacity - afternoonAssigned, 0),
+          value: formatHours(Math.max(afternoonCapacity - afternoonAssigned, 0)),
         },
       ],
     },
@@ -68,8 +86,8 @@ export default async function Home() {
     { label: "Teachers", value: teacherCount },
     { label: "Subjects", value: subjectCount },
     { label: "Loads", value: loadCount },
-    { label: "Assigned Hours", value: totalAssignedHours },
-    { label: "Remaining Hours", value: totalRemaining },
+    { label: "Assigned Hours", value: formatHours(totalAssignedHours) },
+    { label: "Remaining Hours", value: formatHours(totalRemaining) },
   ];
   return (
     <section className="grid gap-6">

@@ -36,14 +36,33 @@ enum Shift {
   AFTERNOON
 }
 
+enum Weekday {
+  MONDAY
+  TUESDAY
+  WEDNESDAY
+  THURSDAY
+  FRIDAY
+}
+
 model Load {
-  id        String   @id @default(cuid())
+  id        String    @id @default(cuid())
   teacherId String
   subjectId String
   shift     Shift
-  hours     Int
-  teacher   Teacher  @relation(fields: [teacherId], references: [id], onDelete: Cascade)
-  subject   Subject  @relation(fields: [subjectId], references: [id], onDelete: Cascade)
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  startTime String
+  endTime   String
+  days      LoadDay[]
+  teacher   Teacher   @relation(fields: [teacherId], references: [id], onDelete: Cascade)
+  subject   Subject   @relation(fields: [subjectId], references: [id], onDelete: Cascade)
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+}
+
+model LoadDay {
+  id      String  @id @default(cuid())
+  loadId  String
+  weekday Weekday
+  load    Load    @relation(fields: [loadId], references: [id], onDelete: Cascade)
+
+  @@unique([loadId, weekday])
 }

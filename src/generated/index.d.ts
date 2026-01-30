@@ -28,6 +28,11 @@ export type Subject = $Result.DefaultSelection<Prisma.$SubjectPayload>
  * 
  */
 export type Load = $Result.DefaultSelection<Prisma.$LoadPayload>
+/**
+ * Model LoadDay
+ * 
+ */
+export type LoadDay = $Result.DefaultSelection<Prisma.$LoadDayPayload>
 
 /**
  * Enums
@@ -40,11 +45,26 @@ export namespace $Enums {
 
 export type Shift = (typeof Shift)[keyof typeof Shift]
 
+
+export const Weekday: {
+  MONDAY: 'MONDAY',
+  TUESDAY: 'TUESDAY',
+  WEDNESDAY: 'WEDNESDAY',
+  THURSDAY: 'THURSDAY',
+  FRIDAY: 'FRIDAY'
+};
+
+export type Weekday = (typeof Weekday)[keyof typeof Weekday]
+
 }
 
 export type Shift = $Enums.Shift
 
 export const Shift: typeof $Enums.Shift
+
+export type Weekday = $Enums.Weekday
+
+export const Weekday: typeof $Enums.Weekday
 
 /**
  * ##  Prisma Client ʲˢ
@@ -192,6 +212,16 @@ export class PrismaClient<
     * ```
     */
   get load(): Prisma.LoadDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.loadDay`: Exposes CRUD operations for the **LoadDay** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more LoadDays
+    * const loadDays = await prisma.loadDay.findMany()
+    * ```
+    */
+  get loadDay(): Prisma.LoadDayDelegate<ExtArgs, ClientOptions>;
 }
 
 export namespace Prisma {
@@ -628,7 +658,8 @@ export namespace Prisma {
   export const ModelName: {
     Teacher: 'Teacher',
     Subject: 'Subject',
-    Load: 'Load'
+    Load: 'Load',
+    LoadDay: 'LoadDay'
   };
 
   export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -644,7 +675,7 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "teacher" | "subject" | "load"
+      modelProps: "teacher" | "subject" | "load" | "loadDay"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -870,6 +901,80 @@ export namespace Prisma {
           }
         }
       }
+      LoadDay: {
+        payload: Prisma.$LoadDayPayload<ExtArgs>
+        fields: Prisma.LoadDayFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.LoadDayFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$LoadDayPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.LoadDayFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$LoadDayPayload>
+          }
+          findFirst: {
+            args: Prisma.LoadDayFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$LoadDayPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.LoadDayFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$LoadDayPayload>
+          }
+          findMany: {
+            args: Prisma.LoadDayFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$LoadDayPayload>[]
+          }
+          create: {
+            args: Prisma.LoadDayCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$LoadDayPayload>
+          }
+          createMany: {
+            args: Prisma.LoadDayCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.LoadDayCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$LoadDayPayload>[]
+          }
+          delete: {
+            args: Prisma.LoadDayDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$LoadDayPayload>
+          }
+          update: {
+            args: Prisma.LoadDayUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$LoadDayPayload>
+          }
+          deleteMany: {
+            args: Prisma.LoadDayDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.LoadDayUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.LoadDayUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$LoadDayPayload>[]
+          }
+          upsert: {
+            args: Prisma.LoadDayUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$LoadDayPayload>
+          }
+          aggregate: {
+            args: Prisma.LoadDayAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateLoadDay>
+          }
+          groupBy: {
+            args: Prisma.LoadDayGroupByArgs<ExtArgs>
+            result: $Utils.Optional<LoadDayGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.LoadDayCountArgs<ExtArgs>
+            result: $Utils.Optional<LoadDayCountAggregateOutputType> | number
+          }
+        }
+      }
     }
   } & {
     other: {
@@ -981,6 +1086,7 @@ export namespace Prisma {
     teacher?: TeacherOmit
     subject?: SubjectOmit
     load?: LoadOmit
+    loadDay?: LoadDayOmit
   }
 
   /* Types for Logging */
@@ -1115,6 +1221,37 @@ export namespace Prisma {
    */
   export type SubjectCountOutputTypeCountLoadsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: LoadWhereInput
+  }
+
+
+  /**
+   * Count Type LoadCountOutputType
+   */
+
+  export type LoadCountOutputType = {
+    days: number
+  }
+
+  export type LoadCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    days?: boolean | LoadCountOutputTypeCountDaysArgs
+  }
+
+  // Custom InputTypes
+  /**
+   * LoadCountOutputType without action
+   */
+  export type LoadCountOutputTypeDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the LoadCountOutputType
+     */
+    select?: LoadCountOutputTypeSelect<ExtArgs> | null
+  }
+
+  /**
+   * LoadCountOutputType without action
+   */
+  export type LoadCountOutputTypeCountDaysArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: LoadDayWhereInput
   }
 
 
@@ -3337,18 +3474,8 @@ export namespace Prisma {
 
   export type AggregateLoad = {
     _count: LoadCountAggregateOutputType | null
-    _avg: LoadAvgAggregateOutputType | null
-    _sum: LoadSumAggregateOutputType | null
     _min: LoadMinAggregateOutputType | null
     _max: LoadMaxAggregateOutputType | null
-  }
-
-  export type LoadAvgAggregateOutputType = {
-    hours: number | null
-  }
-
-  export type LoadSumAggregateOutputType = {
-    hours: number | null
   }
 
   export type LoadMinAggregateOutputType = {
@@ -3356,7 +3483,8 @@ export namespace Prisma {
     teacherId: string | null
     subjectId: string | null
     shift: $Enums.Shift | null
-    hours: number | null
+    startTime: string | null
+    endTime: string | null
     createdAt: Date | null
     updatedAt: Date | null
   }
@@ -3366,7 +3494,8 @@ export namespace Prisma {
     teacherId: string | null
     subjectId: string | null
     shift: $Enums.Shift | null
-    hours: number | null
+    startTime: string | null
+    endTime: string | null
     createdAt: Date | null
     updatedAt: Date | null
   }
@@ -3376,27 +3505,21 @@ export namespace Prisma {
     teacherId: number
     subjectId: number
     shift: number
-    hours: number
+    startTime: number
+    endTime: number
     createdAt: number
     updatedAt: number
     _all: number
   }
 
 
-  export type LoadAvgAggregateInputType = {
-    hours?: true
-  }
-
-  export type LoadSumAggregateInputType = {
-    hours?: true
-  }
-
   export type LoadMinAggregateInputType = {
     id?: true
     teacherId?: true
     subjectId?: true
     shift?: true
-    hours?: true
+    startTime?: true
+    endTime?: true
     createdAt?: true
     updatedAt?: true
   }
@@ -3406,7 +3529,8 @@ export namespace Prisma {
     teacherId?: true
     subjectId?: true
     shift?: true
-    hours?: true
+    startTime?: true
+    endTime?: true
     createdAt?: true
     updatedAt?: true
   }
@@ -3416,7 +3540,8 @@ export namespace Prisma {
     teacherId?: true
     subjectId?: true
     shift?: true
-    hours?: true
+    startTime?: true
+    endTime?: true
     createdAt?: true
     updatedAt?: true
     _all?: true
@@ -3460,18 +3585,6 @@ export namespace Prisma {
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
      * 
-     * Select which fields to average
-    **/
-    _avg?: LoadAvgAggregateInputType
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
-     * Select which fields to sum
-    **/
-    _sum?: LoadSumAggregateInputType
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
      * Select which fields to find the minimum value
     **/
     _min?: LoadMinAggregateInputType
@@ -3502,8 +3615,6 @@ export namespace Prisma {
     take?: number
     skip?: number
     _count?: LoadCountAggregateInputType | true
-    _avg?: LoadAvgAggregateInputType
-    _sum?: LoadSumAggregateInputType
     _min?: LoadMinAggregateInputType
     _max?: LoadMaxAggregateInputType
   }
@@ -3513,12 +3624,11 @@ export namespace Prisma {
     teacherId: string
     subjectId: string
     shift: $Enums.Shift
-    hours: number
+    startTime: string
+    endTime: string
     createdAt: Date
     updatedAt: Date
     _count: LoadCountAggregateOutputType | null
-    _avg: LoadAvgAggregateOutputType | null
-    _sum: LoadSumAggregateOutputType | null
     _min: LoadMinAggregateOutputType | null
     _max: LoadMaxAggregateOutputType | null
   }
@@ -3542,11 +3652,14 @@ export namespace Prisma {
     teacherId?: boolean
     subjectId?: boolean
     shift?: boolean
-    hours?: boolean
+    startTime?: boolean
+    endTime?: boolean
     createdAt?: boolean
     updatedAt?: boolean
+    days?: boolean | Load$daysArgs<ExtArgs>
     teacher?: boolean | TeacherDefaultArgs<ExtArgs>
     subject?: boolean | SubjectDefaultArgs<ExtArgs>
+    _count?: boolean | LoadCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["load"]>
 
   export type LoadSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
@@ -3554,7 +3667,8 @@ export namespace Prisma {
     teacherId?: boolean
     subjectId?: boolean
     shift?: boolean
-    hours?: boolean
+    startTime?: boolean
+    endTime?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     teacher?: boolean | TeacherDefaultArgs<ExtArgs>
@@ -3566,7 +3680,8 @@ export namespace Prisma {
     teacherId?: boolean
     subjectId?: boolean
     shift?: boolean
-    hours?: boolean
+    startTime?: boolean
+    endTime?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     teacher?: boolean | TeacherDefaultArgs<ExtArgs>
@@ -3578,15 +3693,18 @@ export namespace Prisma {
     teacherId?: boolean
     subjectId?: boolean
     shift?: boolean
-    hours?: boolean
+    startTime?: boolean
+    endTime?: boolean
     createdAt?: boolean
     updatedAt?: boolean
   }
 
-  export type LoadOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "teacherId" | "subjectId" | "shift" | "hours" | "createdAt" | "updatedAt", ExtArgs["result"]["load"]>
+  export type LoadOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "teacherId" | "subjectId" | "shift" | "startTime" | "endTime" | "createdAt" | "updatedAt", ExtArgs["result"]["load"]>
   export type LoadInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    days?: boolean | Load$daysArgs<ExtArgs>
     teacher?: boolean | TeacherDefaultArgs<ExtArgs>
     subject?: boolean | SubjectDefaultArgs<ExtArgs>
+    _count?: boolean | LoadCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type LoadIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     teacher?: boolean | TeacherDefaultArgs<ExtArgs>
@@ -3600,6 +3718,7 @@ export namespace Prisma {
   export type $LoadPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "Load"
     objects: {
+      days: Prisma.$LoadDayPayload<ExtArgs>[]
       teacher: Prisma.$TeacherPayload<ExtArgs>
       subject: Prisma.$SubjectPayload<ExtArgs>
     }
@@ -3608,7 +3727,8 @@ export namespace Prisma {
       teacherId: string
       subjectId: string
       shift: $Enums.Shift
-      hours: number
+      startTime: string
+      endTime: string
       createdAt: Date
       updatedAt: Date
     }, ExtArgs["result"]["load"]>
@@ -4005,6 +4125,7 @@ export namespace Prisma {
    */
   export interface Prisma__LoadClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
+    days<T extends Load$daysArgs<ExtArgs> = {}>(args?: Subset<T, Load$daysArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$LoadDayPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     teacher<T extends TeacherDefaultArgs<ExtArgs> = {}>(args?: Subset<T, TeacherDefaultArgs<ExtArgs>>): Prisma__TeacherClient<$Result.GetResult<Prisma.$TeacherPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
     subject<T extends SubjectDefaultArgs<ExtArgs> = {}>(args?: Subset<T, SubjectDefaultArgs<ExtArgs>>): Prisma__SubjectClient<$Result.GetResult<Prisma.$SubjectPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
     /**
@@ -4040,7 +4161,8 @@ export namespace Prisma {
     readonly teacherId: FieldRef<"Load", 'String'>
     readonly subjectId: FieldRef<"Load", 'String'>
     readonly shift: FieldRef<"Load", 'Shift'>
-    readonly hours: FieldRef<"Load", 'Int'>
+    readonly startTime: FieldRef<"Load", 'String'>
+    readonly endTime: FieldRef<"Load", 'String'>
     readonly createdAt: FieldRef<"Load", 'DateTime'>
     readonly updatedAt: FieldRef<"Load", 'DateTime'>
   }
@@ -4437,6 +4559,30 @@ export namespace Prisma {
   }
 
   /**
+   * Load.days
+   */
+  export type Load$daysArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the LoadDay
+     */
+    select?: LoadDaySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the LoadDay
+     */
+    omit?: LoadDayOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: LoadDayInclude<ExtArgs> | null
+    where?: LoadDayWhereInput
+    orderBy?: LoadDayOrderByWithRelationInput | LoadDayOrderByWithRelationInput[]
+    cursor?: LoadDayWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: LoadDayScalarFieldEnum | LoadDayScalarFieldEnum[]
+  }
+
+  /**
    * Load without action
    */
   export type LoadDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -4452,6 +4598,1036 @@ export namespace Prisma {
      * Choose, which related nodes to fetch as well
      */
     include?: LoadInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model LoadDay
+   */
+
+  export type AggregateLoadDay = {
+    _count: LoadDayCountAggregateOutputType | null
+    _min: LoadDayMinAggregateOutputType | null
+    _max: LoadDayMaxAggregateOutputType | null
+  }
+
+  export type LoadDayMinAggregateOutputType = {
+    id: string | null
+    loadId: string | null
+    weekday: $Enums.Weekday | null
+  }
+
+  export type LoadDayMaxAggregateOutputType = {
+    id: string | null
+    loadId: string | null
+    weekday: $Enums.Weekday | null
+  }
+
+  export type LoadDayCountAggregateOutputType = {
+    id: number
+    loadId: number
+    weekday: number
+    _all: number
+  }
+
+
+  export type LoadDayMinAggregateInputType = {
+    id?: true
+    loadId?: true
+    weekday?: true
+  }
+
+  export type LoadDayMaxAggregateInputType = {
+    id?: true
+    loadId?: true
+    weekday?: true
+  }
+
+  export type LoadDayCountAggregateInputType = {
+    id?: true
+    loadId?: true
+    weekday?: true
+    _all?: true
+  }
+
+  export type LoadDayAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which LoadDay to aggregate.
+     */
+    where?: LoadDayWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of LoadDays to fetch.
+     */
+    orderBy?: LoadDayOrderByWithRelationInput | LoadDayOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: LoadDayWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` LoadDays from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` LoadDays.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned LoadDays
+    **/
+    _count?: true | LoadDayCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: LoadDayMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: LoadDayMaxAggregateInputType
+  }
+
+  export type GetLoadDayAggregateType<T extends LoadDayAggregateArgs> = {
+        [P in keyof T & keyof AggregateLoadDay]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateLoadDay[P]>
+      : GetScalarType<T[P], AggregateLoadDay[P]>
+  }
+
+
+
+
+  export type LoadDayGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: LoadDayWhereInput
+    orderBy?: LoadDayOrderByWithAggregationInput | LoadDayOrderByWithAggregationInput[]
+    by: LoadDayScalarFieldEnum[] | LoadDayScalarFieldEnum
+    having?: LoadDayScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: LoadDayCountAggregateInputType | true
+    _min?: LoadDayMinAggregateInputType
+    _max?: LoadDayMaxAggregateInputType
+  }
+
+  export type LoadDayGroupByOutputType = {
+    id: string
+    loadId: string
+    weekday: $Enums.Weekday
+    _count: LoadDayCountAggregateOutputType | null
+    _min: LoadDayMinAggregateOutputType | null
+    _max: LoadDayMaxAggregateOutputType | null
+  }
+
+  type GetLoadDayGroupByPayload<T extends LoadDayGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<LoadDayGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof LoadDayGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], LoadDayGroupByOutputType[P]>
+            : GetScalarType<T[P], LoadDayGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type LoadDaySelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    loadId?: boolean
+    weekday?: boolean
+    load?: boolean | LoadDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["loadDay"]>
+
+  export type LoadDaySelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    loadId?: boolean
+    weekday?: boolean
+    load?: boolean | LoadDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["loadDay"]>
+
+  export type LoadDaySelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    loadId?: boolean
+    weekday?: boolean
+    load?: boolean | LoadDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["loadDay"]>
+
+  export type LoadDaySelectScalar = {
+    id?: boolean
+    loadId?: boolean
+    weekday?: boolean
+  }
+
+  export type LoadDayOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "loadId" | "weekday", ExtArgs["result"]["loadDay"]>
+  export type LoadDayInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    load?: boolean | LoadDefaultArgs<ExtArgs>
+  }
+  export type LoadDayIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    load?: boolean | LoadDefaultArgs<ExtArgs>
+  }
+  export type LoadDayIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    load?: boolean | LoadDefaultArgs<ExtArgs>
+  }
+
+  export type $LoadDayPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "LoadDay"
+    objects: {
+      load: Prisma.$LoadPayload<ExtArgs>
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      loadId: string
+      weekday: $Enums.Weekday
+    }, ExtArgs["result"]["loadDay"]>
+    composites: {}
+  }
+
+  type LoadDayGetPayload<S extends boolean | null | undefined | LoadDayDefaultArgs> = $Result.GetResult<Prisma.$LoadDayPayload, S>
+
+  type LoadDayCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<LoadDayFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: LoadDayCountAggregateInputType | true
+    }
+
+  export interface LoadDayDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['LoadDay'], meta: { name: 'LoadDay' } }
+    /**
+     * Find zero or one LoadDay that matches the filter.
+     * @param {LoadDayFindUniqueArgs} args - Arguments to find a LoadDay
+     * @example
+     * // Get one LoadDay
+     * const loadDay = await prisma.loadDay.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends LoadDayFindUniqueArgs>(args: SelectSubset<T, LoadDayFindUniqueArgs<ExtArgs>>): Prisma__LoadDayClient<$Result.GetResult<Prisma.$LoadDayPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one LoadDay that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {LoadDayFindUniqueOrThrowArgs} args - Arguments to find a LoadDay
+     * @example
+     * // Get one LoadDay
+     * const loadDay = await prisma.loadDay.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends LoadDayFindUniqueOrThrowArgs>(args: SelectSubset<T, LoadDayFindUniqueOrThrowArgs<ExtArgs>>): Prisma__LoadDayClient<$Result.GetResult<Prisma.$LoadDayPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first LoadDay that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {LoadDayFindFirstArgs} args - Arguments to find a LoadDay
+     * @example
+     * // Get one LoadDay
+     * const loadDay = await prisma.loadDay.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends LoadDayFindFirstArgs>(args?: SelectSubset<T, LoadDayFindFirstArgs<ExtArgs>>): Prisma__LoadDayClient<$Result.GetResult<Prisma.$LoadDayPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first LoadDay that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {LoadDayFindFirstOrThrowArgs} args - Arguments to find a LoadDay
+     * @example
+     * // Get one LoadDay
+     * const loadDay = await prisma.loadDay.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends LoadDayFindFirstOrThrowArgs>(args?: SelectSubset<T, LoadDayFindFirstOrThrowArgs<ExtArgs>>): Prisma__LoadDayClient<$Result.GetResult<Prisma.$LoadDayPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more LoadDays that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {LoadDayFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all LoadDays
+     * const loadDays = await prisma.loadDay.findMany()
+     * 
+     * // Get first 10 LoadDays
+     * const loadDays = await prisma.loadDay.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const loadDayWithIdOnly = await prisma.loadDay.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends LoadDayFindManyArgs>(args?: SelectSubset<T, LoadDayFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$LoadDayPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a LoadDay.
+     * @param {LoadDayCreateArgs} args - Arguments to create a LoadDay.
+     * @example
+     * // Create one LoadDay
+     * const LoadDay = await prisma.loadDay.create({
+     *   data: {
+     *     // ... data to create a LoadDay
+     *   }
+     * })
+     * 
+     */
+    create<T extends LoadDayCreateArgs>(args: SelectSubset<T, LoadDayCreateArgs<ExtArgs>>): Prisma__LoadDayClient<$Result.GetResult<Prisma.$LoadDayPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many LoadDays.
+     * @param {LoadDayCreateManyArgs} args - Arguments to create many LoadDays.
+     * @example
+     * // Create many LoadDays
+     * const loadDay = await prisma.loadDay.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends LoadDayCreateManyArgs>(args?: SelectSubset<T, LoadDayCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many LoadDays and returns the data saved in the database.
+     * @param {LoadDayCreateManyAndReturnArgs} args - Arguments to create many LoadDays.
+     * @example
+     * // Create many LoadDays
+     * const loadDay = await prisma.loadDay.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many LoadDays and only return the `id`
+     * const loadDayWithIdOnly = await prisma.loadDay.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends LoadDayCreateManyAndReturnArgs>(args?: SelectSubset<T, LoadDayCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$LoadDayPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a LoadDay.
+     * @param {LoadDayDeleteArgs} args - Arguments to delete one LoadDay.
+     * @example
+     * // Delete one LoadDay
+     * const LoadDay = await prisma.loadDay.delete({
+     *   where: {
+     *     // ... filter to delete one LoadDay
+     *   }
+     * })
+     * 
+     */
+    delete<T extends LoadDayDeleteArgs>(args: SelectSubset<T, LoadDayDeleteArgs<ExtArgs>>): Prisma__LoadDayClient<$Result.GetResult<Prisma.$LoadDayPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one LoadDay.
+     * @param {LoadDayUpdateArgs} args - Arguments to update one LoadDay.
+     * @example
+     * // Update one LoadDay
+     * const loadDay = await prisma.loadDay.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends LoadDayUpdateArgs>(args: SelectSubset<T, LoadDayUpdateArgs<ExtArgs>>): Prisma__LoadDayClient<$Result.GetResult<Prisma.$LoadDayPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more LoadDays.
+     * @param {LoadDayDeleteManyArgs} args - Arguments to filter LoadDays to delete.
+     * @example
+     * // Delete a few LoadDays
+     * const { count } = await prisma.loadDay.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends LoadDayDeleteManyArgs>(args?: SelectSubset<T, LoadDayDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more LoadDays.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {LoadDayUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many LoadDays
+     * const loadDay = await prisma.loadDay.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends LoadDayUpdateManyArgs>(args: SelectSubset<T, LoadDayUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more LoadDays and returns the data updated in the database.
+     * @param {LoadDayUpdateManyAndReturnArgs} args - Arguments to update many LoadDays.
+     * @example
+     * // Update many LoadDays
+     * const loadDay = await prisma.loadDay.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more LoadDays and only return the `id`
+     * const loadDayWithIdOnly = await prisma.loadDay.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends LoadDayUpdateManyAndReturnArgs>(args: SelectSubset<T, LoadDayUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$LoadDayPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one LoadDay.
+     * @param {LoadDayUpsertArgs} args - Arguments to update or create a LoadDay.
+     * @example
+     * // Update or create a LoadDay
+     * const loadDay = await prisma.loadDay.upsert({
+     *   create: {
+     *     // ... data to create a LoadDay
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the LoadDay we want to update
+     *   }
+     * })
+     */
+    upsert<T extends LoadDayUpsertArgs>(args: SelectSubset<T, LoadDayUpsertArgs<ExtArgs>>): Prisma__LoadDayClient<$Result.GetResult<Prisma.$LoadDayPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of LoadDays.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {LoadDayCountArgs} args - Arguments to filter LoadDays to count.
+     * @example
+     * // Count the number of LoadDays
+     * const count = await prisma.loadDay.count({
+     *   where: {
+     *     // ... the filter for the LoadDays we want to count
+     *   }
+     * })
+    **/
+    count<T extends LoadDayCountArgs>(
+      args?: Subset<T, LoadDayCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], LoadDayCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a LoadDay.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {LoadDayAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends LoadDayAggregateArgs>(args: Subset<T, LoadDayAggregateArgs>): Prisma.PrismaPromise<GetLoadDayAggregateType<T>>
+
+    /**
+     * Group by LoadDay.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {LoadDayGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends LoadDayGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: LoadDayGroupByArgs['orderBy'] }
+        : { orderBy?: LoadDayGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, LoadDayGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetLoadDayGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the LoadDay model
+   */
+  readonly fields: LoadDayFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for LoadDay.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__LoadDayClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    load<T extends LoadDefaultArgs<ExtArgs> = {}>(args?: Subset<T, LoadDefaultArgs<ExtArgs>>): Prisma__LoadClient<$Result.GetResult<Prisma.$LoadPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the LoadDay model
+   */
+  interface LoadDayFieldRefs {
+    readonly id: FieldRef<"LoadDay", 'String'>
+    readonly loadId: FieldRef<"LoadDay", 'String'>
+    readonly weekday: FieldRef<"LoadDay", 'Weekday'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * LoadDay findUnique
+   */
+  export type LoadDayFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the LoadDay
+     */
+    select?: LoadDaySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the LoadDay
+     */
+    omit?: LoadDayOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: LoadDayInclude<ExtArgs> | null
+    /**
+     * Filter, which LoadDay to fetch.
+     */
+    where: LoadDayWhereUniqueInput
+  }
+
+  /**
+   * LoadDay findUniqueOrThrow
+   */
+  export type LoadDayFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the LoadDay
+     */
+    select?: LoadDaySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the LoadDay
+     */
+    omit?: LoadDayOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: LoadDayInclude<ExtArgs> | null
+    /**
+     * Filter, which LoadDay to fetch.
+     */
+    where: LoadDayWhereUniqueInput
+  }
+
+  /**
+   * LoadDay findFirst
+   */
+  export type LoadDayFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the LoadDay
+     */
+    select?: LoadDaySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the LoadDay
+     */
+    omit?: LoadDayOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: LoadDayInclude<ExtArgs> | null
+    /**
+     * Filter, which LoadDay to fetch.
+     */
+    where?: LoadDayWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of LoadDays to fetch.
+     */
+    orderBy?: LoadDayOrderByWithRelationInput | LoadDayOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for LoadDays.
+     */
+    cursor?: LoadDayWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` LoadDays from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` LoadDays.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of LoadDays.
+     */
+    distinct?: LoadDayScalarFieldEnum | LoadDayScalarFieldEnum[]
+  }
+
+  /**
+   * LoadDay findFirstOrThrow
+   */
+  export type LoadDayFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the LoadDay
+     */
+    select?: LoadDaySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the LoadDay
+     */
+    omit?: LoadDayOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: LoadDayInclude<ExtArgs> | null
+    /**
+     * Filter, which LoadDay to fetch.
+     */
+    where?: LoadDayWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of LoadDays to fetch.
+     */
+    orderBy?: LoadDayOrderByWithRelationInput | LoadDayOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for LoadDays.
+     */
+    cursor?: LoadDayWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` LoadDays from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` LoadDays.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of LoadDays.
+     */
+    distinct?: LoadDayScalarFieldEnum | LoadDayScalarFieldEnum[]
+  }
+
+  /**
+   * LoadDay findMany
+   */
+  export type LoadDayFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the LoadDay
+     */
+    select?: LoadDaySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the LoadDay
+     */
+    omit?: LoadDayOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: LoadDayInclude<ExtArgs> | null
+    /**
+     * Filter, which LoadDays to fetch.
+     */
+    where?: LoadDayWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of LoadDays to fetch.
+     */
+    orderBy?: LoadDayOrderByWithRelationInput | LoadDayOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing LoadDays.
+     */
+    cursor?: LoadDayWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` LoadDays from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` LoadDays.
+     */
+    skip?: number
+    distinct?: LoadDayScalarFieldEnum | LoadDayScalarFieldEnum[]
+  }
+
+  /**
+   * LoadDay create
+   */
+  export type LoadDayCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the LoadDay
+     */
+    select?: LoadDaySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the LoadDay
+     */
+    omit?: LoadDayOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: LoadDayInclude<ExtArgs> | null
+    /**
+     * The data needed to create a LoadDay.
+     */
+    data: XOR<LoadDayCreateInput, LoadDayUncheckedCreateInput>
+  }
+
+  /**
+   * LoadDay createMany
+   */
+  export type LoadDayCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many LoadDays.
+     */
+    data: LoadDayCreateManyInput | LoadDayCreateManyInput[]
+  }
+
+  /**
+   * LoadDay createManyAndReturn
+   */
+  export type LoadDayCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the LoadDay
+     */
+    select?: LoadDaySelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the LoadDay
+     */
+    omit?: LoadDayOmit<ExtArgs> | null
+    /**
+     * The data used to create many LoadDays.
+     */
+    data: LoadDayCreateManyInput | LoadDayCreateManyInput[]
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: LoadDayIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * LoadDay update
+   */
+  export type LoadDayUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the LoadDay
+     */
+    select?: LoadDaySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the LoadDay
+     */
+    omit?: LoadDayOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: LoadDayInclude<ExtArgs> | null
+    /**
+     * The data needed to update a LoadDay.
+     */
+    data: XOR<LoadDayUpdateInput, LoadDayUncheckedUpdateInput>
+    /**
+     * Choose, which LoadDay to update.
+     */
+    where: LoadDayWhereUniqueInput
+  }
+
+  /**
+   * LoadDay updateMany
+   */
+  export type LoadDayUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update LoadDays.
+     */
+    data: XOR<LoadDayUpdateManyMutationInput, LoadDayUncheckedUpdateManyInput>
+    /**
+     * Filter which LoadDays to update
+     */
+    where?: LoadDayWhereInput
+    /**
+     * Limit how many LoadDays to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * LoadDay updateManyAndReturn
+   */
+  export type LoadDayUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the LoadDay
+     */
+    select?: LoadDaySelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the LoadDay
+     */
+    omit?: LoadDayOmit<ExtArgs> | null
+    /**
+     * The data used to update LoadDays.
+     */
+    data: XOR<LoadDayUpdateManyMutationInput, LoadDayUncheckedUpdateManyInput>
+    /**
+     * Filter which LoadDays to update
+     */
+    where?: LoadDayWhereInput
+    /**
+     * Limit how many LoadDays to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: LoadDayIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * LoadDay upsert
+   */
+  export type LoadDayUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the LoadDay
+     */
+    select?: LoadDaySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the LoadDay
+     */
+    omit?: LoadDayOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: LoadDayInclude<ExtArgs> | null
+    /**
+     * The filter to search for the LoadDay to update in case it exists.
+     */
+    where: LoadDayWhereUniqueInput
+    /**
+     * In case the LoadDay found by the `where` argument doesn't exist, create a new LoadDay with this data.
+     */
+    create: XOR<LoadDayCreateInput, LoadDayUncheckedCreateInput>
+    /**
+     * In case the LoadDay was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<LoadDayUpdateInput, LoadDayUncheckedUpdateInput>
+  }
+
+  /**
+   * LoadDay delete
+   */
+  export type LoadDayDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the LoadDay
+     */
+    select?: LoadDaySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the LoadDay
+     */
+    omit?: LoadDayOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: LoadDayInclude<ExtArgs> | null
+    /**
+     * Filter which LoadDay to delete.
+     */
+    where: LoadDayWhereUniqueInput
+  }
+
+  /**
+   * LoadDay deleteMany
+   */
+  export type LoadDayDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which LoadDays to delete
+     */
+    where?: LoadDayWhereInput
+    /**
+     * Limit how many LoadDays to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * LoadDay without action
+   */
+  export type LoadDayDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the LoadDay
+     */
+    select?: LoadDaySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the LoadDay
+     */
+    omit?: LoadDayOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: LoadDayInclude<ExtArgs> | null
   }
 
 
@@ -4496,12 +5672,22 @@ export namespace Prisma {
     teacherId: 'teacherId',
     subjectId: 'subjectId',
     shift: 'shift',
-    hours: 'hours',
+    startTime: 'startTime',
+    endTime: 'endTime',
     createdAt: 'createdAt',
     updatedAt: 'updatedAt'
   };
 
   export type LoadScalarFieldEnum = (typeof LoadScalarFieldEnum)[keyof typeof LoadScalarFieldEnum]
+
+
+  export const LoadDayScalarFieldEnum: {
+    id: 'id',
+    loadId: 'loadId',
+    weekday: 'weekday'
+  };
+
+  export type LoadDayScalarFieldEnum = (typeof LoadDayScalarFieldEnum)[keyof typeof LoadDayScalarFieldEnum]
 
 
   export const SortOrder: {
@@ -4550,6 +5736,13 @@ export namespace Prisma {
    * Reference to a field of type 'Int'
    */
   export type IntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Int'>
+    
+
+
+  /**
+   * Reference to a field of type 'Weekday'
+   */
+  export type EnumWeekdayFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Weekday'>
     
 
 
@@ -4698,9 +5891,11 @@ export namespace Prisma {
     teacherId?: StringFilter<"Load"> | string
     subjectId?: StringFilter<"Load"> | string
     shift?: EnumShiftFilter<"Load"> | $Enums.Shift
-    hours?: IntFilter<"Load"> | number
+    startTime?: StringFilter<"Load"> | string
+    endTime?: StringFilter<"Load"> | string
     createdAt?: DateTimeFilter<"Load"> | Date | string
     updatedAt?: DateTimeFilter<"Load"> | Date | string
+    days?: LoadDayListRelationFilter
     teacher?: XOR<TeacherScalarRelationFilter, TeacherWhereInput>
     subject?: XOR<SubjectScalarRelationFilter, SubjectWhereInput>
   }
@@ -4710,9 +5905,11 @@ export namespace Prisma {
     teacherId?: SortOrder
     subjectId?: SortOrder
     shift?: SortOrder
-    hours?: SortOrder
+    startTime?: SortOrder
+    endTime?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+    days?: LoadDayOrderByRelationAggregateInput
     teacher?: TeacherOrderByWithRelationInput
     subject?: SubjectOrderByWithRelationInput
   }
@@ -4725,9 +5922,11 @@ export namespace Prisma {
     teacherId?: StringFilter<"Load"> | string
     subjectId?: StringFilter<"Load"> | string
     shift?: EnumShiftFilter<"Load"> | $Enums.Shift
-    hours?: IntFilter<"Load"> | number
+    startTime?: StringFilter<"Load"> | string
+    endTime?: StringFilter<"Load"> | string
     createdAt?: DateTimeFilter<"Load"> | Date | string
     updatedAt?: DateTimeFilter<"Load"> | Date | string
+    days?: LoadDayListRelationFilter
     teacher?: XOR<TeacherScalarRelationFilter, TeacherWhereInput>
     subject?: XOR<SubjectScalarRelationFilter, SubjectWhereInput>
   }, "id">
@@ -4737,14 +5936,13 @@ export namespace Prisma {
     teacherId?: SortOrder
     subjectId?: SortOrder
     shift?: SortOrder
-    hours?: SortOrder
+    startTime?: SortOrder
+    endTime?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     _count?: LoadCountOrderByAggregateInput
-    _avg?: LoadAvgOrderByAggregateInput
     _max?: LoadMaxOrderByAggregateInput
     _min?: LoadMinOrderByAggregateInput
-    _sum?: LoadSumOrderByAggregateInput
   }
 
   export type LoadScalarWhereWithAggregatesInput = {
@@ -4755,9 +5953,56 @@ export namespace Prisma {
     teacherId?: StringWithAggregatesFilter<"Load"> | string
     subjectId?: StringWithAggregatesFilter<"Load"> | string
     shift?: EnumShiftWithAggregatesFilter<"Load"> | $Enums.Shift
-    hours?: IntWithAggregatesFilter<"Load"> | number
+    startTime?: StringWithAggregatesFilter<"Load"> | string
+    endTime?: StringWithAggregatesFilter<"Load"> | string
     createdAt?: DateTimeWithAggregatesFilter<"Load"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"Load"> | Date | string
+  }
+
+  export type LoadDayWhereInput = {
+    AND?: LoadDayWhereInput | LoadDayWhereInput[]
+    OR?: LoadDayWhereInput[]
+    NOT?: LoadDayWhereInput | LoadDayWhereInput[]
+    id?: StringFilter<"LoadDay"> | string
+    loadId?: StringFilter<"LoadDay"> | string
+    weekday?: EnumWeekdayFilter<"LoadDay"> | $Enums.Weekday
+    load?: XOR<LoadScalarRelationFilter, LoadWhereInput>
+  }
+
+  export type LoadDayOrderByWithRelationInput = {
+    id?: SortOrder
+    loadId?: SortOrder
+    weekday?: SortOrder
+    load?: LoadOrderByWithRelationInput
+  }
+
+  export type LoadDayWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    loadId_weekday?: LoadDayLoadIdWeekdayCompoundUniqueInput
+    AND?: LoadDayWhereInput | LoadDayWhereInput[]
+    OR?: LoadDayWhereInput[]
+    NOT?: LoadDayWhereInput | LoadDayWhereInput[]
+    loadId?: StringFilter<"LoadDay"> | string
+    weekday?: EnumWeekdayFilter<"LoadDay"> | $Enums.Weekday
+    load?: XOR<LoadScalarRelationFilter, LoadWhereInput>
+  }, "id" | "loadId_weekday">
+
+  export type LoadDayOrderByWithAggregationInput = {
+    id?: SortOrder
+    loadId?: SortOrder
+    weekday?: SortOrder
+    _count?: LoadDayCountOrderByAggregateInput
+    _max?: LoadDayMaxOrderByAggregateInput
+    _min?: LoadDayMinOrderByAggregateInput
+  }
+
+  export type LoadDayScalarWhereWithAggregatesInput = {
+    AND?: LoadDayScalarWhereWithAggregatesInput | LoadDayScalarWhereWithAggregatesInput[]
+    OR?: LoadDayScalarWhereWithAggregatesInput[]
+    NOT?: LoadDayScalarWhereWithAggregatesInput | LoadDayScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"LoadDay"> | string
+    loadId?: StringWithAggregatesFilter<"LoadDay"> | string
+    weekday?: EnumWeekdayWithAggregatesFilter<"LoadDay"> | $Enums.Weekday
   }
 
   export type TeacherCreateInput = {
@@ -4904,9 +6149,11 @@ export namespace Prisma {
   export type LoadCreateInput = {
     id?: string
     shift: $Enums.Shift
-    hours: number
+    startTime: string
+    endTime: string
     createdAt?: Date | string
     updatedAt?: Date | string
+    days?: LoadDayCreateNestedManyWithoutLoadInput
     teacher: TeacherCreateNestedOneWithoutLoadsInput
     subject: SubjectCreateNestedOneWithoutLoadsInput
   }
@@ -4916,17 +6163,21 @@ export namespace Prisma {
     teacherId: string
     subjectId: string
     shift: $Enums.Shift
-    hours: number
+    startTime: string
+    endTime: string
     createdAt?: Date | string
     updatedAt?: Date | string
+    days?: LoadDayUncheckedCreateNestedManyWithoutLoadInput
   }
 
   export type LoadUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
     shift?: EnumShiftFieldUpdateOperationsInput | $Enums.Shift
-    hours?: IntFieldUpdateOperationsInput | number
+    startTime?: StringFieldUpdateOperationsInput | string
+    endTime?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    days?: LoadDayUpdateManyWithoutLoadNestedInput
     teacher?: TeacherUpdateOneRequiredWithoutLoadsNestedInput
     subject?: SubjectUpdateOneRequiredWithoutLoadsNestedInput
   }
@@ -4936,9 +6187,11 @@ export namespace Prisma {
     teacherId?: StringFieldUpdateOperationsInput | string
     subjectId?: StringFieldUpdateOperationsInput | string
     shift?: EnumShiftFieldUpdateOperationsInput | $Enums.Shift
-    hours?: IntFieldUpdateOperationsInput | number
+    startTime?: StringFieldUpdateOperationsInput | string
+    endTime?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    days?: LoadDayUncheckedUpdateManyWithoutLoadNestedInput
   }
 
   export type LoadCreateManyInput = {
@@ -4946,7 +6199,8 @@ export namespace Prisma {
     teacherId: string
     subjectId: string
     shift: $Enums.Shift
-    hours: number
+    startTime: string
+    endTime: string
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -4954,7 +6208,8 @@ export namespace Prisma {
   export type LoadUpdateManyMutationInput = {
     id?: StringFieldUpdateOperationsInput | string
     shift?: EnumShiftFieldUpdateOperationsInput | $Enums.Shift
-    hours?: IntFieldUpdateOperationsInput | number
+    startTime?: StringFieldUpdateOperationsInput | string
+    endTime?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -4964,9 +6219,51 @@ export namespace Prisma {
     teacherId?: StringFieldUpdateOperationsInput | string
     subjectId?: StringFieldUpdateOperationsInput | string
     shift?: EnumShiftFieldUpdateOperationsInput | $Enums.Shift
-    hours?: IntFieldUpdateOperationsInput | number
+    startTime?: StringFieldUpdateOperationsInput | string
+    endTime?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type LoadDayCreateInput = {
+    id?: string
+    weekday: $Enums.Weekday
+    load: LoadCreateNestedOneWithoutDaysInput
+  }
+
+  export type LoadDayUncheckedCreateInput = {
+    id?: string
+    loadId: string
+    weekday: $Enums.Weekday
+  }
+
+  export type LoadDayUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    weekday?: EnumWeekdayFieldUpdateOperationsInput | $Enums.Weekday
+    load?: LoadUpdateOneRequiredWithoutDaysNestedInput
+  }
+
+  export type LoadDayUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    loadId?: StringFieldUpdateOperationsInput | string
+    weekday?: EnumWeekdayFieldUpdateOperationsInput | $Enums.Weekday
+  }
+
+  export type LoadDayCreateManyInput = {
+    id?: string
+    loadId: string
+    weekday: $Enums.Weekday
+  }
+
+  export type LoadDayUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    weekday?: EnumWeekdayFieldUpdateOperationsInput | $Enums.Weekday
+  }
+
+  export type LoadDayUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    loadId?: StringFieldUpdateOperationsInput | string
+    weekday?: EnumWeekdayFieldUpdateOperationsInput | $Enums.Weekday
   }
 
   export type StringFilter<$PrismaModel = never> = {
@@ -5180,6 +6477,12 @@ export namespace Prisma {
     _max?: NestedIntFilter<$PrismaModel>
   }
 
+  export type LoadDayListRelationFilter = {
+    every?: LoadDayWhereInput
+    some?: LoadDayWhereInput
+    none?: LoadDayWhereInput
+  }
+
   export type TeacherScalarRelationFilter = {
     is?: TeacherWhereInput
     isNot?: TeacherWhereInput
@@ -5190,18 +6493,19 @@ export namespace Prisma {
     isNot?: SubjectWhereInput
   }
 
+  export type LoadDayOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
   export type LoadCountOrderByAggregateInput = {
     id?: SortOrder
     teacherId?: SortOrder
     subjectId?: SortOrder
     shift?: SortOrder
-    hours?: SortOrder
+    startTime?: SortOrder
+    endTime?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
-  }
-
-  export type LoadAvgOrderByAggregateInput = {
-    hours?: SortOrder
   }
 
   export type LoadMaxOrderByAggregateInput = {
@@ -5209,7 +6513,8 @@ export namespace Prisma {
     teacherId?: SortOrder
     subjectId?: SortOrder
     shift?: SortOrder
-    hours?: SortOrder
+    startTime?: SortOrder
+    endTime?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -5219,13 +6524,55 @@ export namespace Prisma {
     teacherId?: SortOrder
     subjectId?: SortOrder
     shift?: SortOrder
-    hours?: SortOrder
+    startTime?: SortOrder
+    endTime?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
 
-  export type LoadSumOrderByAggregateInput = {
-    hours?: SortOrder
+  export type EnumWeekdayFilter<$PrismaModel = never> = {
+    equals?: $Enums.Weekday | EnumWeekdayFieldRefInput<$PrismaModel>
+    in?: $Enums.Weekday[]
+    notIn?: $Enums.Weekday[]
+    not?: NestedEnumWeekdayFilter<$PrismaModel> | $Enums.Weekday
+  }
+
+  export type LoadScalarRelationFilter = {
+    is?: LoadWhereInput
+    isNot?: LoadWhereInput
+  }
+
+  export type LoadDayLoadIdWeekdayCompoundUniqueInput = {
+    loadId: string
+    weekday: $Enums.Weekday
+  }
+
+  export type LoadDayCountOrderByAggregateInput = {
+    id?: SortOrder
+    loadId?: SortOrder
+    weekday?: SortOrder
+  }
+
+  export type LoadDayMaxOrderByAggregateInput = {
+    id?: SortOrder
+    loadId?: SortOrder
+    weekday?: SortOrder
+  }
+
+  export type LoadDayMinOrderByAggregateInput = {
+    id?: SortOrder
+    loadId?: SortOrder
+    weekday?: SortOrder
+  }
+
+  export type EnumWeekdayWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.Weekday | EnumWeekdayFieldRefInput<$PrismaModel>
+    in?: $Enums.Weekday[]
+    notIn?: $Enums.Weekday[]
+    not?: NestedEnumWeekdayWithAggregatesFilter<$PrismaModel> | $Enums.Weekday
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumWeekdayFilter<$PrismaModel>
+    _max?: NestedEnumWeekdayFilter<$PrismaModel>
   }
 
   export type LoadCreateNestedManyWithoutTeacherInput = {
@@ -5336,6 +6683,13 @@ export namespace Prisma {
     deleteMany?: LoadScalarWhereInput | LoadScalarWhereInput[]
   }
 
+  export type LoadDayCreateNestedManyWithoutLoadInput = {
+    create?: XOR<LoadDayCreateWithoutLoadInput, LoadDayUncheckedCreateWithoutLoadInput> | LoadDayCreateWithoutLoadInput[] | LoadDayUncheckedCreateWithoutLoadInput[]
+    connectOrCreate?: LoadDayCreateOrConnectWithoutLoadInput | LoadDayCreateOrConnectWithoutLoadInput[]
+    createMany?: LoadDayCreateManyLoadInputEnvelope
+    connect?: LoadDayWhereUniqueInput | LoadDayWhereUniqueInput[]
+  }
+
   export type TeacherCreateNestedOneWithoutLoadsInput = {
     create?: XOR<TeacherCreateWithoutLoadsInput, TeacherUncheckedCreateWithoutLoadsInput>
     connectOrCreate?: TeacherCreateOrConnectWithoutLoadsInput
@@ -5346,6 +6700,27 @@ export namespace Prisma {
     create?: XOR<SubjectCreateWithoutLoadsInput, SubjectUncheckedCreateWithoutLoadsInput>
     connectOrCreate?: SubjectCreateOrConnectWithoutLoadsInput
     connect?: SubjectWhereUniqueInput
+  }
+
+  export type LoadDayUncheckedCreateNestedManyWithoutLoadInput = {
+    create?: XOR<LoadDayCreateWithoutLoadInput, LoadDayUncheckedCreateWithoutLoadInput> | LoadDayCreateWithoutLoadInput[] | LoadDayUncheckedCreateWithoutLoadInput[]
+    connectOrCreate?: LoadDayCreateOrConnectWithoutLoadInput | LoadDayCreateOrConnectWithoutLoadInput[]
+    createMany?: LoadDayCreateManyLoadInputEnvelope
+    connect?: LoadDayWhereUniqueInput | LoadDayWhereUniqueInput[]
+  }
+
+  export type LoadDayUpdateManyWithoutLoadNestedInput = {
+    create?: XOR<LoadDayCreateWithoutLoadInput, LoadDayUncheckedCreateWithoutLoadInput> | LoadDayCreateWithoutLoadInput[] | LoadDayUncheckedCreateWithoutLoadInput[]
+    connectOrCreate?: LoadDayCreateOrConnectWithoutLoadInput | LoadDayCreateOrConnectWithoutLoadInput[]
+    upsert?: LoadDayUpsertWithWhereUniqueWithoutLoadInput | LoadDayUpsertWithWhereUniqueWithoutLoadInput[]
+    createMany?: LoadDayCreateManyLoadInputEnvelope
+    set?: LoadDayWhereUniqueInput | LoadDayWhereUniqueInput[]
+    disconnect?: LoadDayWhereUniqueInput | LoadDayWhereUniqueInput[]
+    delete?: LoadDayWhereUniqueInput | LoadDayWhereUniqueInput[]
+    connect?: LoadDayWhereUniqueInput | LoadDayWhereUniqueInput[]
+    update?: LoadDayUpdateWithWhereUniqueWithoutLoadInput | LoadDayUpdateWithWhereUniqueWithoutLoadInput[]
+    updateMany?: LoadDayUpdateManyWithWhereWithoutLoadInput | LoadDayUpdateManyWithWhereWithoutLoadInput[]
+    deleteMany?: LoadDayScalarWhereInput | LoadDayScalarWhereInput[]
   }
 
   export type TeacherUpdateOneRequiredWithoutLoadsNestedInput = {
@@ -5362,6 +6737,38 @@ export namespace Prisma {
     upsert?: SubjectUpsertWithoutLoadsInput
     connect?: SubjectWhereUniqueInput
     update?: XOR<XOR<SubjectUpdateToOneWithWhereWithoutLoadsInput, SubjectUpdateWithoutLoadsInput>, SubjectUncheckedUpdateWithoutLoadsInput>
+  }
+
+  export type LoadDayUncheckedUpdateManyWithoutLoadNestedInput = {
+    create?: XOR<LoadDayCreateWithoutLoadInput, LoadDayUncheckedCreateWithoutLoadInput> | LoadDayCreateWithoutLoadInput[] | LoadDayUncheckedCreateWithoutLoadInput[]
+    connectOrCreate?: LoadDayCreateOrConnectWithoutLoadInput | LoadDayCreateOrConnectWithoutLoadInput[]
+    upsert?: LoadDayUpsertWithWhereUniqueWithoutLoadInput | LoadDayUpsertWithWhereUniqueWithoutLoadInput[]
+    createMany?: LoadDayCreateManyLoadInputEnvelope
+    set?: LoadDayWhereUniqueInput | LoadDayWhereUniqueInput[]
+    disconnect?: LoadDayWhereUniqueInput | LoadDayWhereUniqueInput[]
+    delete?: LoadDayWhereUniqueInput | LoadDayWhereUniqueInput[]
+    connect?: LoadDayWhereUniqueInput | LoadDayWhereUniqueInput[]
+    update?: LoadDayUpdateWithWhereUniqueWithoutLoadInput | LoadDayUpdateWithWhereUniqueWithoutLoadInput[]
+    updateMany?: LoadDayUpdateManyWithWhereWithoutLoadInput | LoadDayUpdateManyWithWhereWithoutLoadInput[]
+    deleteMany?: LoadDayScalarWhereInput | LoadDayScalarWhereInput[]
+  }
+
+  export type LoadCreateNestedOneWithoutDaysInput = {
+    create?: XOR<LoadCreateWithoutDaysInput, LoadUncheckedCreateWithoutDaysInput>
+    connectOrCreate?: LoadCreateOrConnectWithoutDaysInput
+    connect?: LoadWhereUniqueInput
+  }
+
+  export type EnumWeekdayFieldUpdateOperationsInput = {
+    set?: $Enums.Weekday
+  }
+
+  export type LoadUpdateOneRequiredWithoutDaysNestedInput = {
+    create?: XOR<LoadCreateWithoutDaysInput, LoadUncheckedCreateWithoutDaysInput>
+    connectOrCreate?: LoadCreateOrConnectWithoutDaysInput
+    upsert?: LoadUpsertWithoutDaysInput
+    connect?: LoadWhereUniqueInput
+    update?: XOR<XOR<LoadUpdateToOneWithWhereWithoutDaysInput, LoadUpdateWithoutDaysInput>, LoadUncheckedUpdateWithoutDaysInput>
   }
 
   export type NestedStringFilter<$PrismaModel = never> = {
@@ -5517,12 +6924,31 @@ export namespace Prisma {
     not?: NestedFloatFilter<$PrismaModel> | number
   }
 
+  export type NestedEnumWeekdayFilter<$PrismaModel = never> = {
+    equals?: $Enums.Weekday | EnumWeekdayFieldRefInput<$PrismaModel>
+    in?: $Enums.Weekday[]
+    notIn?: $Enums.Weekday[]
+    not?: NestedEnumWeekdayFilter<$PrismaModel> | $Enums.Weekday
+  }
+
+  export type NestedEnumWeekdayWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.Weekday | EnumWeekdayFieldRefInput<$PrismaModel>
+    in?: $Enums.Weekday[]
+    notIn?: $Enums.Weekday[]
+    not?: NestedEnumWeekdayWithAggregatesFilter<$PrismaModel> | $Enums.Weekday
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumWeekdayFilter<$PrismaModel>
+    _max?: NestedEnumWeekdayFilter<$PrismaModel>
+  }
+
   export type LoadCreateWithoutTeacherInput = {
     id?: string
     shift: $Enums.Shift
-    hours: number
+    startTime: string
+    endTime: string
     createdAt?: Date | string
     updatedAt?: Date | string
+    days?: LoadDayCreateNestedManyWithoutLoadInput
     subject: SubjectCreateNestedOneWithoutLoadsInput
   }
 
@@ -5530,9 +6956,11 @@ export namespace Prisma {
     id?: string
     subjectId: string
     shift: $Enums.Shift
-    hours: number
+    startTime: string
+    endTime: string
     createdAt?: Date | string
     updatedAt?: Date | string
+    days?: LoadDayUncheckedCreateNestedManyWithoutLoadInput
   }
 
   export type LoadCreateOrConnectWithoutTeacherInput = {
@@ -5568,7 +6996,8 @@ export namespace Prisma {
     teacherId?: StringFilter<"Load"> | string
     subjectId?: StringFilter<"Load"> | string
     shift?: EnumShiftFilter<"Load"> | $Enums.Shift
-    hours?: IntFilter<"Load"> | number
+    startTime?: StringFilter<"Load"> | string
+    endTime?: StringFilter<"Load"> | string
     createdAt?: DateTimeFilter<"Load"> | Date | string
     updatedAt?: DateTimeFilter<"Load"> | Date | string
   }
@@ -5576,9 +7005,11 @@ export namespace Prisma {
   export type LoadCreateWithoutSubjectInput = {
     id?: string
     shift: $Enums.Shift
-    hours: number
+    startTime: string
+    endTime: string
     createdAt?: Date | string
     updatedAt?: Date | string
+    days?: LoadDayCreateNestedManyWithoutLoadInput
     teacher: TeacherCreateNestedOneWithoutLoadsInput
   }
 
@@ -5586,9 +7017,11 @@ export namespace Prisma {
     id?: string
     teacherId: string
     shift: $Enums.Shift
-    hours: number
+    startTime: string
+    endTime: string
     createdAt?: Date | string
     updatedAt?: Date | string
+    days?: LoadDayUncheckedCreateNestedManyWithoutLoadInput
   }
 
   export type LoadCreateOrConnectWithoutSubjectInput = {
@@ -5614,6 +7047,25 @@ export namespace Prisma {
   export type LoadUpdateManyWithWhereWithoutSubjectInput = {
     where: LoadScalarWhereInput
     data: XOR<LoadUpdateManyMutationInput, LoadUncheckedUpdateManyWithoutSubjectInput>
+  }
+
+  export type LoadDayCreateWithoutLoadInput = {
+    id?: string
+    weekday: $Enums.Weekday
+  }
+
+  export type LoadDayUncheckedCreateWithoutLoadInput = {
+    id?: string
+    weekday: $Enums.Weekday
+  }
+
+  export type LoadDayCreateOrConnectWithoutLoadInput = {
+    where: LoadDayWhereUniqueInput
+    create: XOR<LoadDayCreateWithoutLoadInput, LoadDayUncheckedCreateWithoutLoadInput>
+  }
+
+  export type LoadDayCreateManyLoadInputEnvelope = {
+    data: LoadDayCreateManyLoadInput | LoadDayCreateManyLoadInput[]
   }
 
   export type TeacherCreateWithoutLoadsInput = {
@@ -5662,6 +7114,31 @@ export namespace Prisma {
   export type SubjectCreateOrConnectWithoutLoadsInput = {
     where: SubjectWhereUniqueInput
     create: XOR<SubjectCreateWithoutLoadsInput, SubjectUncheckedCreateWithoutLoadsInput>
+  }
+
+  export type LoadDayUpsertWithWhereUniqueWithoutLoadInput = {
+    where: LoadDayWhereUniqueInput
+    update: XOR<LoadDayUpdateWithoutLoadInput, LoadDayUncheckedUpdateWithoutLoadInput>
+    create: XOR<LoadDayCreateWithoutLoadInput, LoadDayUncheckedCreateWithoutLoadInput>
+  }
+
+  export type LoadDayUpdateWithWhereUniqueWithoutLoadInput = {
+    where: LoadDayWhereUniqueInput
+    data: XOR<LoadDayUpdateWithoutLoadInput, LoadDayUncheckedUpdateWithoutLoadInput>
+  }
+
+  export type LoadDayUpdateManyWithWhereWithoutLoadInput = {
+    where: LoadDayScalarWhereInput
+    data: XOR<LoadDayUpdateManyMutationInput, LoadDayUncheckedUpdateManyWithoutLoadInput>
+  }
+
+  export type LoadDayScalarWhereInput = {
+    AND?: LoadDayScalarWhereInput | LoadDayScalarWhereInput[]
+    OR?: LoadDayScalarWhereInput[]
+    NOT?: LoadDayScalarWhereInput | LoadDayScalarWhereInput[]
+    id?: StringFilter<"LoadDay"> | string
+    loadId?: StringFilter<"LoadDay"> | string
+    weekday?: EnumWeekdayFilter<"LoadDay"> | $Enums.Weekday
   }
 
   export type TeacherUpsertWithoutLoadsInput = {
@@ -5724,11 +7201,72 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
+  export type LoadCreateWithoutDaysInput = {
+    id?: string
+    shift: $Enums.Shift
+    startTime: string
+    endTime: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    teacher: TeacherCreateNestedOneWithoutLoadsInput
+    subject: SubjectCreateNestedOneWithoutLoadsInput
+  }
+
+  export type LoadUncheckedCreateWithoutDaysInput = {
+    id?: string
+    teacherId: string
+    subjectId: string
+    shift: $Enums.Shift
+    startTime: string
+    endTime: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type LoadCreateOrConnectWithoutDaysInput = {
+    where: LoadWhereUniqueInput
+    create: XOR<LoadCreateWithoutDaysInput, LoadUncheckedCreateWithoutDaysInput>
+  }
+
+  export type LoadUpsertWithoutDaysInput = {
+    update: XOR<LoadUpdateWithoutDaysInput, LoadUncheckedUpdateWithoutDaysInput>
+    create: XOR<LoadCreateWithoutDaysInput, LoadUncheckedCreateWithoutDaysInput>
+    where?: LoadWhereInput
+  }
+
+  export type LoadUpdateToOneWithWhereWithoutDaysInput = {
+    where?: LoadWhereInput
+    data: XOR<LoadUpdateWithoutDaysInput, LoadUncheckedUpdateWithoutDaysInput>
+  }
+
+  export type LoadUpdateWithoutDaysInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    shift?: EnumShiftFieldUpdateOperationsInput | $Enums.Shift
+    startTime?: StringFieldUpdateOperationsInput | string
+    endTime?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    teacher?: TeacherUpdateOneRequiredWithoutLoadsNestedInput
+    subject?: SubjectUpdateOneRequiredWithoutLoadsNestedInput
+  }
+
+  export type LoadUncheckedUpdateWithoutDaysInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    teacherId?: StringFieldUpdateOperationsInput | string
+    subjectId?: StringFieldUpdateOperationsInput | string
+    shift?: EnumShiftFieldUpdateOperationsInput | $Enums.Shift
+    startTime?: StringFieldUpdateOperationsInput | string
+    endTime?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
   export type LoadCreateManyTeacherInput = {
     id?: string
     subjectId: string
     shift: $Enums.Shift
-    hours: number
+    startTime: string
+    endTime: string
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -5736,9 +7274,11 @@ export namespace Prisma {
   export type LoadUpdateWithoutTeacherInput = {
     id?: StringFieldUpdateOperationsInput | string
     shift?: EnumShiftFieldUpdateOperationsInput | $Enums.Shift
-    hours?: IntFieldUpdateOperationsInput | number
+    startTime?: StringFieldUpdateOperationsInput | string
+    endTime?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    days?: LoadDayUpdateManyWithoutLoadNestedInput
     subject?: SubjectUpdateOneRequiredWithoutLoadsNestedInput
   }
 
@@ -5746,16 +7286,19 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     subjectId?: StringFieldUpdateOperationsInput | string
     shift?: EnumShiftFieldUpdateOperationsInput | $Enums.Shift
-    hours?: IntFieldUpdateOperationsInput | number
+    startTime?: StringFieldUpdateOperationsInput | string
+    endTime?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    days?: LoadDayUncheckedUpdateManyWithoutLoadNestedInput
   }
 
   export type LoadUncheckedUpdateManyWithoutTeacherInput = {
     id?: StringFieldUpdateOperationsInput | string
     subjectId?: StringFieldUpdateOperationsInput | string
     shift?: EnumShiftFieldUpdateOperationsInput | $Enums.Shift
-    hours?: IntFieldUpdateOperationsInput | number
+    startTime?: StringFieldUpdateOperationsInput | string
+    endTime?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -5764,7 +7307,8 @@ export namespace Prisma {
     id?: string
     teacherId: string
     shift: $Enums.Shift
-    hours: number
+    startTime: string
+    endTime: string
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -5772,9 +7316,11 @@ export namespace Prisma {
   export type LoadUpdateWithoutSubjectInput = {
     id?: StringFieldUpdateOperationsInput | string
     shift?: EnumShiftFieldUpdateOperationsInput | $Enums.Shift
-    hours?: IntFieldUpdateOperationsInput | number
+    startTime?: StringFieldUpdateOperationsInput | string
+    endTime?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    days?: LoadDayUpdateManyWithoutLoadNestedInput
     teacher?: TeacherUpdateOneRequiredWithoutLoadsNestedInput
   }
 
@@ -5782,18 +7328,41 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     teacherId?: StringFieldUpdateOperationsInput | string
     shift?: EnumShiftFieldUpdateOperationsInput | $Enums.Shift
-    hours?: IntFieldUpdateOperationsInput | number
+    startTime?: StringFieldUpdateOperationsInput | string
+    endTime?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    days?: LoadDayUncheckedUpdateManyWithoutLoadNestedInput
   }
 
   export type LoadUncheckedUpdateManyWithoutSubjectInput = {
     id?: StringFieldUpdateOperationsInput | string
     teacherId?: StringFieldUpdateOperationsInput | string
     shift?: EnumShiftFieldUpdateOperationsInput | $Enums.Shift
-    hours?: IntFieldUpdateOperationsInput | number
+    startTime?: StringFieldUpdateOperationsInput | string
+    endTime?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type LoadDayCreateManyLoadInput = {
+    id?: string
+    weekday: $Enums.Weekday
+  }
+
+  export type LoadDayUpdateWithoutLoadInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    weekday?: EnumWeekdayFieldUpdateOperationsInput | $Enums.Weekday
+  }
+
+  export type LoadDayUncheckedUpdateWithoutLoadInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    weekday?: EnumWeekdayFieldUpdateOperationsInput | $Enums.Weekday
+  }
+
+  export type LoadDayUncheckedUpdateManyWithoutLoadInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    weekday?: EnumWeekdayFieldUpdateOperationsInput | $Enums.Weekday
   }
 
 

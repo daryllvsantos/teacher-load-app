@@ -1,7 +1,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import type { Shift } from "@/generated";
+import type { Shift, Weekday } from "@/generated";
 import { Button, Input, Select } from "@/components/ui";
 
 type TeacherOption = {
@@ -26,6 +26,14 @@ const shiftLabels: Record<Shift, string> = {
   MORNING: "Morning (6:00 AM - 12:00 NN)",
   AFTERNOON: "Afternoon (1:00 PM - 7:00 PM)",
 };
+
+const weekdayOptions: { value: Weekday; label: string }[] = [
+  { value: "MONDAY", label: "Monday" },
+  { value: "TUESDAY", label: "Tuesday" },
+  { value: "WEDNESDAY", label: "Wednesday" },
+  { value: "THURSDAY", label: "Thursday" },
+  { value: "FRIDAY", label: "Friday" },
+];
 
 export default function LoadForm({ teachers, subjects, createLoad }: LoadFormProps) {
   const [selectedTeacherId, setSelectedTeacherId] = useState("");
@@ -57,7 +65,19 @@ export default function LoadForm({ teachers, subjects, createLoad }: LoadFormPro
           </option>
         ))}
       </Select>
-      <Input name="hours" placeholder="Hours" type="number" />
+      <Input name="startTime" placeholder="Start time" type="time" />
+      <Input name="endTime" placeholder="End time" type="time" />
+      <div className="md:col-span-3">
+        <p className="text-xs font-semibold uppercase text-[var(--text-muted)]">Day</p>
+        <Select name="day" defaultValue="">
+          <option value="">Select day</option>
+          {weekdayOptions.map((weekday) => (
+            <option key={weekday.value} value={weekday.value}>
+              {weekday.label}
+            </option>
+          ))}
+        </Select>
+      </div>
       <div className="md:col-span-3 flex flex-wrap items-center justify-between gap-3">
         <p className="text-sm text-[var(--text-muted)]">
           Shift:{" "}

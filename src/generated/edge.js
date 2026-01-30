@@ -113,9 +113,16 @@ exports.Prisma.LoadScalarFieldEnum = {
   teacherId: 'teacherId',
   subjectId: 'subjectId',
   shift: 'shift',
-  hours: 'hours',
+  startTime: 'startTime',
+  endTime: 'endTime',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
+};
+
+exports.Prisma.LoadDayScalarFieldEnum = {
+  id: 'id',
+  loadId: 'loadId',
+  weekday: 'weekday'
 };
 
 exports.Prisma.SortOrder = {
@@ -132,10 +139,19 @@ exports.Shift = exports.$Enums.Shift = {
   AFTERNOON: 'AFTERNOON'
 };
 
+exports.Weekday = exports.$Enums.Weekday = {
+  MONDAY: 'MONDAY',
+  TUESDAY: 'TUESDAY',
+  WEDNESDAY: 'WEDNESDAY',
+  THURSDAY: 'THURSDAY',
+  FRIDAY: 'FRIDAY'
+};
+
 exports.Prisma.ModelName = {
   Teacher: 'Teacher',
   Subject: 'Subject',
-  Load: 'Load'
+  Load: 'Load',
+  LoadDay: 'LoadDay'
 };
 /**
  * Create the Client
@@ -145,10 +161,10 @@ const config = {
   "clientVersion": "7.3.0",
   "engineVersion": "9d6ad21cbbceab97458517b147a6a09ff43aa735",
   "activeProvider": "sqlite",
-  "inlineSchema": "// This is your Prisma schema file,\n// learn more about it in the docs: https://pris.ly/d/prisma-schema\n\ngenerator client {\n  provider = \"prisma-client-js\"\n  output   = \"../src/generated\"\n}\n\ndatasource db {\n  provider = \"sqlite\"\n}\n\nmodel Teacher {\n  id         String   @id @default(cuid())\n  name       String\n  department String?\n  email      String?  @unique\n  shift      Shift    @default(MORNING)\n  loads      Load[]\n  createdAt  DateTime @default(now())\n  updatedAt  DateTime @updatedAt\n}\n\nmodel Subject {\n  id        String   @id @default(cuid())\n  code      String   @unique\n  name      String\n  hours     Int\n  loads     Load[]\n  createdAt DateTime @default(now())\n  updatedAt DateTime @updatedAt\n}\n\nenum Shift {\n  MORNING\n  AFTERNOON\n}\n\nmodel Load {\n  id        String   @id @default(cuid())\n  teacherId String\n  subjectId String\n  shift     Shift\n  hours     Int\n  teacher   Teacher  @relation(fields: [teacherId], references: [id], onDelete: Cascade)\n  subject   Subject  @relation(fields: [subjectId], references: [id], onDelete: Cascade)\n  createdAt DateTime @default(now())\n  updatedAt DateTime @updatedAt\n}\n"
+  "inlineSchema": "// This is your Prisma schema file,\n// learn more about it in the docs: https://pris.ly/d/prisma-schema\n\ngenerator client {\n  provider = \"prisma-client-js\"\n  output   = \"../src/generated\"\n}\n\ndatasource db {\n  provider = \"sqlite\"\n}\n\nmodel Teacher {\n  id         String   @id @default(cuid())\n  name       String\n  department String?\n  email      String?  @unique\n  shift      Shift    @default(MORNING)\n  loads      Load[]\n  createdAt  DateTime @default(now())\n  updatedAt  DateTime @updatedAt\n}\n\nmodel Subject {\n  id        String   @id @default(cuid())\n  code      String   @unique\n  name      String\n  hours     Int\n  loads     Load[]\n  createdAt DateTime @default(now())\n  updatedAt DateTime @updatedAt\n}\n\nenum Shift {\n  MORNING\n  AFTERNOON\n}\n\nenum Weekday {\n  MONDAY\n  TUESDAY\n  WEDNESDAY\n  THURSDAY\n  FRIDAY\n}\n\nmodel Load {\n  id        String    @id @default(cuid())\n  teacherId String\n  subjectId String\n  shift     Shift\n  startTime String\n  endTime   String\n  days      LoadDay[]\n  teacher   Teacher   @relation(fields: [teacherId], references: [id], onDelete: Cascade)\n  subject   Subject   @relation(fields: [subjectId], references: [id], onDelete: Cascade)\n  createdAt DateTime  @default(now())\n  updatedAt DateTime  @updatedAt\n}\n\nmodel LoadDay {\n  id      String  @id @default(cuid())\n  loadId  String\n  weekday Weekday\n  load    Load    @relation(fields: [loadId], references: [id], onDelete: Cascade)\n\n  @@unique([loadId, weekday])\n}\n"
 }
 
-config.runtimeDataModel = JSON.parse("{\"models\":{\"Teacher\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"name\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"department\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"email\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"shift\",\"kind\":\"enum\",\"type\":\"Shift\"},{\"name\":\"loads\",\"kind\":\"object\",\"type\":\"Load\",\"relationName\":\"LoadToTeacher\"},{\"name\":\"createdAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"updatedAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"}],\"dbName\":null},\"Subject\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"code\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"name\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"hours\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"loads\",\"kind\":\"object\",\"type\":\"Load\",\"relationName\":\"LoadToSubject\"},{\"name\":\"createdAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"updatedAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"}],\"dbName\":null},\"Load\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"teacherId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"subjectId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"shift\",\"kind\":\"enum\",\"type\":\"Shift\"},{\"name\":\"hours\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"teacher\",\"kind\":\"object\",\"type\":\"Teacher\",\"relationName\":\"LoadToTeacher\"},{\"name\":\"subject\",\"kind\":\"object\",\"type\":\"Subject\",\"relationName\":\"LoadToSubject\"},{\"name\":\"createdAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"updatedAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"}],\"dbName\":null}},\"enums\":{},\"types\":{}}")
+config.runtimeDataModel = JSON.parse("{\"models\":{\"Teacher\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"name\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"department\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"email\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"shift\",\"kind\":\"enum\",\"type\":\"Shift\"},{\"name\":\"loads\",\"kind\":\"object\",\"type\":\"Load\",\"relationName\":\"LoadToTeacher\"},{\"name\":\"createdAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"updatedAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"}],\"dbName\":null},\"Subject\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"code\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"name\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"hours\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"loads\",\"kind\":\"object\",\"type\":\"Load\",\"relationName\":\"LoadToSubject\"},{\"name\":\"createdAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"updatedAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"}],\"dbName\":null},\"Load\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"teacherId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"subjectId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"shift\",\"kind\":\"enum\",\"type\":\"Shift\"},{\"name\":\"startTime\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"endTime\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"days\",\"kind\":\"object\",\"type\":\"LoadDay\",\"relationName\":\"LoadToLoadDay\"},{\"name\":\"teacher\",\"kind\":\"object\",\"type\":\"Teacher\",\"relationName\":\"LoadToTeacher\"},{\"name\":\"subject\",\"kind\":\"object\",\"type\":\"Subject\",\"relationName\":\"LoadToSubject\"},{\"name\":\"createdAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"updatedAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"}],\"dbName\":null},\"LoadDay\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"loadId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"weekday\",\"kind\":\"enum\",\"type\":\"Weekday\"},{\"name\":\"load\",\"kind\":\"object\",\"type\":\"Load\",\"relationName\":\"LoadToLoadDay\"}],\"dbName\":null}},\"enums\":{},\"types\":{}}")
 defineDmmfProperty(exports.Prisma, config.runtimeDataModel)
 config.compilerWasm = {
   getRuntime: async () => require('./query_compiler_fast_bg.js'),

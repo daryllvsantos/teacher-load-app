@@ -6,6 +6,22 @@ import { Button, Card, Input, Select } from "@/components/ui";
 
 const MAX_HOURS = 6;
 
+const parseTimeToMinutes = (time: string) => {
+  const [hours, minutes] = time.split(":").map(Number);
+  if (Number.isNaN(hours) || Number.isNaN(minutes)) return null;
+  return hours * 60 + minutes;
+};
+
+const calculateDurationHours = (startTime: string, endTime: string) => {
+  const startMinutes = parseTimeToMinutes(startTime);
+  const endMinutes = parseTimeToMinutes(endTime);
+  if (startMinutes === null || endMinutes === null) return null;
+  if (endMinutes <= startMinutes) return null;
+  return (endMinutes - startMinutes) / 60;
+};
+
+const formatHours = (value: number) => Number(value.toFixed(1));
+
 async function createTeacher(formData: FormData) {
   "use server";
   const name = String(formData.get("name") || "").trim();
@@ -36,16 +52,17 @@ async function deleteTeacher(formData: FormData) {
 }
 
 export default async function TeachersPage() {
-  const [teachers, loadHours] = await Promise.all([
+  const [teachers, loads] = await Promise.all([
     prisma.teacher.findMany({ orderBy: { createdAt: "desc" } }),
-    prisma.load.groupBy({
-      by: ["teacherId"],
-      _sum: { hours: true },
+    prisma.load.findMany({
+      select: { teacherId: true, startTime: true, endTime: true },
     }),
   ]);
-  const teacherHours = Object.fromEntries(
-    loadHours.map((entry) => [entry.teacherId, entry._sum.hours ?? 0])
-  );
+  const teacherHours = loads.reduce<Record<string, number>>((acc, load) => {
+    const duration = calculateDurationHours(load.startTime, load.endTime) ?? 0;
+    acc[load.teacherId] = (acc[load.teacherId] ?? 0) + duration;
+    return acc;
+  }, {});
 
   return (
     <div className="grid gap-6">
@@ -93,7 +110,7 @@ export default async function TeachersPage() {
                     {teacher.shift === "MORNING" ? "Morning" : "Afternoon"}
                   </td>
                   <td className="py-3 text-xs font-semibold text-[var(--text-primary)]">
-                    {MAX_HOURS - (teacherHours[teacher.id] ?? 0)} hrs left
+                    {formatHours(MAX_HOURS - (teacherHours[teacher.id] ?? 0))} hrs left
                   </td>
                 </tr>
               ))}

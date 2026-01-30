@@ -28,6 +28,8 @@ const DEFAULT_COLORS = ["#0f766e", "#f1f5f9"];
 const sumValues = (slices: ChartSlice[]) =>
   slices.reduce((total, slice) => total + slice.value, 0);
 
+const formatHours = (value: number) => Number(value.toFixed(1));
+
 ChartJS.register(ArcElement, Tooltip, Legend);
 
 export default function DashboardCharts({ charts }: DashboardChartsProps) {
@@ -85,7 +87,7 @@ export default function DashboardCharts({ charts }: DashboardChartsProps) {
                 </h3>
               </div>
               <p className="text-sm text-[var(--text-muted)]">
-                Total capacity: {chart.total} hrs
+                Total capacity: {formatHours(chart.total)} hrs
               </p>
             </div>
             <div className="mt-4 h-56 min-w-0">
@@ -123,7 +125,7 @@ export default function DashboardCharts({ charts }: DashboardChartsProps) {
                     <span>{entry.name}</span>
                   </div>
                   <span className="font-semibold text-[var(--text-primary)]">
-                    {entry.value} hrs
+                    {formatHours(entry.value)} hrs
                   </span>
                 </div>
               ))}
