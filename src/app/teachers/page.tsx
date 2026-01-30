@@ -3,6 +3,8 @@ import { revalidatePath } from "next/cache";
 import { prisma } from "@/lib/prisma";
 import type { Shift, Teacher } from "@/generated";
 import { Button, Card, Input, Select } from "@/components/ui";
+import ToastActionForm from "@/components/ToastActionForm";
+import type { ActionResult } from "@/lib/action-result";
 
 const MAX_MORNING_HOURS_PER_DAY = 6.17;
 const MAX_AFTERNOON_HOURS_PER_DAY = 6.67;
@@ -23,14 +25,19 @@ const calculateDurationHours = (startTime: string, endTime: string) => {
 
 const formatHours = (value: number) => Number(value.toFixed(1));
 
-async function createTeacher(formData: FormData) {
+async function createTeacher(
+  _previousState: ActionResult,
+  formData: FormData
+): Promise<ActionResult> {
   "use server";
   const name = String(formData.get("name") || "").trim();
   const department = String(formData.get("department") || "").trim();
   const email = String(formData.get("email") || "").trim();
   const shift = String(formData.get("shift") || "MORNING") as Shift;
 
-  if (!name) return;
+  if (!name) {
+    return { status: "error", message: "Please provide a teacher name." };
+  }
 
   await prisma.teacher.create({
     data: {
@@ -42,14 +49,21 @@ async function createTeacher(formData: FormData) {
   });
 
   revalidatePath("/teachers");
+  return { status: "success", message: "Teacher added successfully." };
 }
 
-async function deleteTeacher(formData: FormData) {
+async function deleteTeacher(
+  _previousState: ActionResult,
+  formData: FormData
+): Promise<ActionResult> {
   "use server";
   const id = String(formData.get("id"));
-  if (!id) return;
+  if (!id) {
+    return { status: "error", message: "Teacher not found." };
+  }
   await prisma.teacher.delete({ where: { id } });
   revalidatePath("/teachers");
+  return { status: "success", message: "Teacher deleted." };
 }
 
 export default async function TeachersPage() {
@@ -82,7 +96,12 @@ export default async function TeachersPage() {
   return (
     <div className="grid gap-6">
       <Card title="Teachers" description="Create and manage teacher profiles.">
-        <form action={createTeacher} className="grid gap-3 md:grid-cols-4">
+        <ToastActionForm
+          serverAction={createTeacher}
+          className="grid gap-3 md:grid-cols-4"
+          successMessage="Teacher added successfully."
+          successVariant="success"
+        >
           <Input name="name" placeholder="Full name" />
           <Input name="department" placeholder="Department (optional)" />
           <Input name="email" placeholder="Email (optional)" type="email" />
@@ -93,7 +112,7 @@ export default async function TeachersPage() {
           <div className="md:col-span-4">
             <Button>Add Teacher</Button>
           </div>
-        </form>
+        </ToastActionForm>
       </Card>
 
       <Card title="Current Teachers">
@@ -125,10 +144,47 @@ export default async function TeachersPage() {
                     {teacher.shift === "MORNING" ? "Morning" : "Afternoon"}
                   </td>
                   <td className="py-3 text-xs font-semibold text-[var(--text-primary)]">
-                    {formatHours(
-                      (maxAllowedByTeacher[teacher.id] ?? 0) -
-                        (maxDayHoursByTeacher[teacher.id] ?? 0)
-                    )} hrs left (per day)
+                    <div className="flex items-center gap-3">
+                      <span>
+                        {formatHours(
+                          (maxAllowedByTeacher[teacher.id] ?? 0) -
+                            (maxDayHoursByTeacher[teacher.id] ?? 0)
+                        )} hrs left (per day)
+                      </span>
+                      <ToastActionForm
+                        serverAction={deleteTeacher}
+                        successMessage="Teacher deleted."
+                        errorMessage="Unable to delete teacher."
+                        successVariant="error"
+                        requiresConfirm
+                        confirmTitle="Delete teacher?"
+                        confirmDescription="This will remove the teacher record and cannot be undone."
+                        confirmLabel="Delete"
+                      >
+                        <input type="hidden" name="id" value={teacher.id} />
+                        <button
+                          aria-label="Delete teacher"
+                          className="inline-flex h-7 w-7 items-center justify-center rounded-full border border-red-200 text-red-600 hover:bg-red-50"
+                          title="Delete teacher"
+                          type="submit"
+                        >
+                          <svg
+                            aria-hidden="true"
+                            className="h-3 w-3"
+                            fill="none"
+                            stroke="currentColor"
+                            strokeWidth="2"
+                            viewBox="0 0 24 24"
+                          >
+                            <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              d="M6 7h12m-9 0V5a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2m-9 0h10m-9 4v6m4-6v6m4-6v6M5 7l1 12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2l1-12"
+                            />
+                          </svg>
+                        </button>
+                      </ToastActionForm>
+                    </div>
                   </td>
                 </tr>
               ))}

@@ -6,6 +6,9 @@ import type { Shift, Weekday } from "@/generated";
 import { Button, Card, Input, Select } from "@/components/ui";
 import LoadModal from "@/app/teachers/[id]/LoadModal";
 import type { LoadFormState } from "@/app/loads/load-types";
+import ToastActionForm from "@/components/ToastActionForm";
+import ToastActionButton from "@/components/ToastActionButton";
+import type { ActionResult } from "@/lib/action-result";
 
 const MAX_MORNING_HOURS_PER_DAY = 6.17;
 const MAX_AFTERNOON_HOURS_PER_DAY = 6.67;
@@ -53,7 +56,10 @@ const hasOverlap = ({
   });
 };
 
-async function updateTeacher(formData: FormData) {
+async function updateTeacher(
+  _previousState: ActionResult,
+  formData: FormData
+): Promise<ActionResult> {
   "use server";
   const id = String(formData.get("id"));
   const name = String(formData.get("name") || "").trim();
@@ -61,7 +67,9 @@ async function updateTeacher(formData: FormData) {
   const email = String(formData.get("email") || "").trim();
   const shift = String(formData.get("shift") || "MORNING") as Shift;
 
-  if (!id || !name) return;
+  if (!id || !name) {
+    return { status: "error", message: "Please provide a teacher name." };
+  }
 
   await prisma.teacher.update({
     where: { id },
@@ -75,23 +83,33 @@ async function updateTeacher(formData: FormData) {
 
   revalidatePath("/teachers");
   revalidatePath(`/teachers/${id}`);
+  return { status: "success", message: "Teacher updated." };
 }
 
-async function deleteTeacher(formData: FormData) {
+async function deleteTeacher(
+  _previousState: ActionResult,
+  formData: FormData
+): Promise<ActionResult> {
   "use server";
   const id = String(formData.get("id"));
-  if (!id) return;
+  if (!id) {
+    return { status: "error", message: "Teacher not found." };
+  }
   await prisma.teacher.delete({ where: { id } });
   revalidatePath("/teachers");
+  return { status: "success", message: "Teacher deleted." };
 }
 
-async function deleteLoad(formData: FormData) {
+async function deleteLoad(formData: FormData): Promise<ActionResult> {
   "use server";
   const id = String(formData.get("id"));
   const teacherId = String(formData.get("teacherId"));
-  if (!id || !teacherId) return;
+  if (!id || !teacherId) {
+    return { status: "error", message: "Load not found." };
+  }
   await prisma.load.delete({ where: { id } });
   revalidatePath(`/teachers/${teacherId}`);
+  return { status: "success", message: "Load removed." };
 }
 
 async function createLoad(
@@ -280,7 +298,12 @@ export default async function TeacherDetailPage({
       </div>
 
       <Card title="Edit Teacher" description="Update the teacher profile details.">
-        <form action={updateTeacher} className="grid gap-3 md:grid-cols-2">
+        <ToastActionForm
+          serverAction={updateTeacher}
+          className="grid gap-3 md:grid-cols-2"
+          successMessage="Teacher updated."
+          successVariant="success"
+        >
           <input type="hidden" name="id" value={teacher.id} />
           <label className="flex flex-col gap-1 text-sm text-[var(--text-muted)]">
             Name
@@ -304,8 +327,18 @@ export default async function TeacherDetailPage({
           <div className="md:col-span-2 flex flex-wrap gap-2">
             <Button>Save Changes</Button>
           </div>
-        </form>
-        <form action={deleteTeacher} className="mt-3">
+        </ToastActionForm>
+        <ToastActionForm
+          serverAction={deleteTeacher}
+          className="mt-3"
+          successMessage="Teacher deleted."
+          errorMessage="Unable to delete teacher."
+          successVariant="error"
+          requiresConfirm
+          confirmTitle="Delete teacher?"
+          confirmDescription="This will remove the teacher record and their loads. This cannot be undone."
+          confirmLabel="Delete"
+        >
           <input type="hidden" name="id" value={teacher.id} />
           <button
             aria-label="Delete teacher"
@@ -328,7 +361,7 @@ export default async function TeacherDetailPage({
               />
             </svg>
           </button>
-        </form>
+        </ToastActionForm>
       </Card>
 
       <Card
@@ -379,18 +412,22 @@ export default async function TeacherDetailPage({
                             className="relative inline-flex max-w-full flex-col gap-1 rounded-lg border border-[var(--border)] px-3 py-2 text-xs"
                             style={{ backgroundColor: load.subject.color }}
                           >
-                            <form action={deleteLoad} className="absolute right-1 top-1">
-                              <input type="hidden" name="id" value={load.id} />
-                              <input type="hidden" name="teacherId" value={teacher.id} />
-                              <button
-                                aria-label="Remove load"
-                                className="inline-flex h-4 w-4 items-center justify-center rounded-full bg-red-500 text-[10px] text-white shadow-sm transition hover:bg-red-600"
-                                title="Remove load"
-                                type="submit"
-                              >
-                                −
-                              </button>
-                            </form>
+                            <ToastActionButton
+                              action={deleteLoad}
+                              fields={{ id: load.id, teacherId: teacher.id }}
+                              successMessage="Load removed."
+                              errorMessage="Unable to remove load."
+                              successVariant="error"
+                              requiresConfirm
+                              confirmTitle="Remove load?"
+                              confirmDescription="This will remove the load from the teacher schedule."
+                              confirmLabel="Remove"
+                              aria-label="Remove load"
+                              className="absolute right-1 top-1 inline-flex h-4 w-4 items-center justify-center rounded-full bg-red-500 text-[10px] text-white shadow-sm transition hover:bg-red-600"
+                              title="Remove load"
+                            >
+                              −
+                            </ToastActionButton>
                             <span className="schedule-chip-text font-semibold text-white">
                               {load.subject.code}
                             </span>

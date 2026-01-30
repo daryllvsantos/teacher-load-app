@@ -2,14 +2,21 @@ import { revalidatePath } from "next/cache";
 import { prisma } from "@/lib/prisma";
 import type { Subject } from "@/generated";
 import { Button, Card, Input, SecondaryButton } from "@/components/ui";
+import ToastActionForm from "@/components/ToastActionForm";
+import type { ActionResult } from "@/lib/action-result";
 
-async function createSubject(formData: FormData) {
+async function createSubject(
+  _previousState: ActionResult,
+  formData: FormData
+): Promise<ActionResult> {
   "use server";
   const code = String(formData.get("code") || "").trim();
   const name = String(formData.get("name") || "").trim();
   const color = String(formData.get("color") || "").trim();
 
-  if (!code || !name || !color) return;
+  if (!code || !name || !color) {
+    return { status: "error", message: "Please complete all subject details." };
+  }
 
   await prisma.subject.create({
     data: {
@@ -20,16 +27,22 @@ async function createSubject(formData: FormData) {
   });
 
   revalidatePath("/subjects");
+  return { status: "success", message: "Subject added successfully." };
 }
 
-async function updateSubject(formData: FormData) {
+async function updateSubject(
+  _previousState: ActionResult,
+  formData: FormData
+): Promise<ActionResult> {
   "use server";
   const id = String(formData.get("id"));
   const code = String(formData.get("code") || "").trim();
   const name = String(formData.get("name") || "").trim();
   const color = String(formData.get("color") || "").trim();
 
-  if (!id || !code || !name || !color) return;
+  if (!id || !code || !name || !color) {
+    return { status: "error", message: "Please complete all subject details." };
+  }
 
   await prisma.subject.update({
     where: { id },
@@ -41,14 +54,21 @@ async function updateSubject(formData: FormData) {
   });
 
   revalidatePath("/subjects");
+  return { status: "success", message: "Subject updated successfully." };
 }
 
-async function deleteSubject(formData: FormData) {
+async function deleteSubject(
+  _previousState: ActionResult,
+  formData: FormData
+): Promise<ActionResult> {
   "use server";
   const id = String(formData.get("id"));
-  if (!id) return;
+  if (!id) {
+    return { status: "error", message: "Subject not found." };
+  }
   await prisma.subject.delete({ where: { id } });
   revalidatePath("/subjects");
+  return { status: "success", message: "Subject deleted." };
 }
 
 export default async function SubjectsPage() {
@@ -57,7 +77,12 @@ export default async function SubjectsPage() {
   return (
     <div className="grid gap-6">
       <Card title="Subjects" description="Manage subject codes and schedule colors.">
-        <form action={createSubject} className="grid gap-3 md:grid-cols-[1fr_1fr_auto] md:items-center">
+        <ToastActionForm
+          serverAction={createSubject}
+          className="grid gap-3 md:grid-cols-[1fr_1fr_auto] md:items-center"
+          successMessage="Subject added successfully."
+          successVariant="success"
+        >
           <Input name="code" placeholder="Subject code" />
           <Input name="name" placeholder="Subject name" />
           <div className="flex items-center gap-2">
@@ -67,7 +92,7 @@ export default async function SubjectsPage() {
           <div className="md:col-span-3">
             <Button>Add Subject</Button>
           </div>
-        </form>
+        </ToastActionForm>
       </Card>
 
       <Card title="Current Subjects">
@@ -81,7 +106,12 @@ export default async function SubjectsPage() {
           {subjects.map((subject: Subject) => (
             <div key={subject.id} className="rounded-xl border border-[var(--border)] px-3 py-2">
               <div className="grid gap-2 md:grid-cols-[minmax(160px,1fr)_minmax(200px,1fr)_minmax(140px,auto)_minmax(160px,auto)] md:items-center">
-                <form action={updateSubject} className="contents">
+                <ToastActionForm
+                  serverAction={updateSubject}
+                  className="contents"
+                  successMessage="Subject updated."
+                  successVariant="success"
+                >
                   <input type="hidden" name="id" value={subject.id} />
                   <Input name="code" defaultValue={subject.code} />
                   <Input name="name" defaultValue={subject.name} />
@@ -117,10 +147,21 @@ export default async function SubjectsPage() {
                       </svg>
                     </button>
                   </div>
-                </form>
-                <form action={deleteSubject} id={`delete-${subject.id}`} className="hidden">
+                </ToastActionForm>
+                <ToastActionForm
+                  serverAction={deleteSubject}
+                  id={`delete-${subject.id}`}
+                  className="hidden"
+                  successMessage="Subject deleted."
+                  errorMessage="Unable to delete subject."
+                  successVariant="error"
+                  requiresConfirm
+                  confirmTitle="Delete subject?"
+                  confirmDescription="This will remove the subject record and cannot be undone."
+                  confirmLabel="Delete"
+                >
                   <input type="hidden" name="id" value={subject.id} />
-                </form>
+                </ToastActionForm>
               </div>
             </div>
           ))}

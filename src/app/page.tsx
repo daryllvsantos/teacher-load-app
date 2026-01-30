@@ -4,6 +4,7 @@ import DashboardCharts from "@/app/DashboardCharts";
 
 const MAX_MORNING_HOURS_PER_DAY = 6.17;
 const MAX_AFTERNOON_HOURS_PER_DAY = 6.67;
+const WEEKDAYS_PER_WEEK = 5;
 
 const parseTimeToMinutes = (time: string) => {
   const [hours, minutes] = time.split(":").map(Number);
@@ -28,7 +29,7 @@ export default async function Home() {
       prisma.subject.count(),
       prisma.load.count(),
       prisma.load.findMany({
-        select: { shift: true, startTime: true, endTime: true },
+        select: { shift: true, startTime: true, endTime: true, days: true },
       }),
       prisma.teacher.groupBy({
         by: ["shift"],
@@ -42,21 +43,30 @@ export default async function Home() {
 
   const totalAssignedHours = loads.reduce((total, load) => {
     const duration = calculateDurationHours(load.startTime, load.endTime) ?? 0;
-    return total + duration;
+    const weeklyDuration = duration * load.days.length;
+    return total + weeklyDuration;
   }, 0);
   const totalCapacity =
-    (teachersByShiftMap.MORNING ?? 0) * MAX_MORNING_HOURS_PER_DAY +
-    (teachersByShiftMap.AFTERNOON ?? 0) * MAX_AFTERNOON_HOURS_PER_DAY;
+    ((teachersByShiftMap.MORNING ?? 0) * MAX_MORNING_HOURS_PER_DAY +
+      (teachersByShiftMap.AFTERNOON ?? 0) * MAX_AFTERNOON_HOURS_PER_DAY) *
+    WEEKDAYS_PER_WEEK;
   const totalRemaining = Math.max(totalCapacity - totalAssignedHours, 0);
 
   const loadsByShiftMap = loads.reduce<Record<string, number>>((acc, load) => {
     const duration = calculateDurationHours(load.startTime, load.endTime) ?? 0;
-    acc[load.shift] = (acc[load.shift] ?? 0) + duration;
+    const weeklyDuration = duration * load.days.length;
+    acc[load.shift] = (acc[load.shift] ?? 0) + weeklyDuration;
     return acc;
   }, {});
 
-  const morningCapacity = (teachersByShiftMap.MORNING ?? 0) * MAX_MORNING_HOURS_PER_DAY;
-  const afternoonCapacity = (teachersByShiftMap.AFTERNOON ?? 0) * MAX_AFTERNOON_HOURS_PER_DAY;
+  const morningCapacity =
+    (teachersByShiftMap.MORNING ?? 0) *
+    MAX_MORNING_HOURS_PER_DAY *
+    WEEKDAYS_PER_WEEK;
+  const afternoonCapacity =
+    (teachersByShiftMap.AFTERNOON ?? 0) *
+    MAX_AFTERNOON_HOURS_PER_DAY *
+    WEEKDAYS_PER_WEEK;
   const morningAssigned = loadsByShiftMap.MORNING ?? 0;
   const afternoonAssigned = loadsByShiftMap.AFTERNOON ?? 0;
 
