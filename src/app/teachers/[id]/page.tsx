@@ -16,6 +16,14 @@ const parseTimeToMinutes = (time: string) => {
   return hours * 60 + minutes;
 };
 
+const formatTimeToMeridiem = (time: string) => {
+  const [rawHours, rawMinutes] = time.split(":").map(Number);
+  if (Number.isNaN(rawHours) || Number.isNaN(rawMinutes)) return time;
+  const period = rawHours >= 12 ? "PM" : "AM";
+  const hours = rawHours % 12 || 12;
+  return `${hours}:${String(rawMinutes).padStart(2, "0")} ${period}`;
+};
+
 const calculateDurationHours = (startTime: string, endTime: string) => {
   const startMinutes = parseTimeToMinutes(startTime);
   const endMinutes = parseTimeToMinutes(endTime);
@@ -75,6 +83,15 @@ async function deleteTeacher(formData: FormData) {
   if (!id) return;
   await prisma.teacher.delete({ where: { id } });
   revalidatePath("/teachers");
+}
+
+async function deleteLoad(formData: FormData) {
+  "use server";
+  const id = String(formData.get("id"));
+  const teacherId = String(formData.get("teacherId"));
+  if (!id || !teacherId) return;
+  await prisma.load.delete({ where: { id } });
+  revalidatePath(`/teachers/${teacherId}`);
 }
 
 async function createLoad(
@@ -359,15 +376,31 @@ export default async function TeacherDetailPage({
                       <td key={`${entry.weekday}-${block.start}`} className="py-3">
                         {load ? (
                           <div
-                            className="inline-flex max-w-full flex-col gap-1 rounded-lg border border-[var(--border)] px-3 py-2 text-xs"
+                            className="relative inline-flex max-w-full flex-col gap-1 rounded-lg border border-[var(--border)] px-3 py-2 text-xs"
                             style={{ backgroundColor: load.subject.color }}
                           >
-                            <span className="font-semibold text-white">
+                            <form action={deleteLoad} className="absolute right-1 top-1">
+                              <input type="hidden" name="id" value={load.id} />
+                              <input type="hidden" name="teacherId" value={teacher.id} />
+                              <button
+                                aria-label="Remove load"
+                                className="inline-flex h-4 w-4 items-center justify-center rounded-full bg-red-500 text-[10px] text-white shadow-sm transition hover:bg-red-600"
+                                title="Remove load"
+                                type="submit"
+                              >
+                                −
+                              </button>
+                            </form>
+                            <span className="schedule-chip-text font-semibold text-white">
                               {load.subject.code}
                             </span>
-                            <span className="text-white/90">{load.subject.name}</span>
-                            <span className="text-[10px] text-white/80">
-                              {load.startTime} - {load.endTime}
+                            <span className="schedule-chip-text text-white/90">
+                              {load.subject.name}
+                            </span>
+                            <span className="schedule-chip-text text-[10px] text-white/80">
+                              {formatTimeToMeridiem(load.startTime)} -
+                              {" "}
+                              {formatTimeToMeridiem(load.endTime)}
                             </span>
                           </div>
                         ) : block.disabled ? (

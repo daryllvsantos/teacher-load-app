@@ -62,3 +62,17 @@ input[type="color"]::-moz-color-swatch {
   border: none;
   border-radius: 0.5rem;
 }
+
+.schedule-chip-text {
+  -webkit-text-stroke: 1px #000;
+  paint-order: stroke fill;
+  text-shadow:
+    -1px -1px 0 #000,
+    0 -1px 0 #000,
+    1px -1px 0 #000,
+    -1px 0 0 #000,
+    1px 0 0 #000,
+    -1px 1px 0 #000,
+    0 1px 0 #000,
+    1px 1px 0 #000;
+}
