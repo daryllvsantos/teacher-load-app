@@ -2,7 +2,8 @@ import Link from "next/link";
 import { prisma } from "@/lib/prisma";
 import DashboardCharts from "@/app/DashboardCharts";
 
-const MAX_HOURS = 6;
+const MAX_MORNING_HOURS_PER_DAY = 6.17;
+const MAX_AFTERNOON_HOURS_PER_DAY = 6.67;
 
 const parseTimeToMinutes = (time: string) => {
   const [hours, minutes] = time.split(":").map(Number);
@@ -35,16 +36,18 @@ export default async function Home() {
       }),
     ]);
 
+  const teachersByShiftMap = Object.fromEntries(
+    teachersByShift.map((entry) => [entry.shift, entry._count.id])
+  );
+
   const totalAssignedHours = loads.reduce((total, load) => {
     const duration = calculateDurationHours(load.startTime, load.endTime) ?? 0;
     return total + duration;
   }, 0);
-  const totalCapacity = teacherCount * MAX_HOURS;
+  const totalCapacity =
+    (teachersByShiftMap.MORNING ?? 0) * MAX_MORNING_HOURS_PER_DAY +
+    (teachersByShiftMap.AFTERNOON ?? 0) * MAX_AFTERNOON_HOURS_PER_DAY;
   const totalRemaining = Math.max(totalCapacity - totalAssignedHours, 0);
-
-  const teachersByShiftMap = Object.fromEntries(
-    teachersByShift.map((entry) => [entry.shift, entry._count.id])
-  );
 
   const loadsByShiftMap = loads.reduce<Record<string, number>>((acc, load) => {
     const duration = calculateDurationHours(load.startTime, load.endTime) ?? 0;
@@ -52,8 +55,8 @@ export default async function Home() {
     return acc;
   }, {});
 
-  const morningCapacity = (teachersByShiftMap.MORNING ?? 0) * MAX_HOURS;
-  const afternoonCapacity = (teachersByShiftMap.AFTERNOON ?? 0) * MAX_HOURS;
+  const morningCapacity = (teachersByShiftMap.MORNING ?? 0) * MAX_MORNING_HOURS_PER_DAY;
+  const afternoonCapacity = (teachersByShiftMap.AFTERNOON ?? 0) * MAX_AFTERNOON_HOURS_PER_DAY;
   const morningAssigned = loadsByShiftMap.MORNING ?? 0;
   const afternoonAssigned = loadsByShiftMap.AFTERNOON ?? 0;
 
@@ -94,9 +97,9 @@ export default async function Home() {
       <div className="rounded-2xl bg-[var(--surface)] p-6 shadow-sm ring-1 ring-[var(--border)]">
         <h2 className="text-xl font-semibold text-[var(--text-primary)]">Welcome</h2>
         <p className="mt-2 text-sm text-[var(--text-muted)]">
-          Use this dashboard to manage teacher subject loads. Each teacher should have a maximum of 6
-          hours per day, and every schedule must be within the morning (6:00 AM - 12:00 NN) or
-          afternoon (1:00 PM - 7:00 PM) shift.
+          Use this dashboard to manage teacher subject loads. Morning shift runs 6:00 AM - 12:10 NN
+          (6 hours 10 minutes total) and afternoon runs 12:00 PM - 7:00 PM (6 hours 40 minutes
+          total).
         </p>
       </div>
       <div className="grid gap-4 md:grid-cols-5">
@@ -115,7 +118,7 @@ export default async function Home() {
         ))}
       </div>
       <DashboardCharts charts={charts} />
-      <div className="grid gap-4 md:grid-cols-3">
+      <div className="grid gap-4 md:grid-cols-2">
         <div className="rounded-2xl bg-[var(--surface)] p-5 shadow-sm ring-1 ring-[var(--border)]">
           <h3 className="text-sm font-semibold uppercase text-[var(--text-muted)]">Teachers</h3>
           <p className="mt-2 text-sm text-[var(--text-muted)]">Add teacher profiles with basic details.</p>
@@ -134,18 +137,6 @@ export default async function Home() {
             href="/subjects"
           >
             Manage subjects →
-          </Link>
-        </div>
-        <div className="rounded-2xl bg-[var(--surface)] p-5 shadow-sm ring-1 ring-[var(--border)]">
-          <h3 className="text-sm font-semibold uppercase text-[var(--text-muted)]">Loads</h3>
-          <p className="mt-2 text-sm text-[var(--text-muted)]">
-            Assign subjects to teachers and keep hours in check.
-          </p>
-          <Link
-            className="mt-3 inline-flex text-sm font-semibold text-[var(--text-primary)] hover:text-[var(--primary)]"
-            href="/loads"
-          >
-            Manage loads →
           </Link>
         </div>
       </div>

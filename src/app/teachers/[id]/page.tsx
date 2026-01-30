@@ -3,7 +3,46 @@ import { notFound } from "next/navigation";
 import { revalidatePath } from "next/cache";
 import { prisma } from "@/lib/prisma";
 import type { Shift, Weekday } from "@/generated";
+import LoadForm from "@/app/loads/LoadForm";
 import { Button, Card, Input, Select } from "@/components/ui";
+
+const MAX_MORNING_HOURS_PER_DAY = 6.17;
+const MAX_AFTERNOON_HOURS_PER_DAY = 6.67;
+
+const parseTimeToMinutes = (time: string) => {
+  const [hours, minutes] = time.split(":").map(Number);
+  if (Number.isNaN(hours) || Number.isNaN(minutes)) return null;
+  return hours * 60 + minutes;
+};
+
+const calculateDurationHours = (startTime: string, endTime: string) => {
+  const startMinutes = parseTimeToMinutes(startTime);
+  const endMinutes = parseTimeToMinutes(endTime);
+  if (startMinutes === null || endMinutes === null) return null;
+  if (endMinutes <= startMinutes) return null;
+  return (endMinutes - startMinutes) / 60;
+};
+
+const hasOverlap = ({
+  startTime,
+  endTime,
+  existing,
+}: {
+  startTime: string;
+  endTime: string;
+  existing: { startTime: string; endTime: string }[];
+}) => {
+  const newStart = parseTimeToMinutes(startTime);
+  const newEnd = parseTimeToMinutes(endTime);
+  if (newStart === null || newEnd === null) return true;
+
+  return existing.some((load) => {
+    const existingStart = parseTimeToMinutes(load.startTime);
+    const existingEnd = parseTimeToMinutes(load.endTime);
+    if (existingStart === null || existingEnd === null) return true;
+    return newStart < existingEnd && newEnd > existingStart;
+  });
+};
 
 async function updateTeacher(formData: FormData) {
   "use server";
@@ -37,6 +76,61 @@ async function deleteTeacher(formData: FormData) {
   revalidatePath("/teachers");
 }
 
+async function createLoad(formData: FormData) {
+  "use server";
+  const teacherId = String(formData.get("teacherId"));
+  const subjectId = String(formData.get("subjectId"));
+  const startTime = String(formData.get("startTime") || "").trim();
+  const endTime = String(formData.get("endTime") || "").trim();
+  const day = String(formData.get("day") || "").trim() as Weekday;
+
+  if (!teacherId || !subjectId || !startTime || !endTime || !day) return;
+
+  const durationHours = calculateDurationHours(startTime, endTime);
+  if (!durationHours) return;
+
+  const teacher = await prisma.teacher.findUnique({
+    where: { id: teacherId },
+    select: { shift: true },
+  });
+  if (!teacher) return;
+
+  const existingSameDay = await prisma.load.findMany({
+    where: {
+      teacherId,
+      days: { some: { weekday: day } },
+    },
+    select: { startTime: true, endTime: true },
+  });
+
+  const existingDayHours = existingSameDay.reduce((total, load) => {
+    const loadHours = calculateDurationHours(load.startTime, load.endTime) ?? 0;
+    return total + loadHours;
+  }, 0);
+
+  const maxHoursForShift =
+    teacher.shift === "AFTERNOON" ? MAX_AFTERNOON_HOURS_PER_DAY : MAX_MORNING_HOURS_PER_DAY;
+
+  if (existingDayHours + durationHours > maxHoursForShift) return;
+
+  if (hasOverlap({ startTime, endTime, existing: existingSameDay })) return;
+
+  await prisma.load.create({
+    data: {
+      teacherId,
+      subjectId,
+      shift: teacher.shift,
+      startTime,
+      endTime,
+      days: {
+        create: { weekday: day },
+      },
+    },
+  });
+
+  revalidatePath(`/teachers/${teacherId}`);
+}
+
 const weekdayOrder: Weekday[] = [
   "MONDAY",
   "TUESDAY",
@@ -63,17 +157,23 @@ export default async function TeacherDetailPage({
   if (!id) {
     notFound();
   }
-  const teacher = await prisma.teacher.findUnique({
-    where: { id },
-    include: {
-      loads: {
-        include: {
-          subject: true,
-          days: true,
+  const [teacher, subjects] = await Promise.all([
+    prisma.teacher.findUnique({
+      where: { id },
+      include: {
+        loads: {
+          include: {
+            subject: true,
+            days: true,
+          },
         },
       },
-    },
-  });
+    }),
+    prisma.subject.findMany({
+      orderBy: { code: "asc" },
+      select: { id: true, code: true, name: true },
+    }),
+  ]);
 
   if (!teacher) {
     notFound();
@@ -113,8 +213,8 @@ export default async function TeacherDetailPage({
           <Input name="department" defaultValue={teacher.department ?? ""} placeholder="Department" />
           <Input name="email" defaultValue={teacher.email ?? ""} placeholder="Email" type="email" />
           <Select name="shift" defaultValue={teacher.shift}>
-            <option value="MORNING">Morning (6:00 AM - 12:00 NN)</option>
-            <option value="AFTERNOON">Afternoon (1:00 PM - 7:00 PM)</option>
+            <option value="MORNING">Morning (6:00 AM - 12:10 NN)</option>
+            <option value="AFTERNOON">Afternoon (12:00 PM - 7:00 PM)</option>
           </Select>
           <div className="md:col-span-2 flex flex-wrap gap-2">
             <Button>Save Changes</Button>
@@ -144,6 +244,21 @@ export default async function TeacherDetailPage({
             </svg>
           </button>
         </form>
+      </Card>
+
+      <Card title="Add Load" description="Assign a subject and time block to this teacher.">
+        <LoadForm
+          createLoad={createLoad}
+          preselectedTeacherId={teacher.id}
+          teachers={[
+            {
+              id: teacher.id,
+              name: teacher.name,
+              shift: teacher.shift,
+            },
+          ]}
+          subjects={subjects}
+        />
       </Card>
 
       <Card

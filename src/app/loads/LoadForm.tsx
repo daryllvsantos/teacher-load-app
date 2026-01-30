@@ -20,11 +20,12 @@ type LoadFormProps = {
   teachers: TeacherOption[];
   subjects: SubjectOption[];
   createLoad: (formData: FormData) => void;
+  preselectedTeacherId?: string;
 };
 
 const shiftLabels: Record<Shift, string> = {
-  MORNING: "Morning (6:00 AM - 12:00 NN)",
-  AFTERNOON: "Afternoon (1:00 PM - 7:00 PM)",
+  MORNING: "Morning (6:00 AM - 12:10 NN)",
+  AFTERNOON: "Afternoon (12:00 PM - 7:00 PM)",
 };
 
 const weekdayOptions: { value: Weekday; label: string }[] = [
@@ -35,28 +36,63 @@ const weekdayOptions: { value: Weekday; label: string }[] = [
   { value: "FRIDAY", label: "Friday" },
 ];
 
-export default function LoadForm({ teachers, subjects, createLoad }: LoadFormProps) {
-  const [selectedTeacherId, setSelectedTeacherId] = useState("");
+export default function LoadForm({
+  teachers,
+  subjects,
+  createLoad,
+  preselectedTeacherId,
+}: LoadFormProps) {
+  const [selectedTeacherId, setSelectedTeacherId] = useState(preselectedTeacherId ?? "");
+  const [selectedTimeBlock, setSelectedTimeBlock] = useState("");
 
   const selectedTeacher = useMemo(
     () => teachers.find((teacher) => teacher.id === selectedTeacherId),
     [teachers, selectedTeacherId]
   );
 
+  const afternoonTimeBlocks = [
+    { label: "12:00 PM - 1:20 PM", start: "12:00", end: "13:20" },
+    { label: "1:20 PM - 2:40 PM", start: "13:20", end: "14:40" },
+    { label: "2:40 PM - 4:00 PM", start: "14:40", end: "16:00" },
+    { label: "Break (4:00 PM - 4:20 PM)", start: "16:00", end: "16:20", disabled: true },
+    { label: "4:20 PM - 5:40 PM", start: "16:20", end: "17:40" },
+    { label: "5:40 PM - 7:00 PM", start: "17:40", end: "19:00" },
+  ];
+
+  const morningTimeBlocks = [
+    { label: "6:00 AM - 7:10 AM", start: "06:00", end: "07:10" },
+    { label: "7:10 AM - 8:20 AM", start: "07:10", end: "08:20" },
+    { label: "8:20 AM - 9:30 AM", start: "08:20", end: "09:30" },
+    { label: "Break (9:30 AM - 9:50 AM)", start: "09:30", end: "09:50", disabled: true },
+    { label: "9:50 AM - 11:00 AM", start: "09:50", end: "11:00" },
+    { label: "11:00 AM - 12:10 PM", start: "11:00", end: "12:10" },
+  ];
+
+  const isAfternoonShift = selectedTeacher?.shift === "AFTERNOON";
+  const isMorningShift = selectedTeacher?.shift === "MORNING";
+  const activeBlocks = isAfternoonShift ? afternoonTimeBlocks : morningTimeBlocks;
+  const selectedBlock = activeBlocks.find(
+    (block) => `${block.start}-${block.end}` === selectedTimeBlock
+  );
+
   return (
     <form action={createLoad} className="grid gap-3 md:grid-cols-3">
-      <Select
-        name="teacherId"
-        defaultValue=""
-        onChange={(event) => setSelectedTeacherId(event.target.value)}
-      >
-        <option value="">Select teacher</option>
-        {teachers.map((teacher) => (
-          <option key={teacher.id} value={teacher.id}>
-            {teacher.name}
-          </option>
-        ))}
-      </Select>
+      {preselectedTeacherId ? (
+        <input type="hidden" name="teacherId" value={preselectedTeacherId} />
+      ) : (
+        <Select
+          name="teacherId"
+          value={selectedTeacherId}
+          onChange={(event) => setSelectedTeacherId(event.target.value)}
+        >
+          <option value="">Select teacher</option>
+          {teachers.map((teacher) => (
+            <option key={teacher.id} value={teacher.id}>
+              {teacher.name}
+            </option>
+          ))}
+        </Select>
+      )}
       <Select name="subjectId">
         <option value="">Select subject</option>
         {subjects.map((subject) => (
@@ -65,8 +101,33 @@ export default function LoadForm({ teachers, subjects, createLoad }: LoadFormPro
           </option>
         ))}
       </Select>
-      <Input name="startTime" placeholder="Start time" type="time" />
-      <Input name="endTime" placeholder="End time" type="time" />
+      {isAfternoonShift || isMorningShift ? (
+        <>
+          <Select
+            name="timeBlock"
+            value={selectedTimeBlock}
+            onChange={(event) => setSelectedTimeBlock(event.target.value)}
+          >
+            <option value="">Select time block</option>
+            {activeBlocks.map((block) => (
+              <option
+                key={`${block.start}-${block.end}`}
+                value={`${block.start}-${block.end}`}
+                disabled={block.disabled}
+              >
+                {block.label}
+              </option>
+            ))}
+          </Select>
+          <input type="hidden" name="startTime" value={selectedBlock?.start ?? ""} />
+          <input type="hidden" name="endTime" value={selectedBlock?.end ?? ""} />
+        </>
+      ) : (
+        <>
+          <Input name="startTime" placeholder="Start time" type="time" />
+          <Input name="endTime" placeholder="End time" type="time" />
+        </>
+      )}
       <div className="md:col-span-3">
         <p className="text-xs font-semibold uppercase text-[var(--text-muted)]">Day</p>
         <Select name="day" defaultValue="">

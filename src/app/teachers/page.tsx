@@ -4,7 +4,8 @@ import { prisma } from "@/lib/prisma";
 import type { Shift, Teacher } from "@/generated";
 import { Button, Card, Input, Select } from "@/components/ui";
 
-const MAX_HOURS = 6;
+const MAX_MORNING_HOURS_PER_DAY = 6.17;
+const MAX_AFTERNOON_HOURS_PER_DAY = 6.67;
 
 const parseTimeToMinutes = (time: string) => {
   const [hours, minutes] = time.split(":").map(Number);
@@ -55,14 +56,28 @@ export default async function TeachersPage() {
   const [teachers, loads] = await Promise.all([
     prisma.teacher.findMany({ orderBy: { createdAt: "desc" } }),
     prisma.load.findMany({
-      select: { teacherId: true, startTime: true, endTime: true },
+      select: { teacherId: true, startTime: true, endTime: true, days: true },
     }),
   ]);
-  const teacherHours = loads.reduce<Record<string, number>>((acc, load) => {
+  const hoursByTeacherDay = loads.reduce<Record<string, number>>((acc, load) => {
     const duration = calculateDurationHours(load.startTime, load.endTime) ?? 0;
-    acc[load.teacherId] = (acc[load.teacherId] ?? 0) + duration;
+    const weekday = load.days[0]?.weekday ?? "";
+    const key = `${load.teacherId}-${weekday}`;
+    acc[key] = (acc[key] ?? 0) + duration;
     return acc;
   }, {});
+  const maxDayHoursByTeacher = loads.reduce<Record<string, number>>((acc, load) => {
+    const weekday = load.days[0]?.weekday ?? "";
+    const key = `${load.teacherId}-${weekday}`;
+    const dayHours = hoursByTeacherDay[key] ?? 0;
+    acc[load.teacherId] = Math.max(acc[load.teacherId] ?? 0, dayHours);
+    return acc;
+  }, {});
+  const maxAllowedByTeacher: Record<string, number> = {};
+  teachers.forEach((teacher) => {
+    maxAllowedByTeacher[teacher.id] =
+      teacher.shift === "AFTERNOON" ? MAX_AFTERNOON_HOURS_PER_DAY : MAX_MORNING_HOURS_PER_DAY;
+  });
 
   return (
     <div className="grid gap-6">
@@ -72,8 +87,8 @@ export default async function TeachersPage() {
           <Input name="department" placeholder="Department (optional)" />
           <Input name="email" placeholder="Email (optional)" type="email" />
           <Select name="shift" defaultValue="MORNING">
-            <option value="MORNING">Morning (6:00 AM - 12:00 NN)</option>
-            <option value="AFTERNOON">Afternoon (1:00 PM - 7:00 PM)</option>
+            <option value="MORNING">Morning (6:00 AM - 12:10 NN)</option>
+            <option value="AFTERNOON">Afternoon (12:00 PM - 7:00 PM)</option>
           </Select>
           <div className="md:col-span-4">
             <Button>Add Teacher</Button>
@@ -110,7 +125,10 @@ export default async function TeachersPage() {
                     {teacher.shift === "MORNING" ? "Morning" : "Afternoon"}
                   </td>
                   <td className="py-3 text-xs font-semibold text-[var(--text-primary)]">
-                    {formatHours(MAX_HOURS - (teacherHours[teacher.id] ?? 0))} hrs left
+                    {formatHours(
+                      (maxAllowedByTeacher[teacher.id] ?? 0) -
+                        (maxDayHoursByTeacher[teacher.id] ?? 0)
+                    )} hrs left (per day)
                   </td>
                 </tr>
               ))}
