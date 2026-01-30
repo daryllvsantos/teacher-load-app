@@ -149,6 +149,22 @@ async function createLoad(
     return { status: "error", message: "Class not found." };
   }
 
+  const duplicateSectionSameDay = await prisma.load.findFirst({
+    where: {
+      teacherId,
+      classId,
+      days: { some: { weekday: day } },
+    },
+    select: { id: true },
+  });
+
+  if (duplicateSectionSameDay) {
+    return {
+      status: "error",
+      message: "Class section already scheduled for this teacher on that day.",
+    };
+  }
+
   const existingSameDay = await prisma.load.findMany({
     where: {
       teacherId,

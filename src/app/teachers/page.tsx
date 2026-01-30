@@ -88,9 +88,15 @@ export default async function TeachersPage() {
     return acc;
   }, {});
   const maxAllowedByTeacher: Record<string, number> = {};
+  const totalHoursByTeacher = loads.reduce<Record<string, number>>((acc, load) => {
+    const duration = calculateDurationHours(load.startTime, load.endTime) ?? 0;
+    acc[load.teacherId] = (acc[load.teacherId] ?? 0) + duration;
+    return acc;
+  }, {});
   teachers.forEach((teacher) => {
-    maxAllowedByTeacher[teacher.id] =
+    const dailyMax =
       teacher.shift === "AFTERNOON" ? MAX_AFTERNOON_HOURS_PER_DAY : MAX_MORNING_HOURS_PER_DAY;
+    maxAllowedByTeacher[teacher.id] = dailyMax * 5;
   });
 
   return (
@@ -124,7 +130,7 @@ export default async function TeachersPage() {
                 <th className="py-2">Department</th>
                 <th className="py-2">Email</th>
                 <th className="py-2">Shift</th>
-                <th className="py-2">Remaining</th>
+                <th className="py-2">Assigned</th>
               </tr>
             </thead>
             <tbody>
@@ -146,10 +152,8 @@ export default async function TeachersPage() {
                   <td className="py-3 text-xs font-semibold text-[var(--text-primary)]">
                     <div className="flex items-center gap-3">
                       <span>
-                        {formatHours(
-                          (maxAllowedByTeacher[teacher.id] ?? 0) -
-                            (maxDayHoursByTeacher[teacher.id] ?? 0)
-                        )} hrs left (per day)
+                        {formatHours(totalHoursByTeacher[teacher.id] ?? 0)} hrs /{" "}
+                        {formatHours(maxAllowedByTeacher[teacher.id] ?? 0)} assigned
                       </span>
                       <ToastActionForm
                         serverAction={deleteTeacher}
